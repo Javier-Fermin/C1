@@ -1,3 +1,5 @@
+package src;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,28 +10,28 @@
  *
  * @author javie
  */
-public class UserAlreadyExistsException extends Exception{
-    public UserAlreadyExistsException() {
+public class ServerErrorException extends Exception{
+    public ServerErrorException() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ServerErrorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(String message, Throwable cause) {
+    public ServerErrorException(String message, Throwable cause) {
         super(message, cause);
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(String message) {
+    public ServerErrorException(String message) {
         super(message);
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(Throwable cause) {
+    public ServerErrorException(Throwable cause) {
         super(cause);
         // TODO Auto-generated constructor stub
     }
