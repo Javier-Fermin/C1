@@ -28,32 +28,32 @@
       </AnchorPane>
       <AnchorPane layoutX="224.0" layoutY="-1.0" prefHeight="402.0" prefWidth="446.0">
          <children>
-            <Label layoutX="13.0" layoutY="8.0" prefHeight="28.0" prefWidth="149.0" text="Name" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-            <TextField layoutX="11.0" layoutY="100.0" prefHeight="28.0" prefWidth="187.0" promptText="Usuario" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="40.0" />
+            <Label fx:id="UserLabel" layoutX="13.0" layoutY="8.0" prefHeight="28.0" prefWidth="149.0" text="Name" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+            <TextField fx:id="UserTextField" layoutX="11.0" layoutY="100.0" prefHeight="28.0" prefWidth="187.0" promptText="Usuario" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="40.0" />
             <ImageView fitHeight="26.0" fitWidth="19.0" layoutX="177.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="188.0" AnchorPane.topAnchor="44.0">
                <image>
                   <Image url="@../resources/images/user.png" />
                </image>
             </ImageView>
-            <Label alignment="CENTER" layoutX="264.0" layoutY="144.0" styleClass="errorLabel" text="User name is invalid." textFill="RED" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="70.0" />
-            <Label layoutX="221.0" layoutY="72.0" prefHeight="28.0" prefWidth="149.0" text="Mobile number" AnchorPane.leftAnchor="233.0" AnchorPane.topAnchor="10.0" />
-            <TextField layoutX="220.0" layoutY="100.0" prefHeight="28.0" prefWidth="187.0" promptText="688819555" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
+            <Label fx:id="UserErrorLabel" alignment="CENTER" layoutX="264.0" layoutY="144.0" styleClass="errorLabel" text="User name is invalid." textFill="RED" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="70.0" />
+            <Label fx:id="PhoneLabel" layoutX="221.0" layoutY="72.0" prefHeight="28.0" prefWidth="149.0" text="Mobile number" AnchorPane.leftAnchor="233.0" AnchorPane.topAnchor="10.0" />
+            <TextField fx:id="PhoneTextField" layoutX="220.0" layoutY="100.0" prefHeight="28.0" prefWidth="187.0" promptText="688819555" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
             <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="407.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="408.0" AnchorPane.topAnchor="42.0">
                <image>
                   <Image url="@../resources/images/phone.png" />
                </image>
             </ImageView>
-            <Label alignment="CENTER" layoutX="254.0" layoutY="134.0" styleClass="errorLabel" text="Invaild phone number" textFill="RED" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="70.0" />
-            <Label layoutX="9.0" layoutY="128.0" prefHeight="28.0" prefWidth="149.0" text="Mail adress" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="100.0" />
-            <TextField layoutX="10.0" layoutY="156.0" prefHeight="28.0" prefWidth="426.0" promptText="mail@mail.com" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="130.0" />
+            <Label fx:id="PhoneErrorLabel" alignment="CENTER" layoutX="254.0" layoutY="134.0" styleClass="errorLabel" text="Invaild phone number" textFill="RED" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="70.0" />
+            <Label fx:id="MailLabel" layoutX="9.0" layoutY="128.0" prefHeight="28.0" prefWidth="149.0" text="Mail adress" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="100.0" />
+            <TextField fx:id="MailTextField" layoutX="10.0" layoutY="156.0" prefHeight="28.0" prefWidth="426.0" promptText="mail@mail.com" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="130.0" />
             <ImageView fitHeight="25.0" fitWidth="28.0" layoutX="406.0" layoutY="132.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="408.0" AnchorPane.topAnchor="132.0">
                <image>
                   <Image url="@../resources/images/mail.png" />
                </image>
             </ImageView>
-            <Label alignment="CENTER" layoutX="95.0" layoutY="190.0" styleClass="errorLabel" text="The mail is invalid." textFill="RED" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="160.0" />
-            <Label layoutX="10.0" layoutY="184.0" prefHeight="28.0" prefWidth="149.0" text="Adress" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="190.0" />
-            <TextField layoutX="9.0" layoutY="212.0" prefHeight="28.0" prefWidth="398.0" promptText="Zip Town Street Number Floor" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="220.0">
+            <Label fx:id="MailErrorLabel" alignment="CENTER" layoutX="95.0" layoutY="190.0" styleClass="errorLabel" text="The mail is invalid." textFill="RED" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="160.0" />
+            <Label fx:id="AddressLabel" layoutX="10.0" layoutY="184.0" prefHeight="28.0" prefWidth="149.0" text="Address" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="190.0" />
+            <TextField fx:id="AddressTextField" layoutX="9.0" layoutY="212.0" prefHeight="28.0" prefWidth="398.0" promptText="Zip Town Street Number Floor" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="220.0">
                <tooltip>
                   <Tooltip text="Empty Tooltip" />
                </tooltip></TextField>
@@ -62,9 +62,9 @@
                   <Image url="@../resources/images/location.png" />
                </image>
             </ImageView>
-            <Label alignment="CENTER" layoutX="105.0" layoutY="200.0" styleClass="errorLabel" text="The address is invalid" textFill="RED" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="250.0" />
-            <Label layoutX="9.0" layoutY="240.0" prefHeight="28.0" prefWidth="149.0" text="Password" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="280.0" />
-            <PasswordField layoutX="60.0" layoutY="312.0" prefHeight="28.0" prefWidth="206.0" promptText="abcd*1234" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="310.0">
+            <Label fx:id="AddressErrorLabel" alignment="CENTER" layoutX="105.0" layoutY="200.0" styleClass="errorLabel" text="The address is invalid" textFill="RED" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="250.0" />
+            <Label fx:id="PasswordLabel" layoutX="9.0" layoutY="240.0" prefHeight="28.0" prefWidth="149.0" text="Password" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="280.0" />
+            <PasswordField fx:id="PasswordTextField" layoutX="60.0" layoutY="312.0" prefHeight="28.0" prefWidth="206.0" promptText="abcd*1234" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="310.0">
                <tooltip>
                   <Tooltip text="The password must have more than 8 &#10;characters and must contain:&#10;&#9;- A letter&#10;&#9;- A digit&#10;&#9;- A special character&#10;&#9;&#9;" />
                </tooltip></PasswordField>
@@ -73,18 +73,18 @@
                   <Image url="@../resources/images/passwd.png" />
                </image>
             </ImageView>
-            <Label layoutX="216.0" layoutY="279.0" prefHeight="28.0" prefWidth="149.0" text="Repeat Password" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="280.0" />
-            <PasswordField layoutX="214.0" layoutY="312.0" prefHeight="28.0" prefWidth="187.0" promptText="abcd*1234" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="310.0" />
+            <Label fx:id="ConfirmPasswordLabel" layoutX="216.0" layoutY="279.0" prefHeight="28.0" prefWidth="149.0" text="Repeat Password" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="280.0" />
+            <PasswordField fx:id="ConfirmPasswordTextField" layoutX="214.0" layoutY="312.0" prefHeight="28.0" prefWidth="187.0" promptText="abcd*1234" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="310.0" />
             <ImageView fitHeight="26.0" fitWidth="20.0" layoutX="196.0" layoutY="323.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="411.0" AnchorPane.topAnchor="313.0">
                <image>
                   <Image url="@../resources/images/passwd.png" />
                </image>
             </ImageView>
-            <Label alignment="CENTER" styleClass="errorLabel" text="Password error" textFill="RED" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="340.0" />
-            <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" styleClass="errorLabel" text="Password error" textFill="RED" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="340.0" />
-            <Label layoutX="115.0" layoutY="320.0" prefHeight="28.0" prefWidth="187.0" text="Do you already have an account?" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="207.8" />
-            <Hyperlink layoutX="159.0" layoutY="347.0" prefHeight="23.0" prefWidth="74.0" text="Log In now!" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="236.0" AnchorPane.rightAnchor="110.0" />
-            <Button disable="true" layoutX="323.0" layoutY="332.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" text="Sign Up" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+            <Label fx:id="PasswordErrorLabel" alignment="CENTER" styleClass="errorLabel" text="Password error" textFill="RED" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="340.0" />
+            <Label fx:id="ConfirmPasswordErrorLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" styleClass="errorLabel" text="Password error" textFill="RED" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="340.0" />
+            <Label fx:id="SignInLabel" layoutX="115.0" layoutY="320.0" prefHeight="28.0" prefWidth="187.0" text="Do you already have an account?" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="207.8" />
+            <Hyperlink fx:id="SignInHyperlink" layoutX="159.0" layoutY="347.0" prefHeight="23.0" prefWidth="74.0" text="Log In now!" textAlignment="CENTER" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="110.0" />
+            <Button fx:id="SignUpButton" disable="true" layoutX="323.0" layoutY="332.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" text="Sign Up" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
          </children>
       </AnchorPane>
    </children>
