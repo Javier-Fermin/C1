@@ -6,6 +6,7 @@
 package view;
 
 
+import exceptions.BadUserException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -115,6 +116,33 @@ public class SignUpController implements ChangeListener<String>{
         AddressTextField.textProperty().addListener(this);
         PasswordTextField.textProperty().addListener(this);
         ConfirmPasswordTextField.textProperty().addListener(this);
+        
+        //We set the focus property listeners
+        UserTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue){
+                    UserLabel.getStyleClass().clear();
+                    UserTextField.getStyleClass().clear();
+                    UserTextField.getStyleClass().addAll("text-field", "text-input", "textFieldWithIcon");
+                    UserErrorLabel.setVisible(false);
+                }else{
+                    try{
+                    if(UserTextField.getText().length() > 500){
+                        throw new BadUserException();
+                    }
+                }catch(BadUserException e){
+                    UserErrorLabel.setVisible(true);
+                    UserLabel.getStyleClass().clear();
+                    UserLabel.getStyleClass().add("errorLabel");
+                    UserTextField.getStyleClass().clear();
+                    UserTextField.getStyleClass().add("textFieldError");
+                }
+                
+                }
+                
+            }
+        });
         
         
         stage.setScene(scene);
