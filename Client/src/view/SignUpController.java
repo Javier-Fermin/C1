@@ -10,13 +10,12 @@ import exceptions.BadEmailException;
 import exceptions.BadPasswordException;
 import exceptions.BadPhoneException;
 import exceptions.BadUserException;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,7 +32,7 @@ import javafx.stage.Stage;
  *
  * @author javie
  */
-public class SignUpController implements ChangeListener<String> {
+public class SignUpController implements ChangeListener<Object> {
 
     private Stage stage;
 
@@ -58,12 +57,14 @@ public class SignUpController implements ChangeListener<String> {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
+    
     public void initStage(Parent root) {
         Scene scene = new Scene(root);
         stage.setResizable(false);
         stage.setTitle("Sign Up");
 
+        SignUpButton.setOnAction(this::buttonSignUpHandler);
+        
         //All the error labels are set to invisible
         UserErrorLabel.setVisible(false);
         PhoneErrorLabel.setVisible(false);
@@ -88,7 +89,9 @@ public class SignUpController implements ChangeListener<String> {
             if (newValue) {
                 UserLabel.getStyleClass().remove("errorLabel");
                 UserTextField.getStyleClass().remove("textFieldError");
-                UserTextField.getStyleClass().add("textFieldWithIcon");
+                if(!UserTextField.getStyleClass().contains("textFieldWithIcon")){
+                    UserTextField.getStyleClass().add("textFieldWithIcon");
+                }
                 UserErrorLabel.setVisible(false);
             } else {
                 try {
@@ -149,63 +152,6 @@ public class SignUpController implements ChangeListener<String> {
             }
         });
 
-        PasswordTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                ConfirmPasswordLabel.getStyleClass().remove("errorLabel");
-                ConfirmPasswordTextField.getStyleClass().remove("textFieldError");
-                ConfirmPasswordTextField.getStyleClass().add("textFieldWithIcon");
-                ConfirmPasswordErrorLabel.setVisible(false);
-                PasswordLabel.getStyleClass().remove("errorLabel");
-                PasswordTextField.getStyleClass().remove("textFieldError");
-                PasswordTextField.getStyleClass().add("textFieldWithIcon");
-                PasswordErrorLabel.setVisible(false);
-            } else {
-                try {
-                    if (((!PasswordTextField.getText().matches(".*[a-z].*")
-                            || !PasswordTextField.getText().matches(".*[A-Z].*")
-                            || !PasswordTextField.getText().matches(".*\\d.*")
-                            || !PasswordTextField.getText().matches(".*[^a-zA-Z0-9].*"))
-                            || (PasswordTextField.getText().length() < 8 || PasswordTextField.getText().length() > 500))
-                            && !PasswordTextField.getText().isEmpty()) {
-                        throw new BadPasswordException();
-                    }
-                } catch (BadPasswordException e) {
-                    PasswordErrorLabel.setVisible(true);
-                    PasswordLabel.getStyleClass().add("errorLabel");
-                    PasswordTextField.getStyleClass().remove("textFieldWithIcon");
-                    PasswordTextField.getStyleClass().add("textFieldError");
-                }
-            }
-        });
-
-        ConfirmPasswordTextField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (newValue) {
-                ConfirmPasswordLabel.getStyleClass().remove("errorLabel");
-                ConfirmPasswordTextField.getStyleClass().remove("textFieldError");
-                ConfirmPasswordTextField.getStyleClass().add("textFieldWithIcon");
-                ConfirmPasswordErrorLabel.setVisible(false);
-                PasswordLabel.getStyleClass().remove("errorLabel");
-                PasswordTextField.getStyleClass().remove("textFieldError");
-                PasswordTextField.getStyleClass().add("textFieldWithIcon");
-                PasswordErrorLabel.setVisible(false);
-            } else {
-                try {
-                    if (!ConfirmPasswordTextField.getText().equals(PasswordTextField.getText())) {
-                        throw new BadPasswordException();
-                    }
-                } catch (BadPasswordException e) {
-                    PasswordErrorLabel.setVisible(false);
-                    ConfirmPasswordErrorLabel.setVisible(true);
-                    ConfirmPasswordLabel.getStyleClass().add("errorLabel");
-                    ConfirmPasswordTextField.getStyleClass().remove("textFieldWithIcon");
-                    ConfirmPasswordTextField.getStyleClass().add("textFieldError");
-                    //PasswordLabel.getStyleClass().add("errorLabel");
-                    //PasswordTextField.getStyleClass().remove("textFieldWithIcon");
-                    //PasswordTextField.getStyleClass().add("textFieldError");
-                }
-            }
-        });
-
         AddressTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 AddressLabel.getStyleClass().remove("errorLabel");
@@ -229,6 +175,56 @@ public class SignUpController implements ChangeListener<String> {
             }
         });
         
+        PasswordTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                PasswordLabel.getStyleClass().remove("errorLabel");
+                PasswordTextField.getStyleClass().remove("textFieldError");
+                PasswordTextField.getStyleClass().add("textFieldWithIcon");
+                PasswordErrorLabel.setVisible(false);
+            } else {
+                try {
+                    
+                    if (((!PasswordTextField.getText().matches(".*[a-z].*")
+                            || !PasswordTextField.getText().matches(".*[A-Z].*")
+                            || !PasswordTextField.getText().matches(".*\\d.*")
+                            || !PasswordTextField.getText().matches(".*[^a-zA-Z0-9].*"))
+                            || (PasswordTextField.getText().length() < 8 || PasswordTextField.getText().length() > 500))
+                            && !PasswordTextField.getText().isEmpty()) {
+                        throw new BadPasswordException();
+                    }
+                } catch (BadPasswordException e) {
+                    PasswordErrorLabel.setVisible(true);
+                    PasswordLabel.getStyleClass().add("errorLabel");
+                    PasswordTextField.getStyleClass().remove("textFieldWithIcon");
+                    PasswordTextField.getStyleClass().add("textFieldError");
+                }
+            }
+        });
+
+        ConfirmPasswordTextField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                ConfirmPasswordLabel.getStyleClass().remove("errorLabel");
+                ConfirmPasswordTextField.getStyleClass().remove("textFieldError");
+                ConfirmPasswordTextField.getStyleClass().add("textFieldWithIcon");
+                ConfirmPasswordErrorLabel.setVisible(false);
+            } else {
+                try {
+                    if (!ConfirmPasswordTextField.getText().equals(PasswordTextField.getText())) {
+                        throw new BadPasswordException();
+                    }
+                } catch (BadPasswordException e) {
+                    
+                    ConfirmPasswordErrorLabel.setVisible(!PasswordErrorLabel.isVisible());
+                    ConfirmPasswordLabel.getStyleClass().add("errorLabel");
+                    ConfirmPasswordTextField.getStyleClass().remove("textFieldWithIcon");
+                    ConfirmPasswordTextField.getStyleClass().add("textFieldError");
+
+                }
+            }
+        });
+
+        
+        
         //Hyperlink view change 
         SignInHyperlink.setOnAction((event) -> {
             try {
@@ -239,8 +235,8 @@ public class SignUpController implements ChangeListener<String> {
 
             SignInController cont = ((SignInController) loader.getController());
 
-            cont.setStage(sStage);
-            cont.initStage(rootSignIn);
+            //cont.setStage(sStage);
+            //cont.initStage(rootSignIn);
 
             stage.close();
         } catch (IOException ex) {
@@ -276,7 +272,7 @@ public class SignUpController implements ChangeListener<String> {
         });
         ConfirmPasswordTextField.setOnKeyPressed((event) -> {
             if(event.getCode().equals(KeyCode.ENTER)){
-                SignUpButton.requestFocus();
+                SignUpButton.fire();
             }
         });
         
@@ -286,8 +282,8 @@ public class SignUpController implements ChangeListener<String> {
     }
 
     @Override
-    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        if (!newValue.isEmpty()
+    public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
+        if (!((String) newValue).isEmpty()
                 && !UserTextField.getText().isEmpty()
                 && !PhoneTextField.getText().isEmpty()
                 && !MailTextField.getText().isEmpty()
@@ -298,5 +294,9 @@ public class SignUpController implements ChangeListener<String> {
         } else {
             SignUpButton.disableProperty().set(true);
         }
+    }
+    
+    public void buttonSignUpHandler(ActionEvent event){
+        SignUpButton.requestFocus();
     }
 }
