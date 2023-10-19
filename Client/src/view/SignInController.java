@@ -9,27 +9,46 @@ package view;
  * Sample Skeleton for 'SignInWindowFXML.fxml' Controller Class
  */
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import model.RegistrableFactory;
+import src.AuthenticationException;
+import src.Registrable;
+import src.User;
+import model.RegistrableImplementation;
+import src.ServerErrorException;
+import src.TimeOutException;
 
-public class SignInController {
+public class SignInController implements ChangeListener<String> {
+
+    Registrable registro;
+    User user;
 
     private Stage stage; //This window Stage
 
@@ -81,24 +100,43 @@ public class SignInController {
     @FXML
     public void signInButtonAction(ActionEvent event) {
         try {
-            //if(){
-            //else{
-            //Abrir ventana
-            Stage sStage = new Stage();
+            if (isValid(usernameText.getText())) {
+                
+                registro = new RegistrableFactory().getRegistrable();
+                
+                user = registro.SignIn(new User("", passwordText.getText(), "", usernameText.getText(), ""));
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainWindowFXML.fxml"));
-            Parent root = (Parent) loader.load();
+                if (user != null) {
+                    Stage sStage = new Stage();
 
-            MainWindowController cont = ((MainWindowController) loader.getController());
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainWindowFXML.fxml"));
+                    Parent root = (Parent) loader.load();
 
-            cont.setMainStage(sStage);
-            cont.initStage(root);
+                    MainWindowController cont = ((MainWindowController) loader.getController());
 
-            stage.close();
+                    cont.setMainStage(sStage);
+                    cont.initStage(root, user);
+
+                    stage.close();
+                } else {
+                    throw new AuthenticationException();
+                }
+            } else {
+                throw new AuthenticationException();
+            }
+        } catch (AuthenticationException ex) {
+            new Alert(Alert.AlertType.ERROR, "Authentication error").showAndWait();
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+        } catch (TimeOutException ex) {
+            new Alert(Alert.AlertType.ERROR, "Server Time out error").showAndWait();
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+            new Alert(Alert.AlertType.ERROR, "App error").showAndWait();
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+        } catch (ServerErrorException ex) {
+            new Alert(Alert.AlertType.ERROR, "Server error").showAndWait();
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         }
-
     }
 
     @FXML
@@ -129,10 +167,31 @@ public class SignInController {
         stage.setScene(scene);
         stage.setOnShowing(this::handleWindowShowing);
         stage.setResizable(false);
+        stage.getIcons().add(new Image("/res/icon.png"));
+        stage.setTitle("Odoo - SignIn");
+
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit?").showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    return;
+                }
+                event.consume();
+            }
+        });
+
+        addTextLimiter(usernameText, 500);
+        addTextLimiter(passwordText, 500);
+        usernameText.textProperty().addListener(this);
+        passwordText.textProperty().addListener(this);
 
         showPasswordButton.setOnAction(this::passwordButtonAction);
         signUpLink.setOnAction(this::signUpClicked);
         signInButton.setOnAction(this::signInButtonAction);
+
+        signInButton.disableProperty().set(true);
+        signInButton.setDefaultButton(true);
 
         stage.show();
     }
@@ -153,6 +212,27 @@ public class SignInController {
     public static boolean isValid(final String email) {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    @Override
+    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        if (!newValue.isEmpty() && !usernameText.getText().isEmpty() && !passwordText.getText().isEmpty()) {
+            signInButton.disableProperty().set(false);
+        } else {
+            signInButton.disableProperty().set(true);
+        }
+    }
+
+    public static void addTextLimiter(final TextField tf, final int maxLength) {
+        tf.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
+                if (tf.getText().length() > maxLength) {
+                    String s = tf.getText().substring(0, maxLength);
+                    tf.setText(s);
+                }
+            }
+        });
     }
 
 }
