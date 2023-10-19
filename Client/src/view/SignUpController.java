@@ -280,6 +280,7 @@ public class SignUpController implements ChangeListener<String> {
             }
         });
         
+        
         stage.setScene(scene);
         stage.show();
     }
