@@ -10,9 +10,15 @@ import exceptions.BadEmailException;
 import exceptions.BadPasswordException;
 import exceptions.BadPhoneException;
 import exceptions.BadUserException;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,6 +26,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 /**
@@ -221,6 +228,58 @@ public class SignUpController implements ChangeListener<String> {
                 }
             }
         });
+        
+        //Hyperlink view change 
+        SignInHyperlink.setOnAction((event) -> {
+            try {
+            Stage sStage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignIn.fxml"));
+            Parent rootSignIn = (Parent) loader.load();
+
+            SignInController cont = ((SignInController) loader.getController());
+
+            cont.setStage(sStage);
+            cont.initStage(rootSignIn);
+
+            stage.close();
+        } catch (IOException ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        });
+        
+        //Change focus with enter
+        UserTextField.setOnKeyPressed((event) -> {
+            if(event.getCode().equals(KeyCode.ENTER)){
+                PhoneTextField.requestFocus();
+            }
+        });
+        PhoneTextField.setOnKeyPressed((event) -> {
+            if(event.getCode().equals(KeyCode.ENTER)){
+                MailTextField.requestFocus();
+            }
+        });
+        MailTextField.setOnKeyPressed((event) -> {
+            if(event.getCode().equals(KeyCode.ENTER)){
+                AddressTextField.requestFocus();
+            }
+        });
+        AddressTextField.setOnKeyPressed((event) -> {
+            if(event.getCode().equals(KeyCode.ENTER)){
+                PasswordTextField.requestFocus();
+            }
+        });
+        PasswordTextField.setOnKeyPressed((event) -> {
+            if(event.getCode().equals(KeyCode.ENTER)){
+                ConfirmPasswordTextField.requestFocus();
+            }
+        });
+        ConfirmPasswordTextField.setOnKeyPressed((event) -> {
+            if(event.getCode().equals(KeyCode.ENTER)){
+                SignUpButton.requestFocus();
+            }
+        });
+        
         stage.setScene(scene);
         stage.show();
     }
