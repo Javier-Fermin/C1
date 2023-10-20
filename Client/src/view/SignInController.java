@@ -48,7 +48,6 @@ import src.TimeOutException;
 public class SignInController implements ChangeListener<String> {
 
     Registrable registro;
-    User user;
 
     private Stage stage; //This window Stage
 
@@ -100,10 +99,11 @@ public class SignInController implements ChangeListener<String> {
     @FXML
     public void signInButtonAction(ActionEvent event) {
         try {
+            User user;
             if (isValid(usernameText.getText())) {
-                
+
                 registro = new RegistrableFactory().getRegistrable();
-                
+
                 user = registro.SignIn(new User("", passwordText.getText(), "", usernameText.getText(), ""));
 
                 if (user != null) {
@@ -130,11 +130,11 @@ public class SignInController implements ChangeListener<String> {
         } catch (TimeOutException ex) {
             new Alert(Alert.AlertType.ERROR, "Server Time out error").showAndWait();
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
-        } catch (IOException ex) {
-            new Alert(Alert.AlertType.ERROR, "App error").showAndWait();
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         } catch (ServerErrorException ex) {
             new Alert(Alert.AlertType.ERROR, "Server error").showAndWait();
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+        } catch (IOException ex) {
+            new Alert(Alert.AlertType.ERROR, "App error").showAndWait();
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         }
     }
@@ -162,7 +162,7 @@ public class SignInController implements ChangeListener<String> {
         this.stage = stage;
     }
 
-    public void initStage(Parent root) {
+    public void initStage(Parent root, User signUpUser) {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setOnShowing(this::handleWindowShowing);
@@ -185,6 +185,10 @@ public class SignInController implements ChangeListener<String> {
         addTextLimiter(passwordText, 500);
         usernameText.textProperty().addListener(this);
         passwordText.textProperty().addListener(this);
+
+        if (signUpUser != null) {
+            usernameText.setText(signUpUser.getEmail());
+        }
 
         showPasswordButton.setOnAction(this::passwordButtonAction);
         signUpLink.setOnAction(this::signUpClicked);

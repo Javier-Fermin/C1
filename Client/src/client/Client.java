@@ -9,23 +9,25 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import src.User;
 import view.SignInController;
 
 /**
  *
  * @author javie
  */
-public class Client extends Application{
+public class Client extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignInWindowFXML.fxml"));
-        Parent root = (Parent)loader.load();
-        
-        SignInController cont = ((SignInController)loader.getController());
-        
+        Parent root = (Parent) loader.load();
+
+        SignInController cont = ((SignInController) loader.getController());
+
         cont.setStage(stage);
-        cont.initStage(root);
+        cont.initStage(root, null);
     }
 
     /**
@@ -34,5 +36,5 @@ public class Client extends Application{
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

@@ -6,15 +6,56 @@ package model;
  * and open the template in the editor.
  */
 
+import src.AuthenticationException;
+import src.Registrable;
+import src.ServerErrorException;
+import src.TimeOutException;
+import src.User;
+import src.UserAlreadyExistsException;
+
+
 /**
  *
  * @author javie
  */
 public class RegistrableImplementation implements Registrable{
 
+    private final String signInStmt = "SELECT P.name, U.password, P.phone, U.login, P.zip ,P.city ,P.street "
+                                    + "FROM public.res_partner P, public.res_users U "
+                                    + "WHERE U.partner_id=P.id AND U.login=? AND U.password=?";
+    
+    private final String insertPartnerStmt = "INSERT INTO public.res_partner" 
+                                            +"(company_id, name, street, zip, city, email, phone, active) " 
+                                            +"VALUES ('1', ?, ?, ?, ?, ?, ?, true)";
+    
+    private final String getPartnerIdStmt = "SELECT id "
+                                           + "FROM public.res_partner "
+                                           + "WHERE email=?";
+    
+    private final String insertUserStmt = "INSERT INTO public.res_users " 
+                                         +"(company_id, partner_id, active, login, password) " 
+                                        +"VALUES ('1', ?, True, ?, ?)";
+    
+    private final String getUserIdStmt = "SELECT id "
+            + "FROM public.res_users "
+            + "WHERE partner_id=?";
+    
+    private final String insertRelUserCompanyStmt = "INSERT INTO public.res_company_users_rel " 
+                                                    +"(cid, user_id) " 
+                                                    +"VALUES ('1', ?)";
+    
     @Override
-    public void SignIn(User user) throws ServerErrorException,AuthenticationException,TimeOutException{
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public User SignIn(User user) throws ServerErrorException,AuthenticationException,TimeOutException{
+        //Instanciamos los objetos necesarios(Connection,PreparedStatement,User,Pool...)
+        User us=new User();
+        
+        //Se llama al pool y nos conectamos a la BD de odoo-postgresql
+        
+        //
+        
+        
+        
+        return us;
     }
 
     @Override

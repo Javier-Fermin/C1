@@ -80,7 +80,7 @@ public class MainWindowController {
             SignInController cont = ((SignInController) loader.getController());
 
             cont.setStage(sStage);
-            cont.initStage(root);
+            cont.initStage(root, null);
             
             stage.close();
             
