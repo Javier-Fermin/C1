@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -53,10 +54,10 @@ public class SignInController implements ChangeListener<String> {
     private Stage stage; //This window Stage
 
     @FXML // fx:id="signInWindow"
-    private Pane signInWindow; // Value injected by FXMLLoader
+    private Pane signInWindow; // signInWindow main Pane
 
     @FXML // fx:id="imageLabel"
-    private ImageView imageLabel; // Value injected by FXMLLoader
+    private ImageView imageLabel; // Decoration view with iamge
 
     @FXML // fx:id="logInLabel"
     private Label logInLabel; // Value injected by FXMLLoader
@@ -175,11 +176,20 @@ public class SignInController implements ChangeListener<String> {
             public void handle(WindowEvent event) {
                 Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit?").showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-                    return;
+                    Platform.exit();
                 }
                 event.consume();
             }
         });
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, ((event) -> {
+            if (KeyCode.ESCAPE == event.getCode()) {
+                Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit?").showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    Platform.exit();
+                }
+                event.consume();
+            }
+        }));
 
         addTextLimiter(usernameText, 500);
         addTextLimiter(passwordText, 500);
