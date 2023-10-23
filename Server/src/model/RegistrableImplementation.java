@@ -6,6 +6,11 @@ package model;
  * and open the template in the editor.
  */
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import server.Pool;
+
 import src.AuthenticationException;
 import src.Registrable;
 import src.ServerErrorException;
@@ -20,6 +25,14 @@ import src.UserAlreadyExistsException;
  */
 public class RegistrableImplementation implements Registrable{
 
+    // DB Connection
+    private Connection con;
+    private PreparedStatement pstmt;
+    private ResultSet rset;
+    private Pool poolConnections = new Pool();
+    
+    //Postgres sentences that we are going to use
+    
     private final String signInStmt = "SELECT P.name, U.password, P.phone, U.login, P.zip ,P.city ,P.street "
                                     + "FROM public.res_partner P, public.res_users U "
                                     + "WHERE U.partner_id=P.id AND U.login=? AND U.password=?";
@@ -37,8 +50,8 @@ public class RegistrableImplementation implements Registrable{
                                         +"VALUES ('1', ?, True, ?, ?)";
     
     private final String getUserIdStmt = "SELECT id "
-            + "FROM public.res_users "
-            + "WHERE partner_id=?";
+                                        + "FROM public.res_users "
+                                        + "WHERE partner_id=?";
     
     private final String insertRelUserCompanyStmt = "INSERT INTO public.res_company_users_rel " 
                                                     +"(cid, user_id) " 
@@ -60,7 +73,13 @@ public class RegistrableImplementation implements Registrable{
 
     @Override
     public User SignUp(User user) throws ServerErrorException,UserAlreadyExistsException,TimeOutException{
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //Instanciar objectos necesarios
+        
+        //Se llama al pool y nos conectamos con la BD
+        
+        
     }
+    
+    public void setPool
     
 }
