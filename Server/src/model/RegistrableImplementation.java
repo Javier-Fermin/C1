@@ -7,8 +7,12 @@ package model;
  */
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import server.Pool;
 
 import src.AuthenticationException;
@@ -37,9 +41,13 @@ public class RegistrableImplementation implements Registrable{
                                     + "FROM public.res_partner P, public.res_users U "
                                     + "WHERE U.partner_id=P.id AND U.login=? AND U.password=?";
     
+    private final String getUserStmt = "SELECT login "
+                                + "FROM public.res_users "
+                                + "WHERE login=?";
+    
     private final String insertPartnerStmt = "INSERT INTO public.res_partner" 
-                                            +"(company_id, name, street, zip, city, email, phone, active) " 
-                                            +"VALUES ('1', ?, ?, ?, ?, ?, ?, true)";
+                                            +"(company_id, name, street, zip, email, phone, active) " 
+                                            +"VALUES ('1', ?, ?, ?, ?, ?, true)";
     
     private final String getPartnerIdStmt = "SELECT id "
                                            + "FROM public.res_partner "
@@ -57,10 +65,13 @@ public class RegistrableImplementation implements Registrable{
                                                     +"(cid, user_id) " 
                                                     +"VALUES ('1', ?)";
     
+    //User object
+    private User us;
+    
     @Override
     public User SignIn(User user) throws ServerErrorException,AuthenticationException,TimeOutException{
         //Instanciamos los objetos necesarios(Connection,PreparedStatement,User,Pool...)
-        User us=new User();
+        us=new User();
         
         //Se llama al pool y nos conectamos a la BD de odoo-postgresql
         
@@ -73,13 +84,169 @@ public class RegistrableImplementation implements Registrable{
 
     @Override
     public User SignUp(User user) throws ServerErrorException,UserAlreadyExistsException,TimeOutException{
-        //Instanciar objectos necesarios
+        //Se llama al pool y nos conectamos con la BD usando a con
+        try{
+        //con=poolConnections.openConnection();
+            con=DriverManager.getConnection("", "", "");
+            
+         //Check if the user isn't registered in the db
+            if(!isUserRegistered(user,con)){
+            //Execute all the needed methods to insert all the data inside of the required postgresql tables
+                insertPartner(user,con);
+            
+                insertUser(user,getPartnerId(user,con),con);
+            
+                insertRelationUserCompany(user,getUserId(getPartnerId(user,con),con),con);
+            
+            }else{
+                throw new UserAlreadyExistsException();
+            }
+            
+        }catch(SQLException e){
         
-        //Se llama al pool y nos conectamos con la BD
+        }finally{
+            //If nothing went wrong, we close the connection with the DB
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         
-        
+        return us;
     }
     
-    public void setPool
+// --- SIGN UP METHODS ---
+    
+    
+    private void insertPartner(User u, Connection c){
+            String[] addressU=u.getAddress().split(",");
+            String zipU=addressU[0];
+            String streetU=addressU[1];
+            
+        try {
+            pstmt = c.prepareStatement(insertPartnerStmt);
+            pstmt.setString(0, u.getName());
+            pstmt.setString(1, streetU);
+            pstmt.setString(2, zipU);
+            pstmt.setString(3, u.getEmail());
+            pstmt.setString(4, u.getPhone());
+            
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+                try {
+                    pstmt.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }    
+    }
+    private int getPartnerId(User u, Connection c){
+        int idP=0;
+        try {
+            pstmt = c.prepareStatement(getPartnerIdStmt);
+            pstmt.setString(0, u.getEmail());
+            
+            rset=pstmt.executeQuery();
+            idP=rset.getInt("id");
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                rset.close();
+                pstmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return idP;
+    }
+
+    private void insertUser(User user, int partnerId, Connection con) {
+        try {
+            pstmt = con.prepareStatement(insertPartnerStmt);
+            
+            pstmt.setInt(0, partnerId);
+            pstmt.setString(1, user.getEmail());
+            pstmt.setString(2, user.getPasswd());
+            
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+                try {
+                    pstmt.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }
+    }
+    
+    private int getUserId(int partnerId, Connection con){
+        int userId=0;
+        
+        try {
+            pstmt = con.prepareStatement(getUserIdStmt);
+            pstmt.setInt(0, partnerId);
+            
+            rset=pstmt.executeQuery();
+            userId=rset.getInt("id");
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                rset.close();
+                pstmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return userId;
+    }
+
+    private void insertRelationUserCompany(User user, int userId, Connection con) {
+        try {
+            pstmt = con.prepareStatement(insertRelUserCompanyStmt);
+            
+            pstmt.setInt(0, userId);
+            
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+                try {
+                    pstmt.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }
+    }
+
+    private boolean isUserRegistered(User user, Connection con) {
+        boolean userRegistered=false;
+        try {
+            pstmt = con.prepareStatement(getUserStmt);
+            pstmt.setString(0, user.getEmail());
+            
+            rset=pstmt.executeQuery();
+            if(!rset.getString("login").isEmpty()){
+                userRegistered=true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                rset.close();
+                pstmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return userRegistered;
+    }
     
 }
