@@ -42,7 +42,18 @@ public class RegistrableImplementation implements Registrable{
             
             oos.writeObject(msg);
             
-            ois.re
+            msg = (Message) ois.readObject();
+            
+            switch(msg.getMessageType()){
+                
+                case USER_ALREADY_EXISTS_EXCEPTION_RESPONSE:
+                    throw new UserAlreadyExistsException();
+                case SUCCESS_RESPONSE:
+                    
+                case SERVER_ERROR_EXCEPTION_RESPONSE:
+                    throw new ServerErrorException());
+                    
+            }
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
