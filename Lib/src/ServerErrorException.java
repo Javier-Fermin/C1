@@ -5,8 +5,9 @@
  */
 
 /**
- *
- * @author javie
+ * This exception is thrwon when there is a problem in the server side
+ * 
+ * @author Javier, Fran, Imanol, Emil
  */
 public class ServerErrorException extends Exception{
     public ServerErrorException() {

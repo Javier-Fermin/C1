@@ -6,8 +6,10 @@
 
 
 /**
- *
- * @author javie
+ * A TimeOutException should be thrown when there is no response after some time
+ * from the server
+ * 
+ * @author Javier, Imanol, Emil, Fran
  */
 public class TimeOutException extends Exception{
     public TimeOutException() {

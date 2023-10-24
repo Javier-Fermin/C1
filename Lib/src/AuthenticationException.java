@@ -5,8 +5,10 @@
  */
 
 /**
- *
- * @author javie
+ * An AuthenticationException should be thrown by the signIn method whenever the
+ * credentials of the user are wrong
+ * 
+ * @author Javier, Fran, Emil, Imanol
  */
 public class AuthenticationException extends Exception{
     public AuthenticationException() {
