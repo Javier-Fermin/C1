@@ -24,8 +24,8 @@ import src.UserAlreadyExistsException;
  * @author Imanol
  */
 public class RegistrableImplementation implements Registrable{
-    private final String PUERTO = ResourceBundle.getBundle("Properties.properties").getString("PORT");
-    private final String IP = ResourceBundle.getBundle("Properties.properties").getString("IP");
+    private final String PUERTO = ResourceBundle.getBundle("./resources/Properties.properties").getString("PORT");
+    private final String IP = ResourceBundle.getBundle("./resources/Properties.properties").getString("IP");
     
     @Override
     public User SignIn(User user) throws ServerErrorException,AuthenticationException,TimeOutException{
