@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 import src.AuthenticationException;
 import src.Message;
@@ -23,8 +24,8 @@ import src.UserAlreadyExistsException;
  * @author Imanol
  */
 public class RegistrableImplementation implements Registrable{
-    private final int PUERTO = 5000;
-    private final String IP = "127.0.0.1";
+    private final String PUERTO = ResourceBundle.getBundle("Properties.properties").getString("PORT");
+    private final String IP = ResourceBundle.getBundle("Properties.properties").getString("IP");
     
     @Override
     public User SignIn(User user) throws ServerErrorException,AuthenticationException,TimeOutException{
@@ -33,7 +34,7 @@ public class RegistrableImplementation implements Registrable{
         ObjectOutputStream oos = null;
         try {
             //creates client connection
-            client = new Socket(IP, PUERTO);
+            client = new Socket(IP, Integer.parseInt(PUERTO));
             //open writing and reading stream
             ois = new ObjectInputStream(client.getInputStream());
             oos = new ObjectOutputStream(client.getOutputStream());
@@ -51,13 +52,12 @@ public class RegistrableImplementation implements Registrable{
                 case SUCCESS_RESPONSE:
                     
                 case SERVER_ERROR_EXCEPTION_RESPONSE:
-                    throw new ServerErrorException());
-                    
+                    throw new ServerErrorException();   
             }
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+            
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            
         } finally {
             try {
                 if (client != null)
