@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.RegistrableFactory;
@@ -17,8 +18,7 @@ import threads.Worker;
  * @author Imanol
  */
 public class Server {
-    private final int PUERTO = 5000;
-    private final String clave = "abc";
+    private final String PUERTO = ResourceBundle.getBundle("./resources/Properties.properties").getString("PORT");
     private final RegistrableFactory factory = new RegistrableFactory();
    
     public void iniciar() {
@@ -27,7 +27,7 @@ public class Server {
        
         try {
             // creates a server socken in the given port
-            server = new ServerSocket(PUERTO);
+            server = new ServerSocket(Integer.parseInt(PUERTO));
             System.out.println("Waiting the client ...");
             // waits until the client connects to the server
             client = server.accept();
