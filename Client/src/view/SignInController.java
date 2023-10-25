@@ -48,7 +48,7 @@ import src.TimeOutException;
 /**
  * This is the class that is responsible of controlling the responses for the
  * actions of the SignIn window.
- * 
+ *
  * @author Emil and Fran
  */
 public class SignInController implements ChangeListener<String> {
@@ -143,27 +143,27 @@ public class SignInController implements ChangeListener<String> {
                     cont.initStage(root, user);
 
                     stage.close();
-                // If the content does not follow an email address pattern, the user will be informed with an authentication error message (AuthenticationException).
-                } else {                    
+                } else {
                     throw new AuthenticationException();
                 }
+                // If the content does not follow an email address pattern, the user will be informed with an authentication error message (AuthenticationException).
             } else {
                 throw new AuthenticationException();
             }
         } catch (AuthenticationException ex) {
             new Alert(Alert.AlertType.ERROR, "Authentication error").showAndWait();
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, "Authentication error" + ex.getMessage());
             //In the event that it takes a while to connect to the server, the user will be informed that the timeout has occurred with the TimeOutException.
         } catch (TimeOutException ex) {
             new Alert(Alert.AlertType.ERROR, "Server Time out error").showAndWait();
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, "Server Time out error" + ex.getMessage());
             //In the event that the server is turned off or inaccessible, a ServerErrorException error message will be displayed.
         } catch (ServerErrorException ex) {
             new Alert(Alert.AlertType.ERROR, "Server error").showAndWait();
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, "Server error" + ex.getMessage());
         } catch (IOException ex) {
             new Alert(Alert.AlertType.ERROR, "App error").showAndWait();
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, "App error" + ex.getMessage());
         }
     }
 
@@ -187,7 +187,7 @@ public class SignInController implements ChangeListener<String> {
 
             stage.close();
         } catch (IOException ex) {
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, "Sign Up window error" + ex.getMessage());
         }
     }
 
@@ -208,61 +208,65 @@ public class SignInController implements ChangeListener<String> {
      * @param signUpUser Collected user from SignUpWindow
      */
     public void initStage(Parent root, User signUpUser) {
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setOnShowing(this::handleWindowShowing);
-        //Window no Resizable
-        stage.setResizable(false);
-        stage.getIcons().add(new Image("/res/icon.png"));
-        //Insert “Odoo Sign In”.  tittle
-        stage.setTitle("Odoo - SignIn");
+        try {
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setOnShowing(this::handleWindowShowing);
+            //Window no Resizable
+            stage.setResizable(false);
+            stage.getIcons().add(new Image("/res/icon.png"));
+            //Insert “Odoo Sign In”.  tittle
+            stage.setTitle("Odoo - SignIn");
 
-        //Confirmation is requested when leaving the window
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                //If you accept, you will exit the application.
-                //If you cancel, you will return to the initial window.
-                Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit?").showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    Platform.exit();
+            //Confirmation is requested when leaving the window
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    //If you accept, you will exit the application.
+                    //If you cancel, you will return to the initial window.
+                    Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit?").showAndWait();
+                    if (result.isPresent() && result.get() == ButtonType.OK) {
+                        Platform.exit();
+                    }
+                    event.consume();
                 }
-                event.consume();
-            }
-        });
-        //The esc key is the window escape button.
-        stage.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-            if (KeyCode.ESCAPE == event.getCode()) {
-                Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit?").showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    Platform.exit();
+            });
+            //The esc key is the window escape button.
+            stage.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+                if (KeyCode.ESCAPE == event.getCode()) {
+                    Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit?").showAndWait();
+                    if (result.isPresent() && result.get() == ButtonType.OK) {
+                        Platform.exit();
+                    }
+                    event.consume();
                 }
-                event.consume();
+            });
+
+            //The usernameText, which will be an empty field, will pick up the focus. This will have a mail pattern.
+            usernameText.textProperty().addListener(this);
+            usernameText.requestFocus();
+            addTextLimiter(usernameText, 500);
+            //The passwordText will be an empty field and will have a range of allowed characters.
+            passwordText.textProperty().addListener(this);
+            addTextLimiter(passwordText, 500);
+
+            if (signUpUser != null) {
+                usernameText.setText(signUpUser.getEmail());
             }
-        });
 
-        //The usernameText, which will be an empty field, will pick up the focus. This will have a mail pattern.
-        usernameText.textProperty().addListener(this);
-        usernameText.requestFocus();
-        addTextLimiter(usernameText, 500);
-        //The passwordText will be an empty field and will have a range of allowed characters.
-        passwordText.textProperty().addListener(this);
-        addTextLimiter(passwordText, 500);
+            showPasswordButton.setOnAction(this::passwordButtonAction);
+            signUpLink.setOnAction(this::signUpClicked);
+            signInButton.setOnAction(this::signInButtonAction);
 
-        if (signUpUser != null) {
-            usernameText.setText(signUpUser.getEmail());
+            //SignInButton from the window is disable
+            signInButton.disableProperty().set(true);
+            //The signInButton button will be set as the default window button
+            signInButton.setDefaultButton(true);
+
+            stage.show();
+        } catch (Exception ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, "Inicialize error" + ex.getMessage());
         }
-
-        showPasswordButton.setOnAction(this::passwordButtonAction);
-        signUpLink.setOnAction(this::signUpClicked);
-        signInButton.setOnAction(this::signInButtonAction);
-
-        //SignInButton from the window is disable
-        signInButton.disableProperty().set(true);
-        //The signInButton button will be set as the default window button
-        signInButton.setDefaultButton(true);
-
-        stage.show();
     }
 
     /**

@@ -25,10 +25,11 @@ import src.UserAlreadyExistsException;
 
 /**
  *
- * @author javie
+ * @author Fran
  */
 public class RegistrableImplementation implements Registrable{
-
+// --- RegistrableImplementation Attributes ---
+    
     // DB Connection
     private Connection con;
     private PreparedStatement pstmt;
@@ -68,6 +69,9 @@ public class RegistrableImplementation implements Registrable{
     //User object
     private User us;
     
+    
+// --- Main RegistrableImplementation Methods ---
+    
     @Override
     public User SignIn(User user) throws ServerErrorException,AuthenticationException,TimeOutException{
         //Instanciamos los objetos necesarios(Connection,PreparedStatement,User,Pool...)
@@ -86,7 +90,7 @@ public class RegistrableImplementation implements Registrable{
     public User SignUp(User user) throws ServerErrorException,UserAlreadyExistsException,TimeOutException{
         //Se llama al pool y nos conectamos con la BD usando a con
         try{
-        //con=poolConnections.openConnection();
+            //con=poolConnections.openConnection();
             con=DriverManager.getConnection("", "", "");
             
          //Check if the user isn't registered in the db
@@ -101,15 +105,14 @@ public class RegistrableImplementation implements Registrable{
             }else{
                 throw new UserAlreadyExistsException();
             }
-            
         }catch(SQLException e){
-        
+            throw new ServerErrorException();
         }finally{
             //If nothing went wrong, we close the connection with the DB
             try {
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+                throw new ServerErrorException();
             }
         }
         
@@ -120,6 +123,7 @@ public class RegistrableImplementation implements Registrable{
     
     
     private void insertPartner(User u, Connection c){
+        //Split the us
             String[] addressU=u.getAddress().split(",");
             String zipU=addressU[0];
             String streetU=addressU[1];
