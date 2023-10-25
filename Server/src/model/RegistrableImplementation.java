@@ -147,7 +147,7 @@ public class RegistrableImplementation implements Registrable{
                 }
         }    
     }
-    private int getPartnerId(User u, Connection c){
+    private int getPartnerId(User u, Connection c) throws ServerErrorException{
         int idP=0;
         try {
             pstmt = c.prepareStatement(getPartnerIdStmt);
@@ -156,7 +156,7 @@ public class RegistrableImplementation implements Registrable{
             rset=pstmt.executeQuery();
             idP=rset.getInt("id");
         } catch (SQLException ex) {
-            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServerErrorException();
         } finally{
             try {
                 rset.close();
