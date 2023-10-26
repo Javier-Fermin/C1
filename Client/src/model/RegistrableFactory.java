@@ -1,16 +1,18 @@
 package model;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import src.Registrable;
+
 
 /**
- *
- * @author javie
+ * The RegistrableFactory class is responsible for creating instances of objects that implement the Registrable interface.
+ * @author Imanol
  */
 public class RegistrableFactory {
+    /**
+     * Creates and returns a new instance of an object that implements the Registrable interface.
+     *
+     * @return a Registrable object that can be used for registration purposes.
+     */
     public Registrable getRegistrable(){
         return new RegistrableImplementation();
     }
