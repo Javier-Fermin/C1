@@ -19,13 +19,16 @@ import threads.Worker;
  */
 public class Server {
     private final String PUERTO = ResourceBundle.getBundle("./resources/Properties.properties").getString("PORT");
+    private final String MAX_THREADS = ResourceBundle.getBundle("./resources/Properties.properties").getString("MAX_THREADS");
     private final RegistrableFactory factory = new RegistrableFactory();
+    private final Pool pool = new Pool();
+    private Integer threads = 0;
    
     public void iniciar() {
         ServerSocket server = null;
         Socket client = null;
-       
-        try {
+       while(true){
+           try {
             // creates a server socken in the given port
             server = new ServerSocket(Integer.parseInt(PUERTO));
             System.out.println("Waiting the client ...");
@@ -35,7 +38,12 @@ public class Server {
             /* then it creates a worker with the parameters of the factory 
             * to process the message
             */
-            Woker worker = new Worker(factory, client);
+            if(threads < Integer.parseInt(MAX_THREADS)){
+                Woker worker = new Worker(factory, client, pool);
+                threads++;
+            }
+            
+            
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
@@ -52,6 +60,8 @@ public class Server {
             System.out.println("Fin servidor");
         }
     }
+       }
+        
 
     public static void main(String[] args) {
         Server s1 = new Server();
