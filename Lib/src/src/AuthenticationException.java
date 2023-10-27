@@ -1,3 +1,5 @@
+package src;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,28 +10,28 @@
  *
  * @author javie
  */
-public class ServerErrorException extends Exception{
-    public ServerErrorException() {
+public class AuthenticationException extends Exception{
+    public AuthenticationException() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-    public ServerErrorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public AuthenticationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
         // TODO Auto-generated constructor stub
     }
 
-    public ServerErrorException(String message, Throwable cause) {
+    public AuthenticationException(String message, Throwable cause) {
         super(message, cause);
         // TODO Auto-generated constructor stub
     }
 
-    public ServerErrorException(String message) {
+    public AuthenticationException(String message) {
         super(message);
         // TODO Auto-generated constructor stub
     }
 
-    public ServerErrorException(Throwable cause) {
+    public AuthenticationException(Throwable cause) {
         super(cause);
         // TODO Auto-generated constructor stub
     }

@@ -2,7 +2,6 @@ package model;
 
 import src.Registrable;
 
-
 /**
  * The RegistrableFactory class is responsible for creating instances of objects that implement the Registrable interface.
  * @author Imanol
@@ -14,6 +13,6 @@ public class RegistrableFactory {
      * @return a Registrable object that can be used for registration purposes.
      */
     public Registrable getRegistrable(){
-        return new RegistrableImplementation();
+        return (Registrable) new RegistrableImplementation();
     }
 }

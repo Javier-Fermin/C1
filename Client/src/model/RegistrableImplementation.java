@@ -1,5 +1,6 @@
 package model;
 
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,6 +10,7 @@ import java.util.Scanner;
 import src.AuthenticationException;
 import src.Message;
 import src.MessageType;
+import src.AuthenticationException;
 import src.Registrable;
 import src.ServerErrorException;
 import src.TimeOutException;
@@ -148,6 +150,4 @@ public class RegistrableImplementation implements Registrable{
         
         return user;
     }
-    
-    
 }
