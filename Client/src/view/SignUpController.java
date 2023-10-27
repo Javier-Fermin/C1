@@ -270,7 +270,7 @@ public class SignUpController {
             userErrorLabel.setVisible(false);
         } else {
             try {
-                if (userTextField.getText().length() > 500) {
+                if (userTextField.getText().length() > 500 || !userTextField.getText().matches("[a-zA-Z]")) {
                     throw new BadUserException();
                 }
             } catch (BadUserException e) {
@@ -363,7 +363,7 @@ public class SignUpController {
         } else {
             try {
                 if (addressTextField.getText().length() > 500
-                        || (!addressTextField.getText().matches("[0-9]\\h[a-zA-Z]\\h[a-zA-Z]\\h[a-zA-Z0-9]\\h[a-zA-Z0-9]"))
+                        || (!addressTextField.getText().matches("[0-9][0-9][0-9][0-9][0-9]\\h[a-zA-Z]"))
                         && !addressTextField.getText().isEmpty()) {
                     throw new BadAddressException();
                 } else {
@@ -401,6 +401,9 @@ public class SignUpController {
                         || !passwordTextField.getText().matches(".*[^a-zA-Z0-9].*"))
                         || (passwordTextField.getText().length() < 8 || passwordTextField.getText().length() > 500))
                         && !passwordTextField.getText().isEmpty()) {
+                    if(confirmPasswordErrorLabel.isVisible()){
+                        confirmPasswordErrorLabel.setVisible(false);
+                    }
                     throw new BadPasswordException();
                 }
             } catch (BadPasswordException e) {
@@ -429,7 +432,9 @@ public class SignUpController {
             confirmPasswordErrorLabel.setVisible(false);
         } else {
             try {
-                if (!confirmPasswordTextField.getText().equals(passwordTextField.getText())) {
+                if (!confirmPasswordTextField.getText().equals(passwordTextField.getText())&&
+                        !passwordErrorLabel.isVisible()&&
+                        !passwordTextField.getText().isEmpty()) {
                     throw new BadPasswordException();
                 }
             } catch (BadPasswordException e) {
