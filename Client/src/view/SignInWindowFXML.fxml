@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="signInWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="670.0" stylesheets="@../res/ClientCSS.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.SignInController">
+<Pane fx:id="signInWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="670.0" stylesheets="@../resources/css/ClientCSS.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.SignInController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f3031" height="350.0" layoutX="633.0" layoutY="265.0" rotate="29.1" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="decorativeBackground" width="10.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f3031" height="350.0" layoutX="625.0" layoutY="225.0" rotate="29.1" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="decorativeBackground" width="20.0" />
@@ -35,7 +35,7 @@
          <children>
             <ImageView fx:id="imageLabel" fitHeight="72.0" fitWidth="224.0" layoutX="18.0" layoutY="168.0" pickOnBounds="true">
                <image>
-                  <Image url="@../res/odoo_logo_inverted.png" />
+                  <Image url="@../resources/images/odoo_logo_inverted.png" />
                </image>
             </ImageView>
          </children>

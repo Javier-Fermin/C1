@@ -16,17 +16,16 @@ import src.TimeOutException;
  */
 public class TimeOutThread extends Thread {
 
-    @Override
-    public void run() {
+    public void sleepTimeOut() throws TimeOutException{
         try {
             TimeUnit.SECONDS.sleep(30);
-            try {
-                throw new TimeOutException();
-            } catch (TimeOutException e) {
-                Logger.getLogger(TimeOutThread.class.getName()).log(Level.FINE, null, e.getMessage());
-            }
+            throw new TimeOutException();
         } catch (InterruptedException ex) {
-            Logger.getLogger(TimeOutThread.class.getName()).log(Level.FINE, null, "All fine");
-        }
+            Logger.getLogger(TimeOutThread.class.getName()).log(Level.SEVERE, null, ex);
+        }   
+    }
+    
+    @Override
+    public void run() {   
     }
 }

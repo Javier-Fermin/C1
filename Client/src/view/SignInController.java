@@ -103,9 +103,9 @@ public class SignInController implements ChangeListener<String> {
     @FXML
     public void passwordButtonAction(ActionEvent event) {
         if (!showPasswordButton.isSelected()) {
-            showPasswordButton.setGraphic(new ImageView("/res/show.png"));
+            showPasswordButton.setGraphic(new ImageView("/resources/images/show.png"));
         } else {
-            showPasswordButton.setGraphic(new ImageView("/res/hide.png"));
+            showPasswordButton.setGraphic(new ImageView("/resources/images/hide.png"));
         }
     }
 
@@ -126,7 +126,7 @@ public class SignInController implements ChangeListener<String> {
                 registro = new RegistrableFactory().getRegistrable();
 
                 //The SignIn logic layer method will be used, defining the parameters with the content of usernameText and passwordText: 
-                user = registro.SignIn(new User("", passwordText.getText(), "", usernameText.getText(), ""));
+                user = registro.signIn(new User("", passwordText.getText(), "", usernameText.getText(), ""));
 
                 //If the user is null, the user will be informed with an authentication error message (AuthenticationException).
                 if (user != null) {
@@ -182,7 +182,7 @@ public class SignInController implements ChangeListener<String> {
 
             SignUpController cont = ((SignUpController) loader.getController());
 
-            cont.setSignUpStage(sStage);
+            cont.setStage(sStage);
             cont.initStage(root);
 
             stage.close();
@@ -210,11 +210,9 @@ public class SignInController implements ChangeListener<String> {
     public void initStage(Parent root, User signUpUser) {
         try {
             Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setOnShowing(this::handleWindowShowing);
             //Window no Resizable
             stage.setResizable(false);
-            stage.getIcons().add(new Image("/res/icon.png"));
+            stage.getIcons().add(new Image("/resources/images/icon.png"));
             //Insert “Odoo Sign In”.  tittle
             stage.setTitle("Odoo - SignIn");
 
@@ -263,8 +261,11 @@ public class SignInController implements ChangeListener<String> {
             //The signInButton button will be set as the default window button
             signInButton.setDefaultButton(true);
 
+            stage.setScene(scene);
+            stage.setOnShowing(this::handleWindowShowing);
             stage.show();
         } catch (Exception ex) {
+            ex.printStackTrace();
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, "Inicialize error" + ex.getMessage());
         }
     }
@@ -280,7 +281,7 @@ public class SignInController implements ChangeListener<String> {
      */
     private void handleWindowShowing(WindowEvent event) {
         showPasswordText.textProperty().bindBidirectional(passwordText.textProperty());
-        showPasswordButton.setGraphic(new ImageView("/res/show.png"));
+        showPasswordButton.setGraphic(new ImageView("/resources/images/show.png"));
         passwordText.visibleProperty().bind(showPasswordButton.selectedProperty().not());
         showPasswordText.visibleProperty().bind(showPasswordButton.selectedProperty());
     }

@@ -238,13 +238,13 @@ public class SignUpController {
         try {
             Stage sStage = new Stage();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignIn.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignInWindowFXML.fxml"));
             Parent rootSignIn = (Parent) loader.load();
 
             SignInController cont = ((SignInController) loader.getController());
 
-            //cont.setStage(sStage);
-            //cont.initStage(rootSignIn);
+            cont.setStage(sStage);
+            cont.initStage(rootSignIn,null);
             stage.close();
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);

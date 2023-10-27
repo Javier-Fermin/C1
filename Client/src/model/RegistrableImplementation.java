@@ -49,7 +49,7 @@ public class RegistrableImplementation implements Registrable{
      * @throws TimeOutException If a timeout occurs during the operation.
      */
     @Override
-    public User SignIn(User user) throws ServerErrorException,AuthenticationException,TimeOutException{
+    public User signIn(User user) throws ServerErrorException,AuthenticationException,TimeOutException{
         Socket client = null;
         ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
@@ -104,7 +104,7 @@ public class RegistrableImplementation implements Registrable{
      * @throws TimeOutException If a timeout occurs during the operation.
      */
     @Override
-    public User SignUp(User user) throws ServerErrorException,UserAlreadyExistsException,TimeOutException{
+    public User signUp(User user) throws ServerErrorException,UserAlreadyExistsException,TimeOutException{
         Socket client = null;
         ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
