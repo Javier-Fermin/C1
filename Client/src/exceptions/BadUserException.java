@@ -3,35 +3,37 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package exceptions;
 
 /**
  *
- * @author javie
+ * @author imape
  */
-public class UserAlreadyExistsException extends Exception{
-    public UserAlreadyExistsException() {
+public class BadUserException extends Exception{
+     public BadUserException() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public BadUserException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(String message, Throwable cause) {
+    public BadUserException(String message, Throwable cause) {
         super(message, cause);
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(String message) {
+    public BadUserException(String message) {
         super(message);
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(Throwable cause) {
+    public BadUserException(Throwable cause) {
         super(cause);
         // TODO Auto-generated constructor stub
     }
     
 }
+
