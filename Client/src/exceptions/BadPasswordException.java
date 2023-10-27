@@ -3,37 +3,37 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package exceptions;
 
 /**
- * An UserAlreadyExistsException is thrown when the user that is trying to signUp
- * already exists in the database
- * 
- * @author Javier, Fran, Imanol, Emil
+ *
+ * @author imape
  */
-public class UserAlreadyExistsException extends Exception{
-    public UserAlreadyExistsException() {
+public class BadPasswordException extends Exception{
+     public BadPasswordException() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public BadPasswordException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(String message, Throwable cause) {
+    public BadPasswordException(String message, Throwable cause) {
         super(message, cause);
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(String message) {
+    public BadPasswordException(String message) {
         super(message);
         // TODO Auto-generated constructor stub
     }
 
-    public UserAlreadyExistsException(Throwable cause) {
+    public BadPasswordException(Throwable cause) {
         super(cause);
         // TODO Auto-generated constructor stub
     }
     
 }
+
