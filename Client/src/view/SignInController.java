@@ -8,6 +8,7 @@ package view;
 /**
  * Sample Skeleton for 'SignInWindowFXML.fxml' Controller Class
  */
+import exceptions.BadEmailException;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -148,8 +149,12 @@ public class SignInController implements ChangeListener<String> {
                 }
                 // If the content does not follow an email address pattern, the user will be informed with an authentication error message (AuthenticationException).
             } else {
-                throw new AuthenticationException();
+                throw new BadEmailException();
             }
+
+        } catch (BadEmailException ex) {
+            new Alert(Alert.AlertType.ERROR, "Email error: Bad email format").showAndWait();
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, "Email error" + ex.getMessage());
         } catch (AuthenticationException ex) {
             new Alert(Alert.AlertType.ERROR, "Authentication error").showAndWait();
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, "Authentication error" + ex.getMessage());
