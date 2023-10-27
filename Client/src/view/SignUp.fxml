@@ -53,9 +53,9 @@
             </ImageView>
             <Label fx:id="mailErrorLabel" alignment="CENTER" layoutX="95.0" layoutY="190.0" styleClass="errorLabel" text="The mail is invalid." textFill="RED" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="160.0" />
             <Label fx:id="addressLabel" layoutX="10.0" layoutY="184.0" prefHeight="28.0" prefWidth="149.0" text="Direction" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="190.0" />
-            <TextField fx:id="addressTextField" layoutX="9.0" layoutY="212.0" prefHeight="28.0" prefWidth="398.0" promptText="48980 Genaro Oraá 24 2C" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="220.0">
+            <TextField fx:id="addressTextField" layoutX="9.0" layoutY="212.0" prefHeight="28.0" prefWidth="398.0" promptText="48980 Genaro Oraá 22 2C" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="220.0">
                <tooltip>
-                  <Tooltip text="-The zip must have 5 digits&#10;-The adress must contain the &#10;Street, number, and the floor&#10;or any relevant information" />
+                  <Tooltip text="-Postcode must be 5 digits&#10;-Address must include all residence&#10;details" />
                </tooltip></TextField>
             <ImageView fitHeight="26.0" fitWidth="20.0" layoutX="411.0" layoutY="133.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="410.0" AnchorPane.topAnchor="224.0">
                <image>
@@ -64,7 +64,7 @@
             </ImageView>
             <Label fx:id="addressErrorLabel" alignment="CENTER" layoutX="105.0" layoutY="200.0" styleClass="errorLabel" text="The address is invalid" textFill="RED" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="250.0" />
             <Label fx:id="passwordLabel" layoutX="9.0" layoutY="240.0" prefHeight="28.0" prefWidth="149.0" text="Password" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="280.0" />
-            <PasswordField fx:id="passwordTextField" layoutX="60.0" layoutY="312.0" prefHeight="28.0" prefWidth="206.0" promptText="Abcd*1234" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="310.0">
+            <PasswordField fx:id="passwordTextField" layoutX="11.0" layoutY="310.0" prefHeight="28.0" prefWidth="206.0" promptText="Abcd*1234" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="232.0" AnchorPane.topAnchor="310.0">
                <tooltip>
                   <Tooltip text="The password must have more than 8 &#10;characters and must contain:&#10;&#9;- A letter&#10;&#9;- A digit&#10;&#9;- A special character&#10;&#9;&#9;" />
                </tooltip></PasswordField>
@@ -74,7 +74,7 @@
                </image>
             </ImageView>
             <Label fx:id="confirmPasswordLabel" layoutX="216.0" layoutY="279.0" prefHeight="28.0" prefWidth="149.0" text="Repeat Password" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="280.0" />
-            <PasswordField fx:id="confirmPasswordTextField" layoutX="234.0" layoutY="310.0" prefHeight="28.0" prefWidth="187.0" promptText="Abcd*1234" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="234.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="310.0" />
+            <PasswordField fx:id="confirmPasswordTextField" layoutX="214.0" layoutY="312.0" prefHeight="28.0" prefWidth="187.0" promptText="Abcd*1234" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="310.0" />
             <ImageView fitHeight="26.0" fitWidth="20.0" layoutX="196.0" layoutY="323.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="411.0" AnchorPane.topAnchor="313.0">
                <image>
                   <Image url="@../resources/images/passwd.png" />

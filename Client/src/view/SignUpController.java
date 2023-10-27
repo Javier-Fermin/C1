@@ -5,28 +5,34 @@
  */
 package view;
 
-
 import exceptions.BadAddressException;
 import exceptions.BadEmailException;
 import exceptions.BadPasswordException;
 import exceptions.BadPhoneException;
 import exceptions.BadUserException;
+import exceptions.NotMatchingPasswordException;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * This is the class that is responsible of controlling the responses for the
@@ -35,6 +41,7 @@ import javafx.stage.Stage;
  * @author Javier, Imanol
  */
 public class SignUpController {
+
     /**
      * The stage to use by the controller
      */
@@ -162,16 +169,16 @@ public class SignUpController {
 
     /**
      * Setter for the stage
-     * 
-     * @param stage 
+     *
+     * @param stage
      */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     /**
      * The initialization of this window.
-     * 
+     *
      * @param root the DOM of the window
      */
     public void initStage(Parent root) {
@@ -215,23 +222,36 @@ public class SignUpController {
 
         //Hyperlink view change 
         signInHyperlink.setOnAction(this::handleHyperlinkSignInOnAction);
-        
+
+        //Confirmation is requested when leaving the window
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                //If you accept, you will exit the application.
+                //If you cancel, you will return to the initial window.
+                Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit?").showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    Platform.exit();
+                }
+                event.consume();
+            }
+        });
         stage.setScene(scene);
         stage.show();
     }
 
     /**
      * buttonSignUp action event handler
-     * 
+     *
      * @param event An ActionEvent object
      */
     public void handleButtonSignUpOnAction(Event event) {
         signUpButton.requestFocus();
     }
-    
+
     /**
      * hyperlinkSignIn action event handler
-     * 
+     *
      * @param event An ActionEvent object
      */
     public void handleHyperlinkSignInOnAction(Event event) {
@@ -244,7 +264,7 @@ public class SignUpController {
             SignInController cont = ((SignInController) loader.getController());
 
             cont.setStage(sStage);
-            cont.initStage(rootSignIn,null);
+            cont.initStage(rootSignIn, null);
             stage.close();
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
@@ -253,7 +273,7 @@ public class SignUpController {
 
     /**
      * userTextField focus property change handler
-     * 
+     *
      * @param observable the focused field property from userTextField
      * @param oldValue the old focus status
      * @param newValue the new focus status
@@ -270,7 +290,9 @@ public class SignUpController {
             userErrorLabel.setVisible(false);
         } else {
             try {
-                if (userTextField.getText().length() > 500 || !userTextField.getText().matches("[a-zA-Z]")) {
+                if ((userTextField.getText().length() > 500
+                        || !userTextField.getText().matches("[a-zA-Z]"))
+                        && !userTextField.getText().isEmpty()) {
                     throw new BadUserException();
                 }
             } catch (BadUserException e) {
@@ -284,7 +306,7 @@ public class SignUpController {
 
     /**
      * phoneTextField focus property change handler
-     * 
+     *
      * @param observable the focused field property from phoneTextField
      * @param oldValue the old focus status
      * @param newValue the new focus status
@@ -316,7 +338,7 @@ public class SignUpController {
 
     /**
      * mailTextField focus property change handler
-     * 
+     *
      * @param observable the focused field property from mailTextField
      * @param oldValue the old focus status
      * @param newValue the new focus status
@@ -347,7 +369,7 @@ public class SignUpController {
 
     /**
      * addressTextField focus property change handler
-     * 
+     *
      * @param observable the focused field property from addressTextField
      * @param oldValue the old focus status
      * @param newValue the new focus status
@@ -379,7 +401,7 @@ public class SignUpController {
 
     /**
      * passwordPasswordField focus property change handler
-     * 
+     *
      * @param observable the focused field property from passwordPasswordField
      * @param oldValue the old focus status
      * @param newValue the new focus status
@@ -394,31 +416,53 @@ public class SignUpController {
             passwordErrorLabel.setVisible(false);
         } else {
             try {
-
                 if (((!passwordTextField.getText().matches(".*[a-z].*")
                         || !passwordTextField.getText().matches(".*[A-Z].*")
                         || !passwordTextField.getText().matches(".*\\d.*")
                         || !passwordTextField.getText().matches(".*[^a-zA-Z0-9].*"))
-                        || (passwordTextField.getText().length() < 8 || passwordTextField.getText().length() > 500))
+                        || (passwordTextField.getText().length() < 8
+                        || passwordTextField.getText().length() > 500))
                         && !passwordTextField.getText().isEmpty()) {
-                    if(confirmPasswordErrorLabel.isVisible()){
+                    if (confirmPasswordErrorLabel.isVisible()) {
                         confirmPasswordErrorLabel.setVisible(false);
                     }
                     throw new BadPasswordException();
                 }
+                if ((!confirmPasswordTextField.getText().equals(passwordTextField.getText())
+                        && !confirmPasswordTextField.getText().isEmpty())
+                        && !passwordTextField.getText().isEmpty()) {
+                    throw new NotMatchingPasswordException();
+                }
+
             } catch (BadPasswordException e) {
                 passwordErrorLabel.setVisible(true);
                 passwordLabel.getStyleClass().add("errorLabel");
                 passwordTextField.getStyleClass().remove("textFieldWithIcon");
                 passwordTextField.getStyleClass().add("textFieldError");
+                if (confirmPasswordLabel.isVisible()) {
+                    confirmPasswordLabel.getStyleClass().remove("errorLabel");
+                    confirmPasswordTextField.getStyleClass().remove("textFieldError");
+                    confirmPasswordTextField.getStyleClass().add("textFieldWithIcon");
+                    confirmPasswordErrorLabel.setVisible(false);
+                }
+
+            } catch (NotMatchingPasswordException ex) {
+                if (!confirmPasswordTextField.getText().isEmpty()) {
+                    confirmPasswordErrorLabel.setVisible(true);
+                    confirmPasswordLabel.getStyleClass().add("errorLabel");
+                    confirmPasswordTextField.getStyleClass().remove("textFieldWithIcon");
+                    confirmPasswordTextField.getStyleClass().add("textFieldError");
+                }
+
             }
         }
     }
 
     /**
      * confirmPasswordPasswordField focus property change handler
-     * 
-     * @param observable the focused field property from confirmPasswordPasswordField
+     *
+     * @param observable the focused field property from
+     * confirmPasswordPasswordField
      * @param oldValue the old focus status
      * @param newValue the new focus status
      */
@@ -430,11 +474,14 @@ public class SignUpController {
             confirmPasswordTextField.getStyleClass().remove("textFieldError");
             confirmPasswordTextField.getStyleClass().add("textFieldWithIcon");
             confirmPasswordErrorLabel.setVisible(false);
+            confirmPasswordLabel.getStyleClass().remove("errorLabel");
+
         } else {
             try {
-                if (!confirmPasswordTextField.getText().equals(passwordTextField.getText())&&
-                        !passwordErrorLabel.isVisible()&&
-                        !passwordTextField.getText().isEmpty()) {
+                if (!confirmPasswordTextField.getText().equals(passwordTextField.getText())
+                        && !passwordErrorLabel.isVisible()
+                        && !passwordTextField.getText().isEmpty()
+                        && !confirmPasswordTextField.getText().isEmpty()) {
                     throw new BadPasswordException();
                 }
             } catch (BadPasswordException e) {
@@ -450,7 +497,7 @@ public class SignUpController {
 
     /**
      * A handler for the text property change
-     * 
+     *
      * @param observable the chagned field
      * @param oldValue the old value of the field
      * @param newValue the new value of the field

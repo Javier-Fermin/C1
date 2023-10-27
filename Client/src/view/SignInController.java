@@ -177,7 +177,7 @@ public class SignInController implements ChangeListener<String> {
         try {
             Stage sStage = new Stage();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignUP.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignUp.fxml"));
             Parent root = (Parent) loader.load();
 
             SignUpController cont = ((SignUpController) loader.getController());
