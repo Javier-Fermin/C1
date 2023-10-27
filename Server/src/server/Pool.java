@@ -9,6 +9,7 @@ import exceptions.PoolErrorException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 import java.util.Stack;
 
 /**
@@ -17,6 +18,10 @@ import java.util.Stack;
  * @author Javier
  */
 public class Pool {
+    private final String PASSWORD_DB = ResourceBundle.getBundle("resources.Properties").getString("PASSWORD_DB");
+    private final String USER_DB = ResourceBundle.getBundle("resources.Properties").getString("USER_DB");
+    private final String URL_DB = ResourceBundle.getBundle("resources.Properties").getString("URL_DB");
+    
     /**
      * The connections
      */
@@ -31,7 +36,7 @@ public class Pool {
     public synchronized Connection openConnection() throws PoolErrorException{
         try{
             if(connections.isEmpty()){
-                connections.push(DriverManager.getConnection(""));
+                connections.push(DriverManager.getConnection(URL_DB, USER_DB, PASSWORD_DB));
             }
             return (Connection) connections.pop();
         }catch(SQLException e){

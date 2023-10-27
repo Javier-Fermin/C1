@@ -7,7 +7,6 @@ package threads;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -68,16 +67,16 @@ public class Worker extends Thread{
                 //In case of a SIGNIN_REQUEST
                 case SIGNIN_REQUEST:
                         //Call the signIn method from the Registrable
-                        reg.SignIn(message.getUser());
+                        reg.signIn(message.getUser());
                         //If there was no error it will be send a SUCCESS_RESPONSE
                         message.setMessageType(MessageType.SUCCESS_RESPONSE);
                     break;
                 //In case of a SIGNIN_REQUEST
                 case SIGNUP_REQUEST:
-                    //Call the signUp method from the Registrable
-                    reg.SignUp(message.getUser());
-                    //If there was no error it will be send a SUCCESS_RESPONSE
-                    message.setMessageType(MessageType.SUCCESS_RESPONSE);
+                        //Call the signUp method from the Registrable
+                        reg.signUp(message.getUser());
+                        //If there was no error it will be send a SUCCESS_RESPONSE
+                        message.setMessageType(MessageType.SUCCESS_RESPONSE);
                     break;
             }
         //If there was any kind of exception it would be catched and then the

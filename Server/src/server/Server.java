@@ -3,13 +3,9 @@ package server;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.RegistrableFactory;
 //import threads.WaitToStopThread;
 import threads.Worker;
@@ -22,17 +18,17 @@ import threads.Worker;
  */
 public class Server {
 
-    private final String PUERTO = ResourceBundle.getBundle("./resources/Properties.properties").getString("PORT");
-    private final String MAX_THREADS = ResourceBundle.getBundle("./resources/Properties.properties").getString("MAX_THREADS");
+    private final String PUERTO = ResourceBundle.getBundle("resources.Properties").getString("PORT");
+    private final String MAX_THREADS = ResourceBundle.getBundle("resources.Properties").getString("MAX_THREADS");
     private final RegistrableFactory factory = new RegistrableFactory();
     
-    private final Integer LOCAL_PORT_SSH_TUNNEL = Integer.parseInt(ResourceBundle.getBundle("./resources/Properties.properties").getString("LOCAL_PORT_SSH_TUNNEL"));
-    private final Integer REMOTE_PORT_SSH_TUNNEL = Integer.parseInt(ResourceBundle.getBundle("./resources/Properties.properties").getString("REMOTE_PORT_SSH_TUNNEL"));
-    private final String REMOTE_IP_SSH_TUNNEL = ResourceBundle.getBundle("./resources/Properties.properties").getString("REMOTE_IP_SSH_TUNNEL");
-    private final Integer PORT_SSH_CONNECTION = Integer.parseInt(ResourceBundle.getBundle("./resources/Properties.properties").getString("PORT_SSH_CONNECTION"));
-    private final String IP_SSH_CONNECTION = ResourceBundle.getBundle("./resources/Properties.properties").getString("IP_SSH_CONNECTION");
-    private final String USER_SSH_CONNECTION = ResourceBundle.getBundle("./resources/Properties.properties").getString("USER_SSH_CONNECTION");
-    private final String PASSWD_SSH_CONNECTION = ResourceBundle.getBundle("./resources/Properties.properties").getString("PASSWD_SSH_CONNECTION");
+    private final Integer LOCAL_PORT_SSH_TUNNEL = Integer.parseInt(ResourceBundle.getBundle("resources.Properties").getString("LOCAL_PORT_SSH_TUNNEL"));
+    private final Integer REMOTE_PORT_SSH_TUNNEL = Integer.parseInt(ResourceBundle.getBundle("resources.Properties").getString("REMOTE_PORT_SSH_TUNNEL"));
+    private final String REMOTE_IP_SSH_TUNNEL = ResourceBundle.getBundle("resources.Properties").getString("REMOTE_IP_SSH_TUNNEL");
+    private final Integer PORT_SSH_CONNECTION = Integer.parseInt(ResourceBundle.getBundle("resources.Properties").getString("PORT_SSH_CONNECTION"));
+    private final String IP_SSH_CONNECTION = ResourceBundle.getBundle("resources.Properties").getString("IP_SSH_CONNECTION");
+    private final String USER_SSH_CONNECTION = ResourceBundle.getBundle("resources.Properties").getString("USER_SSH_CONNECTION");
+    private final String PASSWD_SSH_CONNECTION = ResourceBundle.getBundle("resources.Properties").getString("PASSWD_SSH_CONNECTION");
 
     
     private final Pool pool = new Pool();

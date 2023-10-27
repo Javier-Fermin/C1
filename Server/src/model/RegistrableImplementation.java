@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.PoolErrorException;
 import src.AuthenticationException;
 import src.Registrable;
 import src.ServerErrorException;
@@ -38,7 +39,7 @@ public class RegistrableImplementation implements Registrable {
     private Connection con;
     private PreparedStatement pstmt;
     private ResultSet rset;
-    private Pool poolConnections;
+    private Pool pool;
 
     //Postgres sentences that we are going to use
     private final String signInStmt = "SELECT P.name, U.password, P.phone, U.login, P.zip ,P.city ,P.street "
@@ -72,7 +73,7 @@ public class RegistrableImplementation implements Registrable {
       private User us;
 
     public RegistrableImplementation(Pool poolConnections) {
-        this.poolConnections = poolConnections;
+        this.pool = poolConnections;
     }
 
     /**
@@ -88,15 +89,10 @@ public class RegistrableImplementation implements Registrable {
      * @throws TimeOutException
      */
     @Override
-    public User SignIn(User user) throws ServerErrorException, AuthenticationException, TimeOutException {
+    public User signIn(User user) throws ServerErrorException, AuthenticationException, TimeOutException {
         //Instanciamos los objetos necesarios(Connection,PreparedStatement,User,Pool...)
         try {
-            /**
-             * DESCOMENTAR
-             *
-             * get connection from pool
-             */
-            //con = poolConnections.openConnection();
+            con = pool.openConnection();
             //connection savepoint
             con.setSavepoint();
             con.setAutoCommit(false);
@@ -128,24 +124,26 @@ public class RegistrableImplementation implements Registrable {
             //Return Connetion to pool
             Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.INFO, null, "Close connection and commit connection");
             con.commit();
-            /**
-             * DESCOMENTAR pool.returnConnection(con);
-             */
+            pool.closeConnection(con);
+             
         } catch (AuthenticationException ae) {
             Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, "Authentication error" + ae.getMessage());
         } catch (SQLException ex) {
             Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, "SQL error" + ex.getMessage());
         } catch (ServerErrorException se) {
             Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, "Server Error" + se.getMessage());
+        } catch (PoolErrorException ex) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         }
+        return user;
     }
 
-    public User SignUp(User user) throws ServerErrorException, UserAlreadyExistsException, TimeOutException {
+    @Override
+    public User signUp(User user) throws ServerErrorException, UserAlreadyExistsException, TimeOutException {
         //Se llama al pool y nos conectamos con la BD usando a con
         try {
-            //con=poolConnections.openConnection();
-            con = DriverManager.getConnection("", "", "");
-
+            con=pool.openConnection();
+            
             //Check if the user isn't registered in the db
             if (!isUserRegistered(user, con)) {
                 //Execute all the needed methods to insert all the data inside of the required postgresql tables
@@ -158,7 +156,7 @@ public class RegistrableImplementation implements Registrable {
             } else {
                 throw new UserAlreadyExistsException();
             }
-        } catch (SQLException e) {
+        } catch (PoolErrorException e) {
             throw new ServerErrorException();
         } finally {
             //If nothing went wrong, we close the connection with the DB
@@ -342,8 +340,6 @@ public class RegistrableImplementation implements Registrable {
                 throw new ServerErrorException();
             }
         }
-
-        return user;
     }
 
     /***
