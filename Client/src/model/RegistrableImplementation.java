@@ -28,5 +28,4 @@ public class RegistrableImplementation implements Registrable{
     public User SignUp(User user) throws ServerErrorException,UserAlreadyExistsException,TimeOutException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 }
