@@ -1,0 +1,22 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 16-oct-2023, 20:22:29
+    Author     : javie
+*/
+
+.decorativeBackground{
+    -fx-fill: #7c7bae;
+    -fx-background-color:  #7c7bae;
+}
+
+.textFieldWithIcon{
+    -fx-padding: 0px 30px 0px 5px;
+}
+
+.errorLabel{
+    -fx-font-weight: bold;
+    -fx-text-fill: #d83a47;
+}
