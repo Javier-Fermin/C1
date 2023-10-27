@@ -7,8 +7,10 @@ package src;
  */
 
 /**
- *
- * @author javie
+ * This enum is used to manage the requests and responses between Client and Server
+ * applications
+ * 
+ * @author Javier, Emil, Fran, Imanol
  */
 public enum MessageType {
     SIGNIN_REQUEST,
