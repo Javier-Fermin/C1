@@ -1,39 +1,39 @@
-package src;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package exceptions;
 
 /**
  *
- * @author javie
+ * @author imape
  */
-public class AuthenticationException extends Exception{
-    public AuthenticationException() {
+public class BadUserException extends Exception{
+     public BadUserException() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-    public AuthenticationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public BadUserException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
         // TODO Auto-generated constructor stub
     }
 
-    public AuthenticationException(String message, Throwable cause) {
+    public BadUserException(String message, Throwable cause) {
         super(message, cause);
         // TODO Auto-generated constructor stub
     }
 
-    public AuthenticationException(String message) {
+    public BadUserException(String message) {
         super(message);
         // TODO Auto-generated constructor stub
     }
 
-    public AuthenticationException(Throwable cause) {
+    public BadUserException(Throwable cause) {
         super(cause);
         // TODO Auto-generated constructor stub
     }
     
 }
+

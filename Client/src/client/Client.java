@@ -5,6 +5,7 @@
  */
 package client;
 
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,7 +17,8 @@ import view.SignInController;
  * 
  * @author Fran
  */
-public class Client extends Application {
+
+public class Client extends javafx.application.Application{
 
     @Override
     public void start(Stage stage) throws Exception {
