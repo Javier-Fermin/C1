@@ -7,8 +7,10 @@ package src;
  */
 
 /**
- *
- * @author javie
+ * An UserAlreadyExistsException is thrown when the user that is trying to signUp
+ * already exists in the database
+ * 
+ * @author Javier, Fran, Imanol, Emil
  */
 public class UserAlreadyExistsException extends Exception{
     public UserAlreadyExistsException() {
