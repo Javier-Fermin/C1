@@ -1,12 +1,19 @@
 package model;
 
+import exceptions.PoolErrorException;
+import src.AuthenticationException;
+import src.Registrable;
+import src.ServerErrorException;
+import src.TimeOutException;
+import src.User;
+import src.UserAlreadyExistsException;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +30,7 @@ import src.UserAlreadyExistsException;
 
 /**
  *
- * @author Fran
+ * @author javie
  */
 public class RegistrableImplementation implements Registrable {
 // --- RegistrableImplementation Attributes ---
@@ -32,7 +39,7 @@ public class RegistrableImplementation implements Registrable {
     private Connection con;
     private PreparedStatement pstmt;
     private ResultSet rset;
-    private Pool poolConnections = new Pool();
+    private Pool pool;
 
     //Postgres sentences that we are going to use
     private final String signInStmt = "SELECT P.name, U.password, P.phone, U.login, P.zip ,P.city ,P.street "
@@ -46,7 +53,7 @@ public class RegistrableImplementation implements Registrable {
     private final String insertPartnerStmt = "INSERT INTO public.res_partner"
             + "(company_id, name, street, zip, email, phone, active) "
             + "VALUES ('1', ?, ?, ?, ?, ?, true)";
-
+  
     private final String getPartnerIdStmt = "SELECT id "
             + "FROM public.res_partner "
             + "WHERE email=?";
@@ -63,18 +70,10 @@ public class RegistrableImplementation implements Registrable {
             + "(cid, user_id) "
             + "VALUES ('1', ?)";
 
-    //User object
-    private User us;
+      private User us;
 
-// --- Main RegistrableImplementation Methods ---
-    @Override
-    public User SignIn(User user) throws ServerErrorException, AuthenticationException, TimeOutException {
-        //Instanciamos los objetos necesarios(Connection,PreparedStatement,User,Pool...)
-        us = new User();
-
-        //Se llama al pool y nos conectamos a la BD de odoo-postgresql
-        //
-        return us;
+    public RegistrableImplementation(Pool poolConnections) {
+        this.pool = poolConnections;
     }
 
     /**
@@ -90,12 +89,61 @@ public class RegistrableImplementation implements Registrable {
      * @throws TimeOutException
      */
     @Override
-    public User SignUp(User user) throws ServerErrorException, UserAlreadyExistsException, TimeOutException {
+    public User signIn(User user) throws ServerErrorException, AuthenticationException, TimeOutException {
+        //Instanciamos los objetos necesarios(Connection,PreparedStatement,User,Pool...)
+        try {
+            con = pool.openConnection();
+            //connection savepoint
+            con.setSavepoint();
+            con.setAutoCommit(false);
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.INFO, null, "Open connection");
+            //Find user if already exist
+
+            pstmt = con.prepareStatement(getPartnerIdStmt);
+            pstmt.setString(1, user.getEmail());
+            rset = pstmt.executeQuery();
+            if (rset.next()) {
+                //Connection rollback
+                con.rollback();
+                throw new ServerErrorException();
+            } else {
+                //Try to sign up into server
+                pstmt = con.prepareStatement(signInStmt);
+                pstmt.setString(1, user.getEmail());
+                pstmt.setString(2, user.getPasswd());
+                rset = pstmt.executeQuery();
+                if (!rset.next()) {
+                    //Connection rollback
+                    con.rollback();
+                    throw new AuthenticationException();
+                } else {
+                    //Insert data to the user
+                    user = new User(rset.getString(1), rset.getString(2), rset.getString(3), rset.getString(4), rset.getString(5));
+                }
+            }
+            //Return Connetion to pool
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.INFO, null, "Close connection and commit connection");
+            con.commit();
+            pool.closeConnection(con);
+             
+        } catch (AuthenticationException ae) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, "Authentication error" + ae.getMessage());
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, "SQL error" + ex.getMessage());
+        } catch (ServerErrorException se) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, "Server Error" + se.getMessage());
+        } catch (PoolErrorException ex) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+        }
+        return user;
+    }
+
+    @Override
+    public User signUp(User user) throws ServerErrorException, UserAlreadyExistsException, TimeOutException {
         //Se llama al pool y nos conectamos con la BD usando a con
         try {
-            //con=poolConnections.openConnection();
-            con = DriverManager.getConnection("", "", "");
-
+            con=pool.openConnection();
+            
             //Check if the user isn't registered in the db
             if (!isUserRegistered(user, con)) {
                 //Execute all the needed methods to insert all the data inside of the required postgresql tables
@@ -108,7 +156,7 @@ public class RegistrableImplementation implements Registrable {
             } else {
                 throw new UserAlreadyExistsException();
             }
-        } catch (SQLException e) {
+        } catch (PoolErrorException e) {
             throw new ServerErrorException();
         } finally {
             //If nothing went wrong, we close the connection with the DB

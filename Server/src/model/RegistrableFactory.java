@@ -1,5 +1,6 @@
 package model;
 
+import server.Pool;
 import src.Registrable;
 
 /*
@@ -13,7 +14,7 @@ import src.Registrable;
  * @author javie
  */
 public class RegistrableFactory {
-    public Registrable getRegistrable(){
-        return new RegistrableImplementation();
+    public Registrable getRegistrable(Pool pool){
+        return new RegistrableImplementation(pool);
     }
 }
