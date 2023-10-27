@@ -5,6 +5,7 @@
  */
 package view;
 
+
 import exceptions.BadAddressException;
 import exceptions.BadEmailException;
 import exceptions.BadPasswordException;
@@ -13,9 +14,7 @@ import exceptions.BadUserException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +26,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 /**
@@ -37,7 +35,6 @@ import javafx.stage.Stage;
  * @author Javier, Imanol
  */
 public class SignUpController {
-
     /**
      * The stage to use by the controller
      */

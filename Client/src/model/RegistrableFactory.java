@@ -14,6 +14,6 @@ import src.Registrable;
  */
 public class RegistrableFactory {
     public Registrable getRegistrable(){
-        return new RegistrableImplementation();
+        return (Registrable) new RegistrableImplementation();
     }
 }
