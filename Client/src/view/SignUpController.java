@@ -247,6 +247,15 @@ public class SignUpController {
      */
     public void handleButtonSignUpOnAction(Event event) {
         signUpButton.requestFocus();
+
+        if (userErrorLabel.isVisible()
+                || phoneErrorLabel.isVisible()
+                || mailErrorLabel.isVisible()
+                || addressErrorLabel.isVisible()
+                || passwordErrorLabel.isVisible()
+                || confirmPasswordErrorLabel.isVisible()) {
+            event.consume();
+        }
     }
 
     /**
@@ -507,9 +516,7 @@ public class SignUpController {
             String newValue) {
         if (!newValue.isEmpty()
                 && !userTextField.getText().isEmpty()
-                && !phoneTextField.getText().isEmpty()
                 && !mailTextField.getText().isEmpty()
-                && !addressTextField.getText().isEmpty()
                 && !passwordTextField.getText().isEmpty()
                 && !confirmPasswordTextField.getText().isEmpty()) {
             signUpButton.disableProperty().set(false);
