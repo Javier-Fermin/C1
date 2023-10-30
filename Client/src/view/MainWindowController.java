@@ -45,7 +45,7 @@ public class MainWindowController {
     public void initStage(Parent root, User user) {
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.getIcons().add(new Image("/res/icon.png"));
+        stage.getIcons().add(new Image("/resources/images/icon.png"));
         stage.setTitle("Odoo - SignIn");
         stage.setResizable(false);
 

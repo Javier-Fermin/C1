@@ -12,7 +12,7 @@ public class RegistrableFactory {
      *
      * @return a Registrable object that can be used for registration purposes.
      */
-    public Registrable getRegistrable(){
+    public static Registrable getRegistrable(){
         return (Registrable) new RegistrableImplementation();
     }
 }
