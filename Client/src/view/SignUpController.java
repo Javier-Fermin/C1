@@ -27,6 +27,12 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import model.RegistrableFactory;
+import src.Registrable;
+import src.ServerErrorException;
+import src.TimeOutException;
+import src.User;
+import src.UserAlreadyExistsException;
 
 /**
  * This is the class that is responsible of controlling the responses for the
@@ -39,6 +45,7 @@ public class SignUpController {
      * The stage to use by the controller
      */
     private Stage stage;
+    private Registrable registrable = RegistrableFactory.getRegistrable();
 
     /**
      * Label for the userTextField
@@ -227,6 +234,21 @@ public class SignUpController {
      */
     public void handleButtonSignUpOnAction(Event event) {
         signUpButton.requestFocus();
+        try {
+            registrable.signUp(new User(
+                    userTextField.getText(),
+                    passwordTextField.getText(),
+                    phoneTextField.getText(),
+                    mailTextField.getText(),
+                    addressTextField.getText())
+            );
+        } catch (ServerErrorException ex) {
+            Logger.getLogger(SignUpController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UserAlreadyExistsException ex) {
+            Logger.getLogger(SignUpController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TimeOutException ex) {
+            Logger.getLogger(SignUpController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**

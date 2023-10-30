@@ -119,7 +119,7 @@ public class SignInController implements ChangeListener<String> {
     @FXML
     public void signInButtonAction(ActionEvent event) {
         try {
-            User user;
+            User user=null;
             // When pressed: The content of usernameText is validated: 
             if (isValid(usernameText.getText())) {
 

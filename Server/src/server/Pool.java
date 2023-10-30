@@ -25,7 +25,7 @@ public class Pool {
     /**
      * The connections
      */
-    private Stack connections;
+    private Stack connections = new Stack();
     
     /**
      * A method to open/get a connection

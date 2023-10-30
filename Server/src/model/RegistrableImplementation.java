@@ -17,6 +17,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import server.Pool;
@@ -46,9 +48,7 @@ public class RegistrableImplementation implements Registrable {
             + "FROM public.res_partner P, public.res_users U "
             + "WHERE U.partner_id=P.id AND U.login=? AND U.password=?";
 
-    private final String getUserStmt = "SELECT login "
-            + "FROM public.res_users "
-            + "WHERE login=?";
+    private final String getUserStmt = "SELECT login FROM public.res_users WHERE login=?";
 
     private final String insertPartnerStmt = "INSERT INTO public.res_partner"
             + "(company_id, name, street, zip, email, phone, active) "
@@ -70,7 +70,11 @@ public class RegistrableImplementation implements Registrable {
             + "(cid, user_id) "
             + "VALUES ('1', ?)";
 
-      private User us;
+    private final String insertRelUserGroupStmt = "INSERT INTO public.res_groups_users_rel "
+            + "(gid, uid) "
+            + "VALUES ('1', ?),('7', ?),('8', ?),('9', ?);";
+    
+    private User us;
 
     public RegistrableImplementation(Pool poolConnections) {
         this.pool = poolConnections;
@@ -93,46 +97,27 @@ public class RegistrableImplementation implements Registrable {
         //Instanciamos los objetos necesarios(Connection,PreparedStatement,User,Pool...)
         try {
             con = pool.openConnection();
-            //connection savepoint
-            con.setSavepoint();
-            con.setAutoCommit(false);
-            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.INFO, null, "Open connection");
             //Find user if already exist
 
-            pstmt = con.prepareStatement(getPartnerIdStmt);
+            //Try to sign in into server
+            pstmt = con.prepareStatement(signInStmt);
             pstmt.setString(1, user.getEmail());
+            pstmt.setString(2, user.getPasswd());
             rset = pstmt.executeQuery();
-            if (rset.next()) {
-                //Connection rollback
-                con.rollback();
-                throw new ServerErrorException();
+            if (!rset.next()) {
+                throw new AuthenticationException();
             } else {
-                //Try to sign up into server
-                pstmt = con.prepareStatement(signInStmt);
-                pstmt.setString(1, user.getEmail());
-                pstmt.setString(2, user.getPasswd());
-                rset = pstmt.executeQuery();
-                if (!rset.next()) {
-                    //Connection rollback
-                    con.rollback();
-                    throw new AuthenticationException();
-                } else {
-                    //Insert data to the user
-                    user = new User(rset.getString(1), rset.getString(2), rset.getString(3), rset.getString(4), rset.getString(5));
-                }
+                //Insert data to the user
+                user = new User(rset.getString(1), rset.getString(2), rset.getString(3), rset.getString(4), rset.getString(5));
             }
+            
             //Return Connetion to pool
-            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.INFO, null, "Close connection and commit connection");
-            con.commit();
             pool.closeConnection(con);
-             
-        } catch (AuthenticationException ae) {
-            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, "Authentication error" + ae.getMessage());
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, "SQL error" + ex.getMessage());
-        } catch (ServerErrorException se) {
-            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, "Server Error" + se.getMessage());
         } catch (PoolErrorException ex) {
+            ex.printStackTrace();
             Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         }
         return user;
@@ -143,7 +128,8 @@ public class RegistrableImplementation implements Registrable {
         //Se llama al pool y nos conectamos con la BD usando a con
         try {
             con=pool.openConnection();
-            
+            con.setAutoCommit(false);
+            con.setSavepoint();
             //Check if the user isn't registered in the db
             if (!isUserRegistered(user, con)) {
                 //Execute all the needed methods to insert all the data inside of the required postgresql tables
@@ -152,12 +138,17 @@ public class RegistrableImplementation implements Registrable {
                 insertUser(user, getPartnerId(user, con), con);
 
                 insertRelationUserCompany(user, getUserId(getPartnerId(user, con), con), con);
-
+                
+                insertRelationUserGroups(getUserId(getPartnerId(user, con), con), con);
+                
+                con.commit();
             } else {
                 throw new UserAlreadyExistsException();
             }
         } catch (PoolErrorException e) {
             throw new ServerErrorException();
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             //If nothing went wrong, we close the connection with the DB
             try {
@@ -179,11 +170,11 @@ public class RegistrableImplementation implements Registrable {
      * @param c 
      */
     
-    private void insertPartner(User u, Connection c) {
+    private void insertPartner(User u, Connection c){
         /***
          * Split the users address in two: zip and street
         */
-        String[] addressU = u.getAddress().split(",");
+        String[] addressU = u.getAddress().split(" ");
         String zipU = addressU[0];
         String streetU = addressU[1];
 
@@ -194,19 +185,25 @@ public class RegistrableImplementation implements Registrable {
              * Finally, we close the object.
              */
             pstmt = c.prepareStatement(insertPartnerStmt);
-            pstmt.setString(0, u.getName());
-            pstmt.setString(1, streetU);
-            pstmt.setString(2, zipU);
-            pstmt.setString(3, u.getEmail());
-            pstmt.setString(4, u.getPhone());
+            pstmt.setString(1, u.getName());
+            pstmt.setString(2, streetU);
+            pstmt.setString(3, zipU);
+            pstmt.setString(4, u.getEmail());
+            pstmt.setString(5, u.getPhone());
 
             pstmt.executeUpdate();
         } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 pstmt.close();
             } catch (SQLException ex) {
+                ex.printStackTrace();
                 Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -226,11 +223,18 @@ public class RegistrableImplementation implements Registrable {
         int idP = 0;
         try {
             pstmt = c.prepareStatement(getPartnerIdStmt);
-            pstmt.setString(0, u.getEmail());
+            pstmt.setString(1, u.getEmail());
 
             rset = pstmt.executeQuery();
-            idP = rset.getInt("id");
+            while(rset.next()){
+                idP = rset.getInt("id");
+            }
         } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             throw new ServerErrorException();
         } finally {
             try {
@@ -257,14 +261,19 @@ public class RegistrableImplementation implements Registrable {
     
     private void insertUser(User user, int partnerId, Connection con) throws ServerErrorException {
         try {
-            pstmt = con.prepareStatement(insertPartnerStmt);
+            pstmt = con.prepareStatement(insertUserStmt);
 
-            pstmt.setInt(0, partnerId);
-            pstmt.setString(1, user.getEmail());
-            pstmt.setString(2, user.getPasswd());
+            pstmt.setInt(1, partnerId);
+            pstmt.setString(2, user.getEmail());
+            pstmt.setString(3, user.getPasswd());
 
             pstmt.executeUpdate();
         } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServerErrorException();
         } finally {
@@ -292,11 +301,18 @@ public class RegistrableImplementation implements Registrable {
 
         try {
             pstmt = con.prepareStatement(getUserIdStmt);
-            pstmt.setInt(0, partnerId);
-
+            pstmt.setInt(1, partnerId);
+            
             rset = pstmt.executeQuery();
-            userId = rset.getInt("id");
+            while(rset.next()){
+                userId = rset.getInt("id");
+            }
         } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServerErrorException();
         } finally {
@@ -304,6 +320,7 @@ public class RegistrableImplementation implements Registrable {
                 rset.close();
                 pstmt.close();
             } catch (SQLException ex) {
+                ex.printStackTrace();
                 Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
                 throw new ServerErrorException();
             }
@@ -326,10 +343,53 @@ public class RegistrableImplementation implements Registrable {
         try {
             pstmt = con.prepareStatement(insertRelUserCompanyStmt);
 
-            pstmt.setInt(0, userId);
+            pstmt.setInt(1, userId);
 
             pstmt.executeUpdate();
         } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServerErrorException();
+        } finally {
+            try {
+                pstmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
+                throw new ServerErrorException();
+            }
+        }
+    }
+    
+    /***
+     * This method used by the SignUp method inserts the company's id and the  
+     * id of the User object and, that's sent by the getUserId method, 
+     * inside the database's res_company_users_rel table.
+     * @param user
+     * @param userId
+     * @param con
+     * @throws ServerErrorException 
+     */
+    
+    private void insertRelationUserGroups(int userId, Connection con) throws ServerErrorException {
+        try {
+            pstmt = con.prepareStatement(insertRelUserGroupStmt);
+            
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, userId);
+            pstmt.setInt(3, userId);
+            pstmt.setInt(4, userId);
+            
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServerErrorException();
         } finally {
@@ -357,13 +417,20 @@ public class RegistrableImplementation implements Registrable {
         boolean userRegistered = false;
         try {
             pstmt = con.prepareStatement(getUserStmt);
-            pstmt.setString(0, user.getEmail());
+            pstmt.setString(1, user.getEmail());
 
             rset = pstmt.executeQuery();
-            if (!rset.getString("login").isEmpty()) {
-                userRegistered = true;
+            while(rset.next()){
+                if (!rset.getString("login").isEmpty()) {
+                    userRegistered = true;
+                }
             }
         } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServerErrorException();
         } finally {
@@ -371,6 +438,7 @@ public class RegistrableImplementation implements Registrable {
                 rset.close();
                 pstmt.close();
             } catch (SQLException ex) {
+                ex.printStackTrace();
                 Logger.getLogger(RegistrableImplementation.class.getName()).log(Level.SEVERE, null, ex);
                 throw new ServerErrorException();
             }

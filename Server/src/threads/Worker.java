@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.RegistrableFactory;
 import server.Pool;
+import server.Server;
 import src.AuthenticationException;
 import src.Message;
 import src.MessageType;
@@ -35,7 +36,7 @@ public class Worker extends Thread{
     /**
      * The Socket used to communicate with the client
      */
-    private final Socket socket;
+    private Socket socket;
     
     /**
      * The Pool of connections
@@ -51,7 +52,7 @@ public class Worker extends Thread{
     @Override
     public void run(){
         Message message = null;
-        ObjectInputStream ois;
+        ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
         
         try{
@@ -97,6 +98,10 @@ public class Worker extends Thread{
             //Finally we would sent the message to the user
             try {
                 oos.writeObject(message);
+                ois.close();
+                oos.close();
+                socket.close();
+                Server.setThreads(Server.getThreads()-1);
             } catch (IOException ex) {
                 Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
             }

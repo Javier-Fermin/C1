@@ -1,5 +1,7 @@
 package src;
 
+import java.io.Serializable;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,7 +14,7 @@ package src;
  * 
  * @author Javier, Emil, Imanol, Fran
  */
-public class User {
+public class User implements Serializable{
    private String name,passwd,phone,email,address;
 
     public User() {

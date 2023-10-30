@@ -49,9 +49,9 @@ public class Server {
                     LOCAL_PORT_SSH_TUNNEL,
                     REMOTE_IP_SSH_TUNNEL,
                     REMOTE_PORT_SSH_TUNNEL);
+            server = new ServerSocket(Integer.parseInt(PUERTO));
             while (true) {
                 // creates a server socken in the given port
-                server = new ServerSocket(Integer.parseInt(PUERTO));
                 System.out.println("Waiting the client ...");
                 // waits until the client connects to the server
                 client = server.accept();
@@ -66,10 +66,12 @@ public class Server {
                 }
             }
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Error: " + e.getMessage());
-        } finally {
+        } /*finally {
             try {
                 if (server != null) {
                     server.close();
@@ -81,7 +83,7 @@ public class Server {
                 e.printStackTrace();
             }
             System.out.println("Fin servidor");
-        }
+        }*/
     }
 
     public static synchronized Integer getThreads() {
