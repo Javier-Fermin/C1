@@ -295,7 +295,7 @@ public class SignUpController {
             SignInController cont = ((SignInController) loader.getController());
 
             cont.setStage(sStage);
-            cont.initStage(rootSignIn, null);
+            cont.initStage(rootSignIn);
             stage.close();
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);

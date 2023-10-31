@@ -130,7 +130,7 @@ public class SignInController implements ChangeListener<String> {
                 user = registro.signIn(new User("", passwordText.getText(), "", usernameText.getText(), ""));
 
                 //If the user is null, the user will be informed with an authentication error message (AuthenticationException).
-                if (user != null) {
+                if (!user.getName().isEmpty()) {
 
                     //If no exception has occurred, the user is prompted, the window will be closed and the MainWindow window will be displayed.
                     Stage sStage = new Stage();
@@ -212,7 +212,7 @@ public class SignInController implements ChangeListener<String> {
      * @param root DOM of the window
      * @param signUpUser Collected user from SignUpWindow
      */
-    public void initStage(Parent root, User signUpUser) {
+    public void initStage(Parent root) {
         try {
             Scene scene = new Scene(root);
             //Window no Resizable
@@ -253,9 +253,7 @@ public class SignInController implements ChangeListener<String> {
             passwordText.textProperty().addListener(this);
             addTextLimiter(passwordText, 500);
 
-            if (signUpUser != null) {
-                usernameText.setText(signUpUser.getEmail());
-            }
+           
 
             showPasswordButton.setOnAction(this::passwordButtonAction);
             signUpLink.setOnAction(this::signUpClicked);

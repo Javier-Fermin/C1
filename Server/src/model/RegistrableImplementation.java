@@ -108,7 +108,7 @@ public class RegistrableImplementation implements Registrable {
                 throw new AuthenticationException();
             } else {
                 //Insert data to the user
-                user = new User(rset.getString(1), rset.getString(2), rset.getString(3), rset.getString(4), rset.getString(5));
+                user = new User(rset.getString("name"), rset.getString("password"), rset.getString("phone"), rset.getString("login"), null);
             }
             
             //Return Connetion to pool
