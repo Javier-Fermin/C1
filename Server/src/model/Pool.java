@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package server;
+package model;
 
 import exceptions.PoolErrorException;
 import java.sql.Connection;
@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is a pool of connections
@@ -22,10 +24,12 @@ public class Pool {
     private final String USER_DB = ResourceBundle.getBundle("resources.Properties").getString("USER_DB");
     private final String URL_DB = ResourceBundle.getBundle("resources.Properties").getString("URL_DB");
     
+    private static final Logger LOGGER = Logger.getLogger(Pool.class.getName());
+
     /**
      * The connections
      */
-    private Stack connections = new Stack();
+    private Stack<Connection> connections = new Stack();
     
     /**
      * A method to open/get a connection
@@ -33,13 +37,15 @@ public class Pool {
      * @return the desired connection
      * @throws PoolErrorException in case there is any problem opening the connection
      */
-    public synchronized Connection openConnection() throws PoolErrorException{
+    public synchronized Connection openGetConnection() throws PoolErrorException{
         try{
             if(connections.isEmpty()){
                 connections.push(DriverManager.getConnection(URL_DB, USER_DB, PASSWORD_DB));
             }
+            LOGGER.info("Connection requested.");
             return (Connection) connections.pop();
         }catch(SQLException e){
+            LOGGER.severe(e.getMessage());
             throw new PoolErrorException(e.getMessage());
         }
     }
@@ -49,7 +55,8 @@ public class Pool {
      * 
      * @param connection the connection to be saved in the pool
      */
-    public synchronized void closeConnection(Connection connection){
+    public synchronized void returnConnection(Connection connection){
+        LOGGER.info("Connection returned.");
         connections.push(connection);
     }
     
@@ -58,8 +65,14 @@ public class Pool {
      * 
      * @return True if the method cleared the whole stack False otherwise
      */
-    public boolean closeAll(){
-        connections.clear();
+    public boolean closeCOnnections(){
+        for (Connection connection : connections) {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                LOGGER.severe(ex.getMessage());
+            }
+        }
         return connections.isEmpty();
     }
 }

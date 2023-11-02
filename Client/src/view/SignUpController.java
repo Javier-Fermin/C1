@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -52,6 +53,10 @@ public class SignUpController {
      * The stage to use by the controller
      */
     private Stage stage;
+    
+    /**
+     * A implementation of the Registrable interface
+     */
     private Registrable registrable = RegistrableFactory.getRegistrable();
 
     /**
@@ -59,7 +64,7 @@ public class SignUpController {
      */
     @FXML
     private Label userLabel;
-
+    
     /**
      * TextField for the user's name
      */
@@ -175,6 +180,12 @@ public class SignUpController {
     private Button signUpButton;
 
     /**
+     * Button used to trigger the hyperlink with the default escape button
+     */
+    @FXML
+    private Button hyperlinkButton;
+
+    /**
      * Setter for the stage
      *
      * @param stage
@@ -210,6 +221,11 @@ public class SignUpController {
         signUpButton.disableProperty().set(true);
         //We set the handler of the button
         signUpButton.setOnAction(this::handleButtonSignUpOnAction);
+        //The default button is the signUp button
+        signUpButton.setDefaultButton(true);
+
+        //The default escape button is the hyperlink
+        hyperlinkButton.setCancelButton(true);
 
         //We set the textProperty listeners to all the fields
         userTextField.textProperty().addListener(this::handleTextPropertyChange);
@@ -248,11 +264,20 @@ public class SignUpController {
     }
 
     /**
+     * hyperlinkButton action event handler
+     *
+     * @param event An ActionEvent object
+     */
+    public void handleButtonHyperlink(ActionEvent event) {
+        signInHyperlink.fire();
+    }
+
+    /**
      * buttonSignUp action event handler
      *
      * @param event An ActionEvent object
      */
-    public void handleButtonSignUpOnAction(Event event) {
+    public void handleButtonSignUpOnAction(ActionEvent event) {
         signUpButton.requestFocus();
         if (userErrorLabel.isVisible()
                 || phoneErrorLabel.isVisible()
@@ -261,22 +286,22 @@ public class SignUpController {
                 || passwordErrorLabel.isVisible()
                 || confirmPasswordErrorLabel.isVisible()) {
             event.consume();
-        }else{
-           try {
-            registrable.signUp(new User(
-                    userTextField.getText(),
-                    passwordTextField.getText(),
-                    phoneTextField.getText(),
-                    mailTextField.getText(),
-                    addressTextField.getText())
-            );
-          } catch (ServerErrorException ex) {
-            Logger.getLogger(SignUpController.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (UserAlreadyExistsException ex) {
-            Logger.getLogger(SignUpController.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (TimeOutException ex) {
-            Logger.getLogger(SignUpController.class.getName()).log(Level.SEVERE, null, ex);
-          }
+        } else {
+            try {
+                registrable.signUp(new User(
+                        userTextField.getText(),
+                        passwordTextField.getText(),
+                        phoneTextField.getText(),
+                        mailTextField.getText(),
+                        addressTextField.getText())
+                );
+            } catch (ServerErrorException ex) {
+                new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+            } catch (UserAlreadyExistsException ex) {
+                new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+            } catch (TimeOutException ex) {
+                new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+            }
         }
     }
 
@@ -516,7 +541,6 @@ public class SignUpController {
                     throw new BadPasswordException();
                 }
             } catch (BadPasswordException e) {
-
                 confirmPasswordErrorLabel.setVisible(!passwordErrorLabel.isVisible());
                 confirmPasswordLabel.getStyleClass().add("errorLabel");
                 confirmPasswordTextField.getStyleClass().remove("textFieldWithIcon");
@@ -527,7 +551,10 @@ public class SignUpController {
     }
 
     /**
-     * A handler for the text property change
+     * A handler for the text property change, it checks if the userTextField,
+     * mailTextField, passwordTextField and confirmPasswordTextField are fullfilled,
+     * in case all of them are filled the button signUpButton will be enabled otherwise
+     * disabled.
      *
      * @param observable the chagned field
      * @param oldValue the old value of the field
