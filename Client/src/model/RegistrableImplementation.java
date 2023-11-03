@@ -114,11 +114,11 @@ public class RegistrableImplementation implements Registrable {
                 case SUCCESS_RESPONSE:
                     return msg.getUser();
                 case USER_ALREADY_EXISTS_EXCEPTION_RESPONSE:
-                    throw new UserAlreadyExistsException();
+                    throw new UserAlreadyExistsException("The user already exists.");
                 case SERVER_ERROR_EXCEPTION_RESPONSE:
-                    throw new ServerErrorException();
+                    throw new ServerErrorException("An unexpected error occur.");
                 case TIMEOUT_EXCEPTION_RESPONSE:
-                    throw new TimeOutException();
+                    throw new TimeOutException("Connection timmed out.");
             }
         } finally {
             try {
@@ -144,7 +144,7 @@ public class RegistrableImplementation implements Registrable {
         try {
             //creates client connection
             client = new Socket();
-            client.connect(socketAddress, 1000);
+            client.connect(socketAddress, 10000);
             //open writing and reading stream
             ois = new ObjectInputStream(client.getInputStream());
             oos = new ObjectOutputStream(client.getOutputStream());

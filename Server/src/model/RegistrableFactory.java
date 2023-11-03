@@ -1,6 +1,5 @@
 package model;
 
-import server.Pool;
 import src.Registrable;
 
 /*
@@ -10,11 +9,18 @@ import src.Registrable;
  */
 
 /**
- *
- * @author javie
+ * This class is a factory used to return implementations of the Registrable
+ * interface
+ * 
+ * @author Javier, Fran, Emil, Imanol
  */
 public class RegistrableFactory {
-    public Registrable getRegistrable(Pool pool){
-        return new RegistrableImplementation(pool);
+    /**
+     * This method returns a Registrable implementation
+     * 
+     * @return the desired implementation
+     */
+    public Registrable getRegistrable(){
+        return new RegistrableImplementation();
     }
 }

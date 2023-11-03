@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -54,6 +55,10 @@ public class SignUpController {
      * The stage to use by the controller
      */
     private Stage stage;
+    
+    /**
+     * A implementation of the Registrable interface
+     */
     private Registrable registrable = RegistrableFactory.getRegistrable();
 
     /**
@@ -61,7 +66,7 @@ public class SignUpController {
      */
     @FXML
     private Label userLabel;
-
+    
     /**
      * TextField for the user's name
      */
@@ -177,6 +182,12 @@ public class SignUpController {
     private Button signUpButton;
 
     /**
+     * Button used to trigger the hyperlink with the default escape button
+     */
+    @FXML
+    private Button hyperlinkButton;
+
+    /**
      * Setter for the stage
      *
      * @param stage
@@ -216,6 +227,11 @@ public class SignUpController {
         signUpButton.disableProperty().set(true);
         //We set the handler of the button
         signUpButton.setOnAction(this::handleButtonSignUpOnAction);
+        //The default button is the signUp button
+        signUpButton.setDefaultButton(true);
+
+        //The default escape button is the hyperlink
+        hyperlinkButton.setCancelButton(true);
 
         LOGGER.info("SignUp textFields add listeners.");
         //We set the textProperty listeners to all the fields
@@ -257,11 +273,20 @@ public class SignUpController {
     }
 
     /**
+     * hyperlinkButton action event handler
+     *
+     * @param event An ActionEvent object
+     */
+    public void handleButtonHyperlink(ActionEvent event) {
+        signInHyperlink.fire();
+    }
+
+    /**
      * buttonSignUp action event handler
      *
      * @param event An ActionEvent object
      */
-    public void handleButtonSignUpOnAction(Event event) {
+    public void handleButtonSignUpOnAction(ActionEvent event) {
         signUpButton.requestFocus();
         LOGGER.info("Check all labels are invisible.");
         if (userErrorLabel.isVisible()
@@ -283,11 +308,14 @@ public class SignUpController {
                 );
             } catch (ServerErrorException ex) {
                 LOGGER.severe("Server exception");
+                new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             } catch (UserAlreadyExistsException ex) {
                 LOGGER.severe("User already exist exception");
+                new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             } catch (TimeOutException ex) {
                 LOGGER.severe("Time out exception");
-            }
+                new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+            } 
         }
     }
 
@@ -557,7 +585,10 @@ public class SignUpController {
     }
 
     /**
-     * A handler for the text property change
+     * A handler for the text property change, it checks if the userTextField,
+     * mailTextField, passwordTextField and confirmPasswordTextField are fullfilled,
+     * in case all of them are filled the button signUpButton will be enabled otherwise
+     * disabled.
      *
      * @param observable the chagned field
      * @param oldValue the old value of the field
