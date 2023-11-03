@@ -62,9 +62,9 @@ public class MainWindowController {
 
         logOutButton.setOnAction(this::logOutAction);
         logOutButton.setDefaultButton(true);
-        
+
         welcomeLabel.setText("Welcome " + user.getName());
-        
+
         stage.show();
 
     }
@@ -72,18 +72,23 @@ public class MainWindowController {
     @FXML
     public void logOutAction(ActionEvent event) {
         try {
-            Stage sStage = new Stage();
+            Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to log out?").showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignInWindowFXML.fxml"));
-            Parent root = (Parent) loader.load();
+                Stage sStage = new Stage();
 
-            SignInController cont = ((SignInController) loader.getController());
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignInWindowFXML.fxml"));
+                Parent root = (Parent) loader.load();
 
-            cont.setStage(sStage);
-            cont.initStage(root);
-            
-            stage.close();
-            
+                SignInController cont = ((SignInController) loader.getController());
+
+                cont.setStage(sStage);
+                cont.initStage(root);
+
+                stage.close();
+
+            }
+            event.consume();
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }

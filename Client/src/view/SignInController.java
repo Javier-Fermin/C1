@@ -210,7 +210,6 @@ public class SignInController implements ChangeListener<String> {
      * Method that initialize SignInWindow
      *
      * @param root DOM of the window
-     * @param signUpUser Collected user from SignUpWindow
      */
     public void initStage(Parent root) {
         try {
