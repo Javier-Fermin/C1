@@ -217,8 +217,33 @@ public class SignUpTest extends ApplicationTest {
         clickOn("#passwordTextField");
         write("123456a");
         clickOn("#confirmPasswordTextField");
-        verifyThat("#passwordErroLabel", isVisible());
+        verifyThat("#passwordErrorLabel", isVisible());
         clickOn("#passwordTextField");
+        eraseText(7);
+        write("abcd*1234");
+        clickOn("#confirmPasswordTextField");
+        verifyThat("#passwordErrorLabel", isVisible());
+        clickOn("#passwordTextField");
+        eraseText(9);
+        write("ABCD*1234");
+        clickOn("#confirmPasswordTextField");
+        verifyThat("#passwordErrorLabel", isVisible());
+             
+                
+                
+    }
+    
+    @Test
+    public void test9_confirmPasswordTextfieldError(){
+        clickOn("#signUpLink");
+        verifyThat("#confirmPasswordErrorLabel", isInvisible());
+        verifyThat("#passwordErrorLabel", isInvisible());
+        clickOn("#passwordTextField");
+        write("Abcd*1234");
+        clickOn("#confirmPasswordTextField");
+        write("Abcd*123");
+        clickOn("#passwordTextField");
+        verifyThat("#confirmPasswordErrorLabel", isVisible());
     }
     
     @Test
