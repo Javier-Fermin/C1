@@ -336,7 +336,7 @@ public class SignUpController {
             LOGGER.info("Check values to userTextField has less than 500 characters");
             try {
                 if ((userTextField.getText().length() > 500
-                        || !userTextField.getText().matches("[a-zA-Z]"))
+                        || !userTextField.getText().matches("[a-zA-Z]+"))
                         && !userTextField.getText().isEmpty()) {
                     throw new BadUserException();
                 }
@@ -439,7 +439,7 @@ public class SignUpController {
             try {
                 LOGGER.info("Check values to addressTextField has less than 500 characters and has a correct format");
                 if (addressTextField.getText().length() > 500
-                        || (!addressTextField.getText().matches("[0-9][0-9][0-9][0-9][0-9]\\h[a-zA-Z]"))
+                        || (!addressTextField.getText().matches("[0-9][0-9][0-9][0-9][0-9]\\h[[a-zA-Z0-9]||\\h]+"))
                         && !addressTextField.getText().isEmpty()) {
                     throw new BadAddressException();
                 } else {
