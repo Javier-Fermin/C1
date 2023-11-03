@@ -23,11 +23,13 @@ public class Finisher extends Thread{
     public void run() {
         Scanner scanner = new Scanner(System.in);
         LOGGER.info("To stop the server press "+END_KEY);
-        String userInput = scanner.next();
-        if (userInput.equals(END_KEY)) {
+        String key = scanner.next();
+        if (key.equals(END_KEY)) {
             LOGGER.info(END_KEY+" has been pressed, shutting down the server.");
             //Close the connections of the pool
-            RegistrableImplementation.getPool().closeCOnnections();
+            if(RegistrableImplementation.getPool()!=null){
+                RegistrableImplementation.getPool().closeCOnnections();
+            }
             exit(0);
         }
     }

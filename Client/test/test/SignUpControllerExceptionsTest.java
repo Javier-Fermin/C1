@@ -10,7 +10,8 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 
 /**
- *
+ * 
+ * 
  * @author Javier
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)

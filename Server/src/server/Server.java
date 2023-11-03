@@ -1,7 +1,5 @@
 package server;
 
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -49,8 +47,8 @@ public class Server {
                  */
                 if (threads < Integer.parseInt(MAX_THREADS)) {
                     Worker worker = new Worker(factory, client);
-                    worker.run();
                     LOGGER.info("Worker started for the client");
+                    worker.run();
                     threads++;
                 }else{
                     LOGGER.severe("Max connections reached, responding the client");
