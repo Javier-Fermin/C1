@@ -80,18 +80,16 @@ public class RegistrableImplementation implements Registrable {
         this.pool = poolConnections;
     }
 
-    /**
-     * *
-     * This method get a User object and insert it inside multiple tables inside
-     * the PostgreSQL database, using various methods in the process and a Pool
-     * object to make the connection with the database.
-     *
-     * @param user
-     * @return User
-     * @throws ServerErrorException
-     * @throws UserAlreadyExistsException
-     * @throws TimeOutException
-     */
+   /**
+    * This method take a user with a login and password, check if user exist 
+    * in database, and if exist, return the user with all the data
+    * 
+    * @param user
+    * @return user
+    * @throws ServerErrorException
+    * @throws AuthenticationException
+    * @throws TimeOutException 
+    */
     @Override
     public User signIn(User user) throws ServerErrorException, AuthenticationException, TimeOutException {
         //Instanciamos los objetos necesarios(Connection,PreparedStatement,User,Pool...)
@@ -123,6 +121,18 @@ public class RegistrableImplementation implements Registrable {
         return user;
     }
 
+     /**
+     * *
+     * This method get a User object and insert it inside multiple tables inside
+     * the PostgreSQL database, using various methods in the process and a Pool
+     * object to make the connection with the database.
+     *
+     * @param user
+     * @return User
+     * @throws ServerErrorException
+     * @throws UserAlreadyExistsException
+     * @throws TimeOutException
+     */
     @Override
     public User signUp(User user) throws ServerErrorException, UserAlreadyExistsException, TimeOutException {
         //Se llama al pool y nos conectamos con la BD usando a con
