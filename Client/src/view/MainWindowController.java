@@ -113,7 +113,6 @@ public class MainWindowController {
                 stage.close();
             }
             event.consume();
-
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
