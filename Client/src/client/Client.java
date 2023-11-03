@@ -34,7 +34,7 @@ public class Client extends javafx.application.Application{
         //Set the stage
         cont.setStage(stage);
         //Initialize the window
-        cont.initStage(root, null);
+        cont.initStage(root);
     }
 
     /**

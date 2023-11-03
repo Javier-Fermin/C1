@@ -68,7 +68,7 @@ public class Worker extends Thread{
                 //In case of a SIGNIN_REQUEST
                 case SIGNIN_REQUEST:
                         //Call the signIn method from the Registrable
-                        reg.signIn(message.getUser());
+                        message.setUser(reg.signIn(message.getUser()));
                         //If there was no error it will be send a SUCCESS_RESPONSE
                         message.setMessageType(MessageType.SUCCESS_RESPONSE);
                     break;
