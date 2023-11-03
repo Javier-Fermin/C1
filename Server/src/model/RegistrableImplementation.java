@@ -109,6 +109,7 @@ public class RegistrableImplementation implements Registrable {
             pool = new Pool();
         }
     }
+
     /**
      * Getter for the pool attribute
      * 
@@ -149,7 +150,7 @@ public class RegistrableImplementation implements Registrable {
                 throw new AuthenticationException("The credentials for the user are wrong.");
             } else {
                 //Insert data to the user
-                user = new User(rset.getString(1), rset.getString(2), rset.getString(3), rset.getString(4), rset.getString(5));
+                user = new User(rset.getString("name"), rset.getString("password"), rset.getString("phone"), rset.getString("login"), null);
                 LOGGER.info("User found successfully.");
             }
         } catch (SQLTimeoutException ex) {

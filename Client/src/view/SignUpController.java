@@ -49,6 +49,8 @@ import src.UserAlreadyExistsException;
  */
 public class SignUpController {
 
+    protected static final Logger LOGGER = Logger.getLogger(SignUpController.class.getName());
+
     /**
      * The stage to use by the controller
      */
@@ -200,6 +202,8 @@ public class SignUpController {
      * @param root the DOM of the window
      */
     public void initStage(Parent root) {
+        LOGGER.info("Initializing SignUp.");
+
         Scene scene = new Scene(root);
 
         //Set the title of the window to "Odoo SignUp".
@@ -209,6 +213,7 @@ public class SignUpController {
         //Establish the icon of the window 
         stage.getIcons().add(new Image("/resources/images/odoo_icon.png"));
 
+        LOGGER.info("SignUp labels not visible.");
         //All the error labels are set to invisible
         userErrorLabel.setVisible(false);
         phoneErrorLabel.setVisible(false);
@@ -217,6 +222,7 @@ public class SignUpController {
         passwordErrorLabel.setVisible(false);
         confirmPasswordErrorLabel.setVisible(false);
 
+        LOGGER.info("SignUp button disable.");
         //The signUpButton is disabled
         signUpButton.disableProperty().set(true);
         //We set the handler of the button
@@ -227,6 +233,7 @@ public class SignUpController {
         //The default escape button is the hyperlink
         hyperlinkButton.setCancelButton(true);
 
+        LOGGER.info("SignUp textFields add listeners.");
         //We set the textProperty listeners to all the fields
         userTextField.textProperty().addListener(this::handleTextPropertyChange);
         phoneTextField.textProperty().addListener(this::handleTextPropertyChange);
@@ -243,9 +250,11 @@ public class SignUpController {
         passwordTextField.focusedProperty().addListener(this::handlePasswordFocusPropertyChange);
         confirmPasswordTextField.focusedProperty().addListener(this::handleConfirmPasswordFocusPropertyChange);
 
+        LOGGER.info("SignUp hyperlink set action.");
         //Hyperlink view change 
         signInHyperlink.setOnAction(this::handleHyperlinkSignInOnAction);
 
+        LOGGER.info("SignUp alert on close request.");
         //Confirmation is requested when leaving the window
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -279,6 +288,7 @@ public class SignUpController {
      */
     public void handleButtonSignUpOnAction(ActionEvent event) {
         signUpButton.requestFocus();
+        LOGGER.info("Check all labels are invisible.");
         if (userErrorLabel.isVisible()
                 || phoneErrorLabel.isVisible()
                 || mailErrorLabel.isVisible()
@@ -287,6 +297,7 @@ public class SignUpController {
                 || confirmPasswordErrorLabel.isVisible()) {
             event.consume();
         } else {
+            LOGGER.info("Execute signUp method.");
             try {
                 registrable.signUp(new User(
                         userTextField.getText(),
@@ -296,12 +307,15 @@ public class SignUpController {
                         addressTextField.getText())
                 );
             } catch (ServerErrorException ex) {
+                LOGGER.severe("Server exception");
                 new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             } catch (UserAlreadyExistsException ex) {
+                LOGGER.severe("User already exist exception");
                 new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             } catch (TimeOutException ex) {
+                LOGGER.severe("Time out exception");
                 new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
-            }
+            } 
         }
     }
 
@@ -311,6 +325,7 @@ public class SignUpController {
      * @param event An ActionEvent object
      */
     public void handleHyperlinkSignInOnAction(Event event) {
+        LOGGER.info("Changing from SignUp window to SignInWindow.");
         try {
             Stage sStage = new Stage();
 
@@ -320,7 +335,7 @@ public class SignUpController {
             SignInController cont = ((SignInController) loader.getController());
 
             cont.setStage(sStage);
-            cont.initStage(rootSignIn, null);
+            cont.initStage(rootSignIn);
             stage.close();
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
@@ -337,6 +352,7 @@ public class SignUpController {
     public void handleUserFocusPropertyChange(ObservableValue observable,
             Boolean oldValue,
             Boolean newValue) {
+        LOGGER.info("Check values to remove the userLabel");
         if (newValue) {
             userLabel.getStyleClass().remove("errorLabel");
             userTextField.getStyleClass().remove("textFieldError");
@@ -345,13 +361,15 @@ public class SignUpController {
             }
             userErrorLabel.setVisible(false);
         } else {
+            LOGGER.info("Check values to userTextField has less than 500 characters");
             try {
                 if ((userTextField.getText().length() > 500
-                        || !userTextField.getText().matches("[a-zA-Z]"))
+                        || !userTextField.getText().matches("[a-zA-Z]+"))
                         && !userTextField.getText().isEmpty()) {
                     throw new BadUserException();
                 }
             } catch (BadUserException e) {
+                LOGGER.severe("Error in usertextField, show the userErrorLabel");
                 userErrorLabel.setVisible(true);
                 userLabel.getStyleClass().add("errorLabel");
                 userTextField.getStyleClass().remove("textFieldWithIcon");
@@ -370,6 +388,7 @@ public class SignUpController {
     public void handlePhoneFocusPropertyChange(ObservableValue observable,
             Boolean oldValue,
             Boolean newValue) {
+        LOGGER.info("Check values to remove the phoneLabel");
         if (newValue) {
             phoneLabel.getStyleClass().remove("errorLabel");
             phoneTextField.getStyleClass().remove("textFieldError");
@@ -377,6 +396,7 @@ public class SignUpController {
             phoneErrorLabel.setVisible(false);
         } else {
             try {
+                LOGGER.info("Check values to phoneTextField has less than 20 characters and all characters are numbers");
                 if (!phoneTextField.getText().isEmpty()
                         && (phoneTextField.getText().length() > 20
                         || !(phoneTextField.getText().matches("[+][0-9]+")
@@ -384,6 +404,7 @@ public class SignUpController {
                     throw new BadPhoneException();
                 }
             } catch (BadPhoneException e) {
+                LOGGER.severe("Error in phoneTextField, show the phoneErrorLabel");
                 phoneErrorLabel.setVisible(true);
                 phoneLabel.getStyleClass().add("errorLabel");
                 phoneTextField.getStyleClass().remove("textFieldWithIcon");
@@ -402,6 +423,7 @@ public class SignUpController {
     public void handleMailFocusPropertyChange(ObservableValue observable,
             Boolean oldValue,
             Boolean newValue) {
+        LOGGER.info("Check values to remove the mailLabel");
         if (newValue) {
             mailLabel.getStyleClass().remove("errorLabel");
             mailTextField.getStyleClass().remove("textFieldError");
@@ -409,12 +431,14 @@ public class SignUpController {
             mailErrorLabel.setVisible(false);
         } else {
             try {
+                LOGGER.info("Check values to mailTextField has less than 500 characters and has a correct format");
                 if (!mailTextField.getText().isEmpty()
                         && (mailTextField.getText().length() > 500
                         || !mailTextField.getText().matches("[a-zA-Z0-9]+[@][a-zA-Z0-9]+[.][a-zA-Z0-9]+"))) {
                     throw new BadEmailException();
                 }
             } catch (BadEmailException e) {
+                LOGGER.severe("Error in mailTextField, show the mailErrorLabel");
                 mailErrorLabel.setVisible(true);
                 mailLabel.getStyleClass().add("errorLabel");
                 mailTextField.getStyleClass().remove("textFieldWithIcon");
@@ -433,6 +457,7 @@ public class SignUpController {
     public void handleAddressFocusPropertyChange(ObservableValue observable,
             Boolean oldValue,
             Boolean newValue) {
+        LOGGER.info("Check values to remove the addressLabel");
         if (newValue) {
             addressLabel.getStyleClass().remove("errorLabel");
             addressTextField.getStyleClass().remove("textFieldError");
@@ -440,13 +465,15 @@ public class SignUpController {
             addressErrorLabel.setVisible(false);
         } else {
             try {
+                LOGGER.info("Check values to addressTextField has less than 500 characters and has a correct format");
                 if (addressTextField.getText().length() > 500
-                        || (!addressTextField.getText().matches("[0-9][0-9][0-9][0-9][0-9]\\h[a-zA-Z]"))
+                        || (!addressTextField.getText().matches("[0-9][0-9][0-9][0-9][0-9]\\h[[a-zA-Z0-9]||\\h]+"))
                         && !addressTextField.getText().isEmpty()) {
                     throw new BadAddressException();
                 } else {
                 }
             } catch (BadAddressException e) {
+                LOGGER.severe("Error in addressTextField, show the addressErrorLabel");
                 addressErrorLabel.setVisible(true);
                 addressLabel.getStyleClass().add("errorLabel");
                 addressTextField.getStyleClass().remove("textFieldWithIcon");
@@ -465,6 +492,7 @@ public class SignUpController {
     public void handlePasswordFocusPropertyChange(ObservableValue observable,
             Boolean oldValue,
             Boolean newValue) {
+        LOGGER.info("Check values to remove the passwordLabel");
         if (newValue) {
             passwordLabel.getStyleClass().remove("errorLabel");
             passwordTextField.getStyleClass().remove("textFieldError");
@@ -472,6 +500,7 @@ public class SignUpController {
             passwordErrorLabel.setVisible(false);
         } else {
             try {
+                LOGGER.info("Check values to passwordTextField has less than 500 characters and has a correct format");
                 if (((!passwordTextField.getText().matches(".*[a-z].*")
                         || !passwordTextField.getText().matches(".*[A-Z].*")
                         || !passwordTextField.getText().matches(".*\\d.*")
@@ -484,6 +513,7 @@ public class SignUpController {
                     }
                     throw new BadPasswordException();
                 }
+                LOGGER.info("Check values from passwordTextField is equal to confirmPasswordTextField");
                 if ((!confirmPasswordTextField.getText().equals(passwordTextField.getText())
                         && !confirmPasswordTextField.getText().isEmpty())
                         && !passwordTextField.getText().isEmpty()) {
@@ -491,6 +521,7 @@ public class SignUpController {
                 }
 
             } catch (BadPasswordException e) {
+                LOGGER.severe("Value from passwordTextField have incorrect format, show passwordErrorLabel");
                 passwordErrorLabel.setVisible(true);
                 passwordLabel.getStyleClass().add("errorLabel");
                 passwordTextField.getStyleClass().remove("textFieldWithIcon");
@@ -503,6 +534,7 @@ public class SignUpController {
                 }
 
             } catch (NotMatchingPasswordException ex) {
+                LOGGER.severe("Values from passwordTextField and confirmPasswordTextField are diferent, show confirmPasswordErrorLabel");
                 if (!confirmPasswordTextField.getText().isEmpty()) {
                     confirmPasswordErrorLabel.setVisible(true);
                     confirmPasswordLabel.getStyleClass().add("errorLabel");
@@ -525,15 +557,16 @@ public class SignUpController {
     public void handleConfirmPasswordFocusPropertyChange(ObservableValue observable,
             Boolean oldValue,
             Boolean newValue) {
+        LOGGER.info("Check values to remove the confirmPasswordLabel");
         if (newValue) {
             confirmPasswordLabel.getStyleClass().remove("errorLabel");
             confirmPasswordTextField.getStyleClass().remove("textFieldError");
             confirmPasswordTextField.getStyleClass().add("textFieldWithIcon");
             confirmPasswordErrorLabel.setVisible(false);
             confirmPasswordLabel.getStyleClass().remove("errorLabel");
-
         } else {
             try {
+                LOGGER.info("Check values from confirmPasswordTextField is equal to passwordTextField");
                 if (!confirmPasswordTextField.getText().equals(passwordTextField.getText())
                         && !passwordErrorLabel.isVisible()
                         && !passwordTextField.getText().isEmpty()
@@ -541,6 +574,7 @@ public class SignUpController {
                     throw new BadPasswordException();
                 }
             } catch (BadPasswordException e) {
+                LOGGER.severe("Values from passwordTextField and confirmPasswordTextField are diferent, show confirmPasswordErrorLabel");
                 confirmPasswordErrorLabel.setVisible(!passwordErrorLabel.isVisible());
                 confirmPasswordLabel.getStyleClass().add("errorLabel");
                 confirmPasswordTextField.getStyleClass().remove("textFieldWithIcon");
@@ -563,6 +597,7 @@ public class SignUpController {
     public void handleTextPropertyChange(ObservableValue observable,
             String oldValue,
             String newValue) {
+        LOGGER.info("Enable signUpButton if the required fields contain info");
         if (!newValue.isEmpty()
                 && !userTextField.getText().isEmpty()
                 && !mailTextField.getText().isEmpty()

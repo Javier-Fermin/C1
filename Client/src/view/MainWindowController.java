@@ -23,12 +23,15 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import src.User;
+import static view.SignInController.LOGGER;
 
 /**
  *
  * @author javie
  */
 public class MainWindowController {
+
+    protected static final Logger LOGGER = Logger.getLogger(MainWindowController.class.getName());
 
     @FXML
     private Label welcomeLabel;
@@ -42,13 +45,23 @@ public class MainWindowController {
         this.stage = stage;
     }
 
+    /**
+     * Init method for MainWindow
+     *
+     * @param root
+     * @param user
+     */
     public void initStage(Parent root, User user) {
+        //Receives a User object from the SignInWindow window.
+        LOGGER.info("Init Main Window");
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.getIcons().add(new Image("/resources/images/icon.png"));
         stage.setTitle("Odoo - SignIn");
         stage.setResizable(false);
 
+        //The escape button by default closes the window.
+        LOGGER.info("If the window want to exit, alert to verify");
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
@@ -60,30 +73,46 @@ public class MainWindowController {
             }
         });
 
+        //The logOutButton button is displayed on the screen
+        LOGGER.info("Log Out settings");
         logOutButton.setOnAction(this::logOutAction);
+        //The logOutButton button will be the default window button.
         logOutButton.setDefaultButton(true);
-        
+
+        //A welcome message is displayed with the name of the User object
+        LOGGER.info("Set User name in Main window Welcome");
         welcomeLabel.setText("Welcome " + user.getName());
-        
+
         stage.show();
 
     }
 
+    /**
+     * Method for logOutButton If you accept, the MainWindow window will close
+     * and the SignInWindow window will open. If you cancel, you will return to
+     * the MainWindow window
+     *
+     * @param event
+     */
     @FXML
     public void logOutAction(ActionEvent event) {
         try {
-            Stage sStage = new Stage();
+            Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to log out?").showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                LOGGER.info("Go to SignIn Window");
+                Stage sStage = new Stage();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignInWindowFXML.fxml"));
-            Parent root = (Parent) loader.load();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignInWindowFXML.fxml"));
+                Parent root = (Parent) loader.load();
 
-            SignInController cont = ((SignInController) loader.getController());
+                SignInController cont = ((SignInController) loader.getController());
 
-            cont.setStage(sStage);
-            cont.initStage(root, null);
-            
-            stage.close();
-            
+                cont.setStage(sStage);
+                cont.initStage(root);
+
+                stage.close();
+            }
+            event.consume();
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
