@@ -12,7 +12,7 @@ import src.MessageType;
 import threads.Worker;
 import java.util.logging.Logger;
 import threads.Finisher;
-    
+
 /**
  * This class is the responsible of initialize the server with an open
  * connection and make aviable to exit the application
@@ -24,9 +24,9 @@ public class Server {
     private final String PUERTO = ResourceBundle.getBundle("resources.Properties").getString("PORT");
     private final String MAX_THREADS = ResourceBundle.getBundle("resources.Properties").getString("MAX_THREADS");
     private final RegistrableFactory factory = new RegistrableFactory();
-    
+
     private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
-    
+
     private static Integer threads = 0;
 
     public void iniciar() {
@@ -35,31 +35,40 @@ public class Server {
         try {
             // creates a server socket in the given port
             server = new ServerSocket(Integer.parseInt(PUERTO));
-            LOGGER.info("Server started");
+            LOGGER.info("Server started, it has a capacity for " + MAX_THREADS + " users");
             Finisher finisher = new Finisher();
             finisher.start();
             while (true) {
-                // waits until the client connects to the server
-                client = server.accept();
-                LOGGER.info("Client accepted");
-                /* then it creates a worker with the parameters of the factory 
+                try {
+                    // waits until the client connects to the server
+                    client = server.accept();
+                    LOGGER.info("Client accepted");
+                    /* then it creates a worker with the parameters of the factory 
                  * to process the message
-                 */
-                if (threads < Integer.parseInt(MAX_THREADS)) {
-                    Worker worker = new Worker(factory, client);
-                    LOGGER.info("Worker started for the client");
-                    worker.run();
-                    threads++;
-                }else{
-                    LOGGER.severe("Max connections reached, responding the client");
-                    ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
-                    Message message = (Message) ois.readObject();
-                    ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
-                    message.setMessageType(MessageType.SERVER_ERROR_EXCEPTION_RESPONSE);
-                    oos.writeObject(message);
-                    ois.close();
-                    oos.close();
-                    client.close();
+                     */
+                    if (threads < Integer.parseInt(MAX_THREADS)) {
+                        Worker worker = new Worker(factory, client);
+                        LOGGER.info("Worker started for the client");
+                        worker.run();
+                        threads++;
+                    } else {
+                        LOGGER.severe("Max connections reached, responding the client");
+                        ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
+                        LOGGER.info("Message read.");
+                        Message message = (Message) ois.readObject();
+                        ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
+                        message.setMessageType(MessageType.SERVER_ERROR_EXCEPTION_RESPONSE);
+                        LOGGER.info("Message sent.");
+                        oos.writeObject(message);
+                        LOGGER.info("Closing connection with the user.");
+                        ois.close();
+                        oos.close();
+                        client.close();
+                    }
+                } catch (IOException e) {
+                    LOGGER.severe(e.getMessage());
+                } catch (Exception e) {
+                    LOGGER.severe(e.getMessage());
                 }
             }
         } catch (IOException e) {
@@ -68,7 +77,7 @@ public class Server {
             LOGGER.severe(e.getMessage());
         }
     }
-    
+
     public static synchronized void minusThread() {
         LOGGER.info("A worker has ended.");
         threads--;

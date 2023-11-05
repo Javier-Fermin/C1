@@ -49,13 +49,16 @@ import src.UserAlreadyExistsException;
  */
 public class SignUpController {
 
+    /**
+     * A Logger for the logs
+     */
     protected static final Logger LOGGER = Logger.getLogger(SignUpController.class.getName());
 
     /**
      * The stage to use by the controller
      */
     private Stage stage;
-    
+
     /**
      * A implementation of the Registrable interface
      */
@@ -66,7 +69,7 @@ public class SignUpController {
      */
     @FXML
     private Label userLabel;
-    
+
     /**
      * TextField for the user's name
      */
@@ -315,7 +318,7 @@ public class SignUpController {
             } catch (TimeOutException ex) {
                 LOGGER.severe("Time out exception");
                 new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
-            } 
+            }
         }
     }
 
@@ -518,8 +521,16 @@ public class SignUpController {
                         && !confirmPasswordTextField.getText().isEmpty())
                         && !passwordTextField.getText().isEmpty()) {
                     throw new NotMatchingPasswordException();
+                } else {
+                    if (confirmPasswordTextField.isVisible()
+                            || confirmPasswordTextField.getStyleClass().contains("textFieldError")
+                            || confirmPasswordLabel.getStyleClass().contains("errorLabel")) {
+                        confirmPasswordLabel.getStyleClass().remove("errorLabel");
+                        confirmPasswordTextField.getStyleClass().remove("textFieldError");
+                        confirmPasswordTextField.getStyleClass().add("textFieldWithIcon");
+                        confirmPasswordErrorLabel.setVisible(false);
+                    }
                 }
-
             } catch (BadPasswordException e) {
                 LOGGER.severe("Value from passwordTextField have incorrect format, show passwordErrorLabel");
                 passwordErrorLabel.setVisible(true);
@@ -586,9 +597,9 @@ public class SignUpController {
 
     /**
      * A handler for the text property change, it checks if the userTextField,
-     * mailTextField, passwordTextField and confirmPasswordTextField are fullfilled,
-     * in case all of them are filled the button signUpButton will be enabled otherwise
-     * disabled.
+     * mailTextField, passwordTextField and confirmPasswordTextField are
+     * fullfilled, in case all of them are filled the button signUpButton will
+     * be enabled otherwise disabled.
      *
      * @param observable the chagned field
      * @param oldValue the old value of the field
@@ -597,14 +608,19 @@ public class SignUpController {
     public void handleTextPropertyChange(ObservableValue observable,
             String oldValue,
             String newValue) {
-        LOGGER.info("Enable signUpButton if the required fields contain info");
         if (!newValue.isEmpty()
                 && !userTextField.getText().isEmpty()
                 && !mailTextField.getText().isEmpty()
                 && !passwordTextField.getText().isEmpty()
                 && !confirmPasswordTextField.getText().isEmpty()) {
+            if(signUpButton.isDisabled()){
+                LOGGER.info("signUpButton enabled.");
+            }
             signUpButton.disableProperty().set(false);
         } else {
+            if(!signUpButton.isDisabled()){
+                LOGGER.info("signUpButton disabled.");
+            }
             signUpButton.disableProperty().set(true);
         }
     }

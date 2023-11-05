@@ -12,13 +12,21 @@ import java.util.logging.Logger;
 import model.RegistrableImplementation;
 
 /**
- *
- * @author javie
+ * A thread used to end the server when certain key is pressed
+ * 
+ * @author Javier
  */
 public class Finisher extends Thread{
+    /**
+     * The Logger for the logs
+     */
     private static final Logger LOGGER = Logger.getLogger(Finisher.class.getName());
+    /**
+     * The key to end the server application
+     */
     private final String END_KEY = ResourceBundle.getBundle("resources.Properties").getString("END_KEY");
 
+    
     @Override
     public void run() {
         Scanner scanner = new Scanner(System.in);
@@ -28,7 +36,7 @@ public class Finisher extends Thread{
             LOGGER.info(END_KEY+" has been pressed, shutting down the server.");
             //Close the connections of the pool
             if(RegistrableImplementation.getPool()!=null){
-                RegistrableImplementation.getPool().closeCOnnections();
+                RegistrableImplementation.getPool().closeConnections();
             }
             exit(0);
         }

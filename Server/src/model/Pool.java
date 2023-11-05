@@ -11,7 +11,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.Stack;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -20,10 +19,21 @@ import java.util.logging.Logger;
  * @author Javier
  */
 public class Pool {
+    /**
+     * Parameter with the password to access the database
+     */
     private final String PASSWORD_DB = ResourceBundle.getBundle("resources.Properties").getString("PASSWORD_DB");
+    /**
+     * Parameter with the user to access the database
+     */
     private final String USER_DB = ResourceBundle.getBundle("resources.Properties").getString("USER_DB");
+    /**
+     * Parameter with the url to access the database
+     */
     private final String URL_DB = ResourceBundle.getBundle("resources.Properties").getString("URL_DB");
-    
+    /**
+     * The Logger for the logs
+     */
     private static final Logger LOGGER = Logger.getLogger(Pool.class.getName());
 
     /**
@@ -40,6 +50,7 @@ public class Pool {
     public synchronized Connection openGetConnection() throws PoolErrorException{
         try{
             if(connections.isEmpty()){
+                LOGGER.info("Creating a new connection.");
                 connections.push(DriverManager.getConnection(URL_DB, USER_DB, PASSWORD_DB));
             }
             LOGGER.info("Connection requested.");
@@ -65,7 +76,7 @@ public class Pool {
      * 
      * @return True if the method cleared the whole stack False otherwise
      */
-    public boolean closeCOnnections(){
+    public boolean closeConnections(){
         for (Connection connection : connections) {
             try {
                 connection.close();

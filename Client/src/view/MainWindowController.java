@@ -7,7 +7,6 @@ package view;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,24 +22,41 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import src.User;
-import static view.SignInController.LOGGER;
 
 /**
- *
- * @author javie
+ * This is the class that is responsible of controlling the responses for the
+ * actions of the MainWindow.
+ * 
+ * @author Fran, Emil
  */
 public class MainWindowController {
-
+    /**
+     * The Logger for the logs
+     */
     protected static final Logger LOGGER = Logger.getLogger(MainWindowController.class.getName());
 
+    /**
+     * Label with fx id welcomeLabel
+     */
     @FXML
     private Label welcomeLabel;
 
+    /**
+     * Button with fx id logOutButton
+     */
     @FXML
     private Button logOutButton;
 
+    /**
+     * The window stage
+     */
     private Stage stage; //This window Stage
 
+    /**
+     * Setter for the window stage
+     * 
+     * @param stage the window stage to set
+     */
     public void setMainStage(Stage stage) {
         this.stage = stage;
     }
@@ -114,7 +130,7 @@ public class MainWindowController {
             }
             event.consume();
         } catch (IOException ex) {
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.severe(ex.getMessage());
         }
     }
 

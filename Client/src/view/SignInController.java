@@ -5,9 +5,6 @@
  */
 package view;
 
-/**
- * Sample Skeleton for 'SignInWindowFXML.fxml' Controller Class
- */
 import exceptions.BadEmailException;
 import java.io.IOException;
 import java.util.Optional;
@@ -45,7 +42,6 @@ import src.Registrable;
 import src.User;
 import src.ServerErrorException;
 import src.TimeOutException;
-import static view.SignUpController.LOGGER;
 
 /**
  * This is the class that is responsible of controlling the responses for the
@@ -55,47 +51,92 @@ import static view.SignUpController.LOGGER;
  */
 public class SignInController implements ChangeListener<String> {
 
+    /**
+     * The Logger for the logs
+     */
     protected static final Logger LOGGER = Logger.getLogger(SignInController.class.getName());
 
-    Registrable registro;
+    /**
+     * An object that implements the Registable interface
+     */
+    private Registrable registro;
 
+    /**
+     * The window stage
+     */
     private Stage stage; //This window Stage
 
+    /**
+     * signInWindow main Pane
+     */
     @FXML // fx:id="signInWindow"
-    private Pane signInWindow; // signInWindow main Pane
+    private Pane signInWindow;
 
+    /**
+     * Decoration view with iamge
+     */
     @FXML // fx:id="imageLabel"
-    private ImageView imageLabel; // Decoration view with iamge
+    private ImageView imageLabel;
 
+    /**
+     * LogIn label for the window
+     */
     @FXML // fx:id="logInLabel"
-    private Label logInLabel; // LogIn label for the window
+    private Label logInLabel;
 
+    /**
+     * Username label for the window
+     */
     @FXML // fx:id="usernameLabel"
-    private Label usernameLabel; //  Username label for the window
+    private Label usernameLabel;
 
+    /**
+     * Password label for the window
+     */
     @FXML // fx:id="passwordLabel"
-    private Label passwordLabel; // Password label for the window
+    private Label passwordLabel;
 
+    /**
+     * TextField to insert the username of the user
+     */
     @FXML // fx:id="usernameText"
-    private TextField usernameText; // TextField to insert the username of the user
+    private TextField usernameText;
 
+    /**
+     * PasswordField to insert the password
+     */
     @FXML // fx:id="passwordText"
-    private PasswordField passwordText; //PasswordField to insert the password
+    private PasswordField passwordText;
 
+    /**
+     * Button to SignIn
+     */
     @FXML // fx:id="signInButton"
-    private Button signInButton; // Button to SignIn
+    private Button signInButton;
 
+    /**
+     * signUpAccess label for the window
+     */
     @FXML // fx:id="signUpAccessLabel"
-    private Label signUpAccessLabel; // signUpAccess label for the window
+    private Label signUpAccessLabel;
 
+    /**
+     * Link to the SignUpWindow
+     */
     @FXML // fx:id="signUpLink"
-    private Hyperlink signUpLink; // Link to the SignUpWindow
+    private Hyperlink signUpLink;
 
+    /**
+     * Button to show showPasswordText
+     */
     @FXML // fx:id="showPasswordButton"
-    private ToggleButton showPasswordButton; // Button to show showPasswordText
+    private ToggleButton showPasswordButton;
 
+    /**
+     * TexField to show the password in clear
+     */
     @FXML // fx:id="showPasswordText"
-    private TextField showPasswordText; // TexField to show the password in clear
+    private TextField showPasswordText;
 
     /**
      * Method tha change image of the window When pressed: The ToggleButton icon
@@ -115,7 +156,6 @@ public class SignInController implements ChangeListener<String> {
     }
 
     /**
-     *
      * This button is the event of signInButton, that will be enabled if
      * usernameText and passwordText contain information.
      *
@@ -205,14 +245,13 @@ public class SignInController implements ChangeListener<String> {
     /**
      * Setter of stage
      *
-     * @param stage
+     * @param stage the stage to set
      */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
     /**
-     * *
      * Method that initialize SignInWindow
      *
      * @param root DOM of the window
@@ -297,7 +336,7 @@ public class SignInController implements ChangeListener<String> {
         passwordText.visibleProperty().bind(showPasswordButton.selectedProperty().not());
         showPasswordText.visibleProperty().bind(showPasswordButton.selectedProperty());
     }
-
+    
     private static final String EMAIL_PATTERN
             = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";

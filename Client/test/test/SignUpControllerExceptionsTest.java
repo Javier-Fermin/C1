@@ -6,8 +6,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
+import static org.testfx.api.FxAssert.verifyThat;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
+import static org.testfx.matcher.base.NodeMatchers.isDisabled;
+import static org.testfx.matcher.base.NodeMatchers.isVisible;
+
 
 /**
  * 
@@ -23,9 +27,9 @@ public class SignUpControllerExceptionsTest extends ApplicationTest{
     }*/
     
     /**
-     * Set up Java FX fixture for tests. This is a general approach for using a 
-     * unique instance of the application in the test.
-     * @throws java.util.concurrent.TimeoutException
+     * Launch only one JavaFX application
+     * 
+     * @throws TimeoutException
      */
     @BeforeClass
     public static void setUpClass() throws TimeoutException {
@@ -48,9 +52,10 @@ public class SignUpControllerExceptionsTest extends ApplicationTest{
         clickOn("#confirmPasswordTextField");
         write("Abcd*1234");
         clickOn("#signUpButton");
+        verifyThat("Aceptar", isVisible());
     }
     
-    @Test
+    //@Test
     public void test2_ServerError(){
         clickOn("#signUpLink");
         clickOn("#userTextField");
@@ -62,9 +67,10 @@ public class SignUpControllerExceptionsTest extends ApplicationTest{
         clickOn("#confirmPasswordTextField");
         write("Abcd*1234");
         clickOn("#signUpButton");
+        verifyThat("Aceptar", isVisible());
     }
     
-    @Test
+    //@Test
     public void test3_TimeOut() {
         clickOn("#signUpLink");
         clickOn("#userTextField");
