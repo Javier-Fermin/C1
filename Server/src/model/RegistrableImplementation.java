@@ -181,9 +181,10 @@ public class RegistrableImplementation implements Registrable {
      */
     @Override
     public User signUp(User user) throws ServerErrorException, UserAlreadyExistsException, TimeOutException {
-        //Se llama al pool y nos conectamos con la BD usando a con
         LOGGER.info("Signing up a user.");
         try {
+            //Connects to the database using the Pool to obtain an open 
+            //connection
             LOGGER.info("Requesting a connection to the pool.");
             con=pool.openGetConnection();
             con.setAutoCommit(false);

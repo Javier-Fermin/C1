@@ -21,14 +21,33 @@ import threads.Finisher;
  */
 public class Server {
 
+    /***
+     * Parameter with the port the server uses.
+     */
     private final String PUERTO = ResourceBundle.getBundle("resources.Properties").getString("PORT");
+    /***
+     * Parameter with the server's maximum number of open connections.
+     */
     private final String MAX_THREADS = ResourceBundle.getBundle("resources.Properties").getString("MAX_THREADS");
+    
+    /***
+     * The factory used to obtain a Registrable object. 
+     */
     private final RegistrableFactory factory = new RegistrableFactory();
 
+    /***
+     * The logger for the logs
+     */
     private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 
+    /***
+     * Parameter with the number of current open connections
+     */
     private static Integer threads = 0;
 
+    /***
+     * Server's initialization method
+     */
     public void iniciar() {
         ServerSocket server = null;
         Socket client = null;
