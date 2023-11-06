@@ -6,17 +6,11 @@
 package test;
 
 import client.Client;
-import exceptions.BadEmailException;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.TimeoutException;
-import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.stage.Stage;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -29,7 +23,6 @@ import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.matcher.base.NodeMatchers.isInvisible;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import static org.testfx.matcher.control.TextInputControlMatchers.hasText;
-import src.AuthenticationException;
 
 /**
  *
@@ -40,7 +33,7 @@ public class SignInTest extends ApplicationTest {
 
     private ImageView showPasswdImg = new ImageView("resources/images/show.png");
     private ImageView hidePasswdImg = new ImageView("resources/images/hide.png");
-    private Node signInPane = lookup("#signInWindow").query();
+   
 
     @Override
     public void stop(){}
@@ -67,8 +60,9 @@ public class SignInTest extends ApplicationTest {
         verifyThat("#showPasswordButton", isEnabled());
         verifyThat(showPasswdImg, (ImageView b) -> b.isVisible());
         verifyThat("#signInButton", isDisabled());
+        
     }
-
+    
     //Test 2: Comprobar que el SignIn boton este deshabilitado si alguno de los 
     //        campos o ambos estan vacios(usernameText y passwordText).
     @Test
@@ -127,7 +121,7 @@ public class SignInTest extends ApplicationTest {
 
     //Test 5: Comprobar que al clickar el boton SignInButton la ventana 
     //        MainWindow es visible.
-//    @Test
+    @Test
     public void test05_SignInCliked() {
         clickOn("#usernameText");
         write("manolo@gmail.com");
@@ -160,7 +154,7 @@ public class SignInTest extends ApplicationTest {
 
     //Test 7: Comprobar que se muestra un Alert cuando al hacer el metodo de 
     //        logica SignIn nos devuelva un objeto User nulo.
-    //@Test
+    @Test
     public void test07_AuthenticationError() {
         clickOn("#usernameText");
         write("manoloNoExiste@wakeup.please");
@@ -193,11 +187,29 @@ public class SignInTest extends ApplicationTest {
         clickOn("#passwordText");
         eraseText(9);
     }
-    //Test 9: Comprobar que muestra un Alert de confirmacion al cerrar la 
+    
+    //Test 9: Comprobar que se muestra un Alert cuando salte el TimeOutException
+    //        por tardar demasiado en conectarse con el servidor.
+    @Test
+    public void test09_ServerErrorException() {
+        clickOn("#usernameText");
+        write("manolo@gmail.com");
+        clickOn("#passwordText");
+        write("abcd*1234");
+        clickOn("#signInButton");
+        verifyThat("Server error", isVisible());
+        clickOn("Aceptar");
+        clickOn("#usernameText");
+        eraseText(16);
+        clickOn("#passwordText");
+        eraseText(9);
+    }
+    
+    //Test 10: Comprobar que muestra un Alert de confirmacion al cerrar la 
     //         ventana y y esta no se cierra cuando el usuario cancela la 
     //         operacion.
     @Test
-    public void test09_CancelCloseWindow() {
+    public void test10_CancelCloseWindow() {
         press(KeyCode.ESCAPE).release(KeyCode.ESCAPE);
         verifyThat("Are you sure you want to exit?", isVisible());
         clickOn("Cancelar");
@@ -205,10 +217,10 @@ public class SignInTest extends ApplicationTest {
         verifyThat("Are you sure you want to exit?", isVisible());
         press(KeyCode.ESCAPE).release(KeyCode.ESCAPE);
     }
-    //Test 10: Comprobar que muestra un Alert de confirmacion al cerrar la 
+    //Test 11: Comprobar que muestra un Alert de confirmacion al cerrar la 
     //         ventana y esta se cierra cuando el usuario confirma la operacion.
     @Test
-    public void test10_ConfirmCloseWindow() {
+    public void test11_ConfirmCloseWindow() {
         press(KeyCode.ESCAPE).release(KeyCode.ESCAPE);
         verifyThat("Are you sure you want to exit?", isVisible());
         clickOn("Aceptar");
