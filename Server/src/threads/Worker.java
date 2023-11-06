@@ -9,10 +9,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.RegistrableFactory;
-import model.Pool;
 import server.Server;
 import src.AuthenticationException;
 import src.Message;
@@ -37,10 +35,17 @@ public class Worker extends Thread{
      * The Socket used to communicate with the client
      */
     private Socket socket;
-    
+    /**
+     * A Logger for the logs
+     */
     private static final Logger LOGGER = Logger.getLogger(Worker.class.getName());
 
-
+    /**
+     * Constructor of a worker thread
+     * 
+     * @param factory the RegistrableFactory to be used
+     * @param socket the socket to communicate with the client
+     */
     public Worker(RegistrableFactory factory, Socket socket) {
         this.factory = factory;
         this.socket = socket;
@@ -51,29 +56,35 @@ public class Worker extends Thread{
         Message message = null;
         ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
-        
         try{
             //Getting the streams to communicate with the user
+            LOGGER.info("Getting the streams of the client.");
             oos = new ObjectOutputStream(socket.getOutputStream());
             ois = new ObjectInputStream(socket.getInputStream());
             //Read the message from the user
+            LOGGER.info("Reading the message from the client.");
             message = (Message) ois.readObject();
             //Get a Registrable from the factory
             Registrable reg = factory.getRegistrable();
             //Switch the user's request
+            LOGGER.info("Analyzing the request.");
             switch (message.getMessageType()){
                 //In case of a SIGNIN_REQUEST
                 case SIGNIN_REQUEST:
+                        LOGGER.info("SignIn request recieved.");
                         //Call the signIn method from the Registrable
                         message.setUser(reg.signIn(message.getUser()));
                         //If there was no error it will be send a SUCCESS_RESPONSE
+                        LOGGER.info("Sign In successful.");
                         message.setMessageType(MessageType.SUCCESS_RESPONSE);
                     break;
                 //In case of a SIGNIN_REQUEST
                 case SIGNUP_REQUEST:
+                        LOGGER.info("SignUp request recieved.");
                         //Call the signUp method from the Registrable
                         message.setUser(reg.signUp(message.getUser()));
                         //If there was no error it will be send a SUCCESS_RESPONSE
+                        LOGGER.info("Sign Up successful.");
                         message.setMessageType(MessageType.SUCCESS_RESPONSE);
                     break;
             }
@@ -100,6 +111,7 @@ public class Worker extends Thread{
         }finally{
             //Finally we would sent the message to the user
             try {
+                LOGGER.info("Sending response.");
                 oos.writeObject(message);
                 ois.close();
                 oos.close();

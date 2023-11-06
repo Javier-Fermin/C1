@@ -200,7 +200,6 @@ public class RegistrableImplementation implements Registrable {
                 insertRelationUserCompany(user, getUserId(getPartnerId(user, con), con), con);
                 LOGGER.info("Inserting the relations of the user and the groups.");
                 insertRelationUserGroups(getUserId(getPartnerId(user, con), con), con);
-                
                 con.commit();
             } else {
                 LOGGER.severe("User already exists.");
@@ -232,9 +231,13 @@ public class RegistrableImplementation implements Registrable {
         /*
          * Split the users address in two: zip and street
          */
-        String[] addressU = u.getAddress().split(" ");
-        String zipU = addressU[0];
-        String streetU = addressU[1];
+        String zipU = null;
+        String streetU = null;
+        if(!u.getAddress().isEmpty()){
+            String[] addressU = u.getAddress().split(" ");
+            zipU = addressU[0];
+            streetU = addressU[1];
+        }
 
         try {
             /*

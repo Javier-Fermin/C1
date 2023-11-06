@@ -5,9 +5,6 @@
  */
 package view;
 
-/**
- * Sample Skeleton for 'SignInWindowFXML.fxml' Controller Class
- */
 import exceptions.BadEmailException;
 import java.io.IOException;
 import java.util.Optional;
@@ -45,7 +42,6 @@ import src.Registrable;
 import src.User;
 import src.ServerErrorException;
 import src.TimeOutException;
-import static view.SignUpController.LOGGER;
 
 /**
  * This is the class that is responsible of controlling the responses for the
@@ -55,50 +51,95 @@ import static view.SignUpController.LOGGER;
  */
 public class SignInController implements ChangeListener<String> {
 
+    /**
+     * The Logger for the logs
+     */
     protected static final Logger LOGGER = Logger.getLogger(SignInController.class.getName());
 
-    Registrable registro;
-
-    private Stage stage; //This window Stage
-
-    @FXML // fx:id="signInWindow"
-    private Pane signInWindow; // signInWindow main Pane
-
-    @FXML // fx:id="imageLabel"
-    private ImageView imageLabel; // Decoration view with iamge
-
-    @FXML // fx:id="logInLabel"
-    private Label logInLabel; // LogIn label for the window
-
-    @FXML // fx:id="usernameLabel"
-    private Label usernameLabel; //  Username label for the window
-
-    @FXML // fx:id="passwordLabel"
-    private Label passwordLabel; // Password label for the window
-
-    @FXML // fx:id="usernameText"
-    private TextField usernameText; // TextField to insert the username of the user
-
-    @FXML // fx:id="passwordText"
-    private PasswordField passwordText; //PasswordField to insert the password
-
-    @FXML // fx:id="signInButton"
-    private Button signInButton; // Button to SignIn
-
-    @FXML // fx:id="signUpAccessLabel"
-    private Label signUpAccessLabel; // signUpAccess label for the window
-
-    @FXML // fx:id="signUpLink"
-    private Hyperlink signUpLink; // Link to the SignUpWindow
-
-    @FXML // fx:id="showPasswordButton"
-    private ToggleButton showPasswordButton; // Button to show showPasswordText
-
-    @FXML // fx:id="showPasswordText"
-    private TextField showPasswordText; // TexField to show the password in clear
+    /**
+     * An object that implements the Registable interface
+     */
+    private Registrable registro;
 
     /**
-     * Method tha change image of the window When pressed: The ToggleButton icon
+     * The window stage
+     */
+    private Stage stage; //This window Stage
+
+    /**
+     * signInWindow main Pane
+     */
+    @FXML // fx:id="signInWindow"
+    private Pane signInWindow;
+
+    /**
+     * Decoration view with iamge
+     */
+    @FXML // fx:id="imageLabel"
+    private ImageView imageLabel;
+
+    /**
+     * LogIn label for the window
+     */
+    @FXML // fx:id="logInLabel"
+    private Label logInLabel;
+
+    /**
+     * Username label for the window
+     */
+    @FXML // fx:id="usernameLabel"
+    private Label usernameLabel;
+
+    /**
+     * Password label for the window
+     */
+    @FXML // fx:id="passwordLabel"
+    private Label passwordLabel;
+
+    /**
+     * TextField to insert the username of the user
+     */
+    @FXML // fx:id="usernameText"
+    private TextField usernameText;
+
+    /**
+     * PasswordField to insert the password
+     */
+    @FXML // fx:id="passwordText"
+    private PasswordField passwordText;
+
+    /**
+     * Button to SignIn
+     */
+    @FXML // fx:id="signInButton"
+    private Button signInButton;
+
+    /**
+     * signUpAccess label for the window
+     */
+    @FXML // fx:id="signUpAccessLabel"
+    private Label signUpAccessLabel;
+
+    /**
+     * Link to the SignUpWindow
+     */
+    @FXML // fx:id="signUpLink"
+    private Hyperlink signUpLink;
+
+    /**
+     * Button to show showPasswordText
+     */
+    @FXML // fx:id="showPasswordButton"
+    private ToggleButton showPasswordButton;
+
+    /**
+     * TexField to show the password in clear
+     */
+    @FXML // fx:id="showPasswordText"
+    private TextField showPasswordText;
+
+    /**
+     * Method that change image of the window When pressed: The ToggleButton icon
      * is changed: If it is selected, its icon is hide.png If it is not
      * selected, its icon is show.png
      *
@@ -115,7 +156,6 @@ public class SignInController implements ChangeListener<String> {
     }
 
     /**
-     *
      * This button is the event of signInButton, that will be enabled if
      * usernameText and passwordText contain information.
      *
@@ -134,45 +174,40 @@ public class SignInController implements ChangeListener<String> {
                 user = registro.signIn(new User("", passwordText.getText(), "", usernameText.getText(), ""));
 
                 //If the user is null, the user will be informed with an authentication error message (AuthenticationException).
-                LOGGER.info("Validate user have data");
-                if (user != null) {
-                    LOGGER.info("Open Main Window");
-                    //If no exception has occurred, the user is prompted, the window will be closed and the MainWindow window will be displayed.
-                    Stage sStage = new Stage();
+                LOGGER.info("Open Main Window");
+                //If no exception has occurred, the user is prompted, the window will be closed and the MainWindow window will be displayed.
+                Stage sStage = new Stage();
 
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainWindowFXML.fxml"));
-                    Parent root = (Parent) loader.load();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainWindowFXML.fxml"));
+                Parent root = (Parent) loader.load();
 
-                    MainWindowController cont = ((MainWindowController) loader.getController());
+                MainWindowController cont = ((MainWindowController) loader.getController());
 
-                    cont.setMainStage(sStage);
-                    cont.initStage(root, user);
+                cont.setMainStage(sStage);
+                cont.initStage(root, user);
 
-                    stage.close();
-                } else {
-                    throw new AuthenticationException();
-                }
+                stage.close();
                 // If the content does not follow an email address pattern, the user will be informed with an authentication error message (AuthenticationException).
             } else {
-                throw new BadEmailException();
+                throw new BadEmailException("Email error: Bad email format");
             }
 
         } catch (BadEmailException ex) {
-            new Alert(Alert.AlertType.ERROR, "Email error: Bad email format").showAndWait();
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             LOGGER.severe("Email have a incorrect format");
         } catch (AuthenticationException ex) {
-            new Alert(Alert.AlertType.ERROR, "Authentication error").showAndWait();
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             LOGGER.severe("Authentication error");
             //In the event that it takes a while to connect to the server, the user will be informed that the timeout has occurred with the TimeOutException.
         } catch (TimeOutException ex) {
-            new Alert(Alert.AlertType.ERROR, "Server Time out error").showAndWait();
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             LOGGER.severe("Server Time out error");
             //In the event that the server is turned off or inaccessible, a ServerErrorException error message will be displayed.
         } catch (ServerErrorException ex) {
-            new Alert(Alert.AlertType.ERROR, "Server error").showAndWait();
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             LOGGER.severe("Server error");
         } catch (IOException ex) {
-            new Alert(Alert.AlertType.ERROR, "App error").showAndWait();
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             LOGGER.severe("App error");
         }
     }
@@ -205,14 +240,13 @@ public class SignInController implements ChangeListener<String> {
     /**
      * Setter of stage
      *
-     * @param stage
+     * @param stage the stage to set
      */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
     /**
-     * *
      * Method that initialize SignInWindow
      *
      * @param root DOM of the window
@@ -297,7 +331,7 @@ public class SignInController implements ChangeListener<String> {
         passwordText.visibleProperty().bind(showPasswordButton.selectedProperty().not());
         showPasswordText.visibleProperty().bind(showPasswordButton.selectedProperty());
     }
-
+    
     private static final String EMAIL_PATTERN
             = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";

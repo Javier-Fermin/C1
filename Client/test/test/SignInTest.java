@@ -6,17 +6,12 @@
 package test;
 
 import client.Client;
-import exceptions.BadEmailException;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.TimeoutException;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.stage.Stage;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -29,7 +24,6 @@ import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.matcher.base.NodeMatchers.isInvisible;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import static org.testfx.matcher.control.TextInputControlMatchers.hasText;
-import src.AuthenticationException;
 
 /**
  *
@@ -167,7 +161,8 @@ public class SignInTest extends ApplicationTest {
         clickOn("#passwordText");
         write("password");
         clickOn("#signInButton");
-        verifyThat("Authentication error", isVisible());
+        verifyThat("The credentials given for this user\n"
+                            + "are wrong or the user does not exists.", isVisible());
         clickOn("Aceptar");
         doubleClickOn("#usernameText");
         eraseText(28);
@@ -186,7 +181,7 @@ public class SignInTest extends ApplicationTest {
         clickOn("#passwordText");
         write("abcd*1234");
         clickOn("#signInButton");
-        verifyThat("Server Time out error", isVisible());
+        verifyThat("Could not reach the server, try again later.", isVisible());
         clickOn("Aceptar");
         clickOn("#usernameText");
         eraseText(16);

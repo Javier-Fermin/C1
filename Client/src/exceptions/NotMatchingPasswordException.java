@@ -6,35 +6,27 @@
 package exceptions;
 
 /**
- *
- * @author imape
+ * This is an exception for the treatment of the user interface validations
+ * 
+ * @author Javier, Imanol
  */
 public class NotMatchingPasswordException extends Exception{
-     public NotMatchingPasswordException() {
-        super();
-        // TODO Auto-generated constructor stub
+    /**
+     * Creates a new instance of <code>NotMatchingPasswordException</code> without detail
+     * message.
+     */
+    public NotMatchingPasswordException() {
     }
 
-    public NotMatchingPasswordException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        // TODO Auto-generated constructor stub
+    /**
+     * Constructs an instance of <code>NotMatchingPasswordException</code> with the
+     * specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    public NotMatchingPasswordException(String msg) {
+        super(msg);
     }
-
-    public NotMatchingPasswordException(String message, Throwable cause) {
-        super(message, cause);
-        // TODO Auto-generated constructor stub
-    }
-
-    public NotMatchingPasswordException(String message) {
-        super(message);
-        // TODO Auto-generated constructor stub
-    }
-
-    public NotMatchingPasswordException(Throwable cause) {
-        super(cause);
-        // TODO Auto-generated constructor stub
-    }
-    
 }
 
 

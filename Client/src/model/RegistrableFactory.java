@@ -4,6 +4,7 @@ import src.Registrable;
 
 /**
  * The RegistrableFactory class is responsible for creating instances of objects that implement the Registrable interface.
+ * 
  * @author Imanol
  */
 public class RegistrableFactory {

@@ -6,34 +6,26 @@
 package exceptions;
 
 /**
- *
- * @author imape
+ * This is an exception for the treatment of the user interface validations
+ * 
+ * @author Javier, Imanol
  */
 public class BadUserException extends Exception{
-     public BadUserException() {
-        super();
-        // TODO Auto-generated constructor stub
+    /**
+     * Creates a new instance of <code>BadUserException</code> without detail
+     * message.
+     */
+    public BadUserException() {
     }
 
-    public BadUserException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        // TODO Auto-generated constructor stub
+    /**
+     * Constructs an instance of <code>BadUserException</code> with the
+     * specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    public BadUserException(String msg) {
+        super(msg);
     }
-
-    public BadUserException(String message, Throwable cause) {
-        super(message, cause);
-        // TODO Auto-generated constructor stub
-    }
-
-    public BadUserException(String message) {
-        super(message);
-        // TODO Auto-generated constructor stub
-    }
-
-    public BadUserException(Throwable cause) {
-        super(cause);
-        // TODO Auto-generated constructor stub
-    }
-    
 }
 

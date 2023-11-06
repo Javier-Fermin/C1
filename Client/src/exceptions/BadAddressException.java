@@ -6,34 +6,26 @@
 package exceptions;
 
 /**
- *
- * @author imape
+ * This is an exception for the treatment of the user interface validations
+ * 
+ * @author Javier, Imanol
  */
 public class BadAddressException extends Exception{
-     public BadAddressException() {
-        super();
-        // TODO Auto-generated constructor stub
+    /**
+     * Creates a new instance of <code>BadAddressException</code> without detail
+     * message.
+     */
+    public BadAddressException() {
     }
 
-    public BadAddressException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        // TODO Auto-generated constructor stub
+    /**
+     * Constructs an instance of <code>BadAddressException</code> with the
+     * specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    public BadAddressException(String msg) {
+        super(msg);
     }
-
-    public BadAddressException(String message, Throwable cause) {
-        super(message, cause);
-        // TODO Auto-generated constructor stub
-    }
-
-    public BadAddressException(String message) {
-        super(message);
-        // TODO Auto-generated constructor stub
-    }
-
-    public BadAddressException(Throwable cause) {
-        super(cause);
-        // TODO Auto-generated constructor stub
-    }
-    
 }
 

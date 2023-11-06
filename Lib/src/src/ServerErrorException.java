@@ -12,29 +12,20 @@ package src;
  * @author Javier, Fran, Imanol, Emil
  */
 public class ServerErrorException extends Exception{
+    /**
+     * Creates a new instance of <code>ServerErrorException</code> without detail
+     * message.
+     */
     public ServerErrorException() {
-        super();
-        // TODO Auto-generated constructor stub
     }
 
-    public ServerErrorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        // TODO Auto-generated constructor stub
+    /**
+     * Constructs an instance of <code>ServerErrorException</code> with the
+     * specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    public ServerErrorException(String msg) {
+        super(msg);
     }
-
-    public ServerErrorException(String message, Throwable cause) {
-        super(message, cause);
-        // TODO Auto-generated constructor stub
-    }
-
-    public ServerErrorException(String message) {
-        super(message);
-        // TODO Auto-generated constructor stub
-    }
-
-    public ServerErrorException(Throwable cause) {
-        super(cause);
-        // TODO Auto-generated constructor stub
-    }
-    
 }

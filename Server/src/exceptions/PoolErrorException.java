@@ -12,7 +12,6 @@ package exceptions;
  * @author Javier
  */
 public class PoolErrorException extends Exception {
-
     /**
      * Creates a new instance of <code>PoolErrorException</code> without detail
      * message.
