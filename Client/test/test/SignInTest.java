@@ -60,7 +60,6 @@ public class SignInTest extends ApplicationTest {
         verifyThat("#showPasswordButton", isEnabled());
         verifyThat(showPasswdImg, (ImageView b) -> b.isVisible());
         verifyThat("#signInButton", isDisabled());
-        
     }
     
     //Test 2: Comprobar que el SignIn boton este deshabilitado si alguno de los 
@@ -86,9 +85,7 @@ public class SignInTest extends ApplicationTest {
         write("manolo");
         clickOn("#passwordText");
         write("password");
-
         verifyThat("#signInButton", isEnabled());
-
         clickOn("#passwordText");
         eraseText(8);
         clickOn("#usernameText");
@@ -102,19 +99,16 @@ public class SignInTest extends ApplicationTest {
         clickOn("#passwordText");
         write("password");
         verifyThat("#showPasswordText", hasText("password"));
-
         clickOn("#showPasswordButton");
         verifyThat("#showPasswordButton", (ToggleButton tb) -> tb.isSelected());
         verifyThat("#passwordText", isInvisible());
         verifyThat("#showPasswordText", isVisible());
         verifyThat(hidePasswdImg, (ImageView iv) -> iv.isVisible());
-
         clickOn("#showPasswordButton");
         verifyThat("#showPasswordButton", (ToggleButton bt) -> !bt.isSelected());
         verifyThat("#showPasswordText", isInvisible());
         verifyThat("#passwordText", isVisible());
         verifyThat(showPasswdImg, (ImageView iv) -> iv.isVisible());
-
         clickOn("#passwordText");
         eraseText(8);
     }
@@ -129,7 +123,6 @@ public class SignInTest extends ApplicationTest {
         write("abcd*1234");
         clickOn("#signInButton");
         verifyThat("#mainWindowPane", isVisible());
-
         clickOn("#logOutButton");
         verifyThat("#signInWindow", isVisible());
     }
@@ -149,7 +142,6 @@ public class SignInTest extends ApplicationTest {
         eraseText(7);
         clickOn("#passwordText");
         eraseText(8);
-
     }
 
     //Test 7: Comprobar que se muestra un Alert cuando al hacer el metodo de 
