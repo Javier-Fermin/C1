@@ -139,7 +139,7 @@ public class SignInController implements ChangeListener<String> {
     private TextField showPasswordText;
 
     /**
-     * Method tha change image of the window When pressed: The ToggleButton icon
+     * Method that change image of the window When pressed: The ToggleButton icon
      * is changed: If it is selected, its icon is hide.png If it is not
      * selected, its icon is show.png
      *
@@ -174,45 +174,40 @@ public class SignInController implements ChangeListener<String> {
                 user = registro.signIn(new User("", passwordText.getText(), "", usernameText.getText(), ""));
 
                 //If the user is null, the user will be informed with an authentication error message (AuthenticationException).
-                LOGGER.info("Validate user have data");
-                if (user != null) {
-                    LOGGER.info("Open Main Window");
-                    //If no exception has occurred, the user is prompted, the window will be closed and the MainWindow window will be displayed.
-                    Stage sStage = new Stage();
+                LOGGER.info("Open Main Window");
+                //If no exception has occurred, the user is prompted, the window will be closed and the MainWindow window will be displayed.
+                Stage sStage = new Stage();
 
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainWindowFXML.fxml"));
-                    Parent root = (Parent) loader.load();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainWindowFXML.fxml"));
+                Parent root = (Parent) loader.load();
 
-                    MainWindowController cont = ((MainWindowController) loader.getController());
+                MainWindowController cont = ((MainWindowController) loader.getController());
 
-                    cont.setMainStage(sStage);
-                    cont.initStage(root, user);
+                cont.setMainStage(sStage);
+                cont.initStage(root, user);
 
-                    stage.close();
-                } else {
-                    throw new AuthenticationException();
-                }
+                stage.close();
                 // If the content does not follow an email address pattern, the user will be informed with an authentication error message (AuthenticationException).
             } else {
-                throw new BadEmailException();
+                throw new BadEmailException("Email error: Bad email format");
             }
 
         } catch (BadEmailException ex) {
-            new Alert(Alert.AlertType.ERROR, "Email error: Bad email format").showAndWait();
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             LOGGER.severe("Email have a incorrect format");
         } catch (AuthenticationException ex) {
-            new Alert(Alert.AlertType.ERROR, "Authentication error").showAndWait();
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             LOGGER.severe("Authentication error");
             //In the event that it takes a while to connect to the server, the user will be informed that the timeout has occurred with the TimeOutException.
         } catch (TimeOutException ex) {
-            new Alert(Alert.AlertType.ERROR, "Server Time out error").showAndWait();
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             LOGGER.severe("Server Time out error");
             //In the event that the server is turned off or inaccessible, a ServerErrorException error message will be displayed.
         } catch (ServerErrorException ex) {
-            new Alert(Alert.AlertType.ERROR, "Server error").showAndWait();
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             LOGGER.severe("Server error");
         } catch (IOException ex) {
-            new Alert(Alert.AlertType.ERROR, "App error").showAndWait();
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             LOGGER.severe("App error");
         }
     }

@@ -15,11 +15,14 @@ import java.io.Serializable;
  * @author Javier, Emil, Imanol, Fran
  */
 public class User implements Serializable{
-   private String name,passwd,phone,email,address;
+    /**
+     * Attributes for the Odoo user
+     */
+    private String name,passwd,phone,email,address;
 
     public User() {
     }
-
+    
     public User(String name, String passwd, String phone, String email, String address) {
         this.name = name;
         this.passwd = passwd;

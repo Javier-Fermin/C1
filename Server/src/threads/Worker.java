@@ -75,6 +75,7 @@ public class Worker extends Thread{
                         //Call the signIn method from the Registrable
                         message.setUser(reg.signIn(message.getUser()));
                         //If there was no error it will be send a SUCCESS_RESPONSE
+                        LOGGER.info("Sign In successful.");
                         message.setMessageType(MessageType.SUCCESS_RESPONSE);
                     break;
                 //In case of a SIGNIN_REQUEST
@@ -83,6 +84,7 @@ public class Worker extends Thread{
                         //Call the signUp method from the Registrable
                         message.setUser(reg.signUp(message.getUser()));
                         //If there was no error it will be send a SUCCESS_RESPONSE
+                        LOGGER.info("Sign Up successful.");
                         message.setMessageType(MessageType.SUCCESS_RESPONSE);
                     break;
             }
@@ -109,6 +111,7 @@ public class Worker extends Thread{
         }finally{
             //Finally we would sent the message to the user
             try {
+                LOGGER.info("Sending response.");
                 oos.writeObject(message);
                 ois.close();
                 oos.close();

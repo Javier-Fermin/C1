@@ -14,29 +14,20 @@ package src;
  * @author Javier, Imanol, Emil, Fran
  */
 public class TimeOutException extends Exception{
+    /**
+     * Creates a new instance of <code>TimeOutException</code> without detail
+     * message.
+     */
     public TimeOutException() {
-        super();
-        // TODO Auto-generated constructor stub
     }
 
-    public TimeOutException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        // TODO Auto-generated constructor stub
+    /**
+     * Constructs an instance of <code>TimeOutException</code> with the
+     * specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    public TimeOutException(String msg) {
+        super(msg);
     }
-
-    public TimeOutException(String message, Throwable cause) {
-        super(message, cause);
-        // TODO Auto-generated constructor stub
-    }
-
-    public TimeOutException(String message) {
-        super(message);
-        // TODO Auto-generated constructor stub
-    }
-
-    public TimeOutException(Throwable cause) {
-        super(cause);
-        // TODO Auto-generated constructor stub
-    }
-    
 }

@@ -14,7 +14,7 @@ import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 
 /**
- * 
+ * This class tests all the exceptions that could be thrown 
  * 
  * @author Javier
  */
@@ -52,35 +52,27 @@ public class SignUpControllerExceptionsTest extends ApplicationTest{
         clickOn("#confirmPasswordTextField");
         write("Abcd*1234");
         clickOn("#signUpButton");
-        verifyThat("Aceptar", isVisible());
+        verifyThat("The user already exists.", isVisible());
+        clickOn("Aceptar");
     }
     
-    //@Test
+    /**
+     * 
+     */
+    @Test
     public void test2_ServerError(){
-        clickOn("#signUpLink");
-        clickOn("#userTextField");
-        write("User");
-        clickOn("#mailTextField");
-        write("user@gmail.com");
-        clickOn("#passwordTextField");
-        write("Abcd*1234");
-        clickOn("#confirmPasswordTextField");
-        write("Abcd*1234");
         clickOn("#signUpButton");
-        verifyThat("Aceptar", isVisible());
+        verifyThat("An unexpected error occurred, try again later.", isVisible());
+        clickOn("Aceptar");
     }
     
-    //@Test
+    /**
+     * 
+     */
+    @Test
     public void test3_TimeOut() {
-        clickOn("#signUpLink");
-        clickOn("#userTextField");
-        write("User");
-        clickOn("#mailTextField");
-        write("user@gmail.com");
-        clickOn("#passwordTextField");
-        write("Abcd*1234");
-        clickOn("#confirmPasswordTextField");
-        write("Abcd*1234");
         clickOn("#signUpButton");
+        verifyThat("Could not reach the server, try again later.", isVisible());
+        clickOn("Aceptar");
     }
 }

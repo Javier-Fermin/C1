@@ -78,6 +78,7 @@ public class RegistrableImplementation implements Registrable {
                 case SUCCESS_RESPONSE:
                     LOGGER.info("SignIn executed successfully.");
                     answer = msg.getUser();
+                    break;
                 case AUTHENTICATION_EXCEPTION_RESPONSE:
                     LOGGER.severe("The credentials given for this user are wrong or the user does not exists.");
                     throw new AuthenticationException("The credentials given for this user\n"
@@ -127,6 +128,7 @@ public class RegistrableImplementation implements Registrable {
                 case SUCCESS_RESPONSE:
                     LOGGER.info("SignUp executed successfully.");
                     answer = msg.getUser();
+                    break;
                 case USER_ALREADY_EXISTS_EXCEPTION_RESPONSE:
                     LOGGER.severe("The user already exists.");
                     throw new UserAlreadyExistsException("The user already exists.");
@@ -158,6 +160,14 @@ public class RegistrableImplementation implements Registrable {
         return answer;
     }
 
+    /**
+     * This method sends a message with the given type and the given user, then
+     * recieves an answer from the server and finally returns the message
+     * 
+     * @param user the user to be used in the message to sent
+     * @param type the type to be used in the message to sent
+     * @return the message with the answer
+     */
     private Message connectAndSendMessage(User user, MessageType type) {
         Message msg = null;
         try {

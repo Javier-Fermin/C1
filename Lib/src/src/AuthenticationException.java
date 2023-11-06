@@ -13,29 +13,20 @@ package src;
  * @author Javier, Fran, Emil, Imanol
  */
 public class AuthenticationException extends Exception{
+    /**
+     * Creates a new instance of <code>AuthenticationException</code> without detail
+     * message.
+     */
     public AuthenticationException() {
-        super();
-        // TODO Auto-generated constructor stub
     }
 
-    public AuthenticationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        // TODO Auto-generated constructor stub
+    /**
+     * Constructs an instance of <code>AuthenticationException</code> with the
+     * specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    public AuthenticationException(String msg) {
+        super(msg);
     }
-
-    public AuthenticationException(String message, Throwable cause) {
-        super(message, cause);
-        // TODO Auto-generated constructor stub
-    }
-
-    public AuthenticationException(String message) {
-        super(message);
-        // TODO Auto-generated constructor stub
-    }
-
-    public AuthenticationException(Throwable cause) {
-        super(cause);
-        // TODO Auto-generated constructor stub
-    }
-    
 }
