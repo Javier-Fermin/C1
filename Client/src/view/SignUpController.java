@@ -437,7 +437,7 @@ public class SignUpController {
                 LOGGER.info("Check values to mailTextField has less than 500 characters and has a correct format");
                 if (!mailTextField.getText().isEmpty()
                         && (mailTextField.getText().length() > 500
-                        || !mailTextField.getText().matches("[a-zA-Z0-9]+[@][a-zA-Z0-9]+[.][a-zA-Z0-9]+"))) {
+                        || !mailTextField.getText().matches("^(?=.{1,64}@)[A-Za-z0-9_-]+[@][a-zA-Z0-9]+[.][a-zA-Z0-9]+"))) {
                     throw new BadEmailException();
                 }
             } catch (BadEmailException e) {

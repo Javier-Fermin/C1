@@ -161,7 +161,8 @@ public class SignInTest extends ApplicationTest {
         clickOn("#passwordText");
         write("password");
         clickOn("#signInButton");
-        verifyThat("Authentication error", isVisible());
+        verifyThat("The credentials given for this user\n"
+                            + "are wrong or the user does not exists.", isVisible());
         clickOn("Aceptar");
         doubleClickOn("#usernameText");
         eraseText(28);
@@ -180,7 +181,7 @@ public class SignInTest extends ApplicationTest {
         clickOn("#passwordText");
         write("abcd*1234");
         clickOn("#signInButton");
-        verifyThat("Server Time out error", isVisible());
+        verifyThat("Could not reach the server, try again later.", isVisible());
         clickOn("Aceptar");
         clickOn("#usernameText");
         eraseText(16);
