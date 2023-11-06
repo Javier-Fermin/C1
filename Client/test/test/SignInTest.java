@@ -33,7 +33,6 @@ public class SignInTest extends ApplicationTest {
 
     private ImageView showPasswdImg = new ImageView("resources/images/show.png");
     private ImageView hidePasswdImg = new ImageView("resources/images/hide.png");
-   
 
     @Override
     public void stop(){}
