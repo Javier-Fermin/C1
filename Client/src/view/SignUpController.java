@@ -290,8 +290,10 @@ public class SignUpController {
      * @param event An ActionEvent object
      */
     public void handleButtonSignUpOnAction(ActionEvent event) {
+        //The focus will be requested
         signUpButton.requestFocus();
         LOGGER.info("Check all labels are invisible.");
+        //If there´s any error, we stop the log in 
         if (userErrorLabel.isVisible()
                 || phoneErrorLabel.isVisible()
                 || mailErrorLabel.isVisible()
@@ -302,6 +304,7 @@ public class SignUpController {
         } else {
             LOGGER.info("Execute signUp method.");
             try {
+                //Using the interface method SignUp we create a user tu later be added tod¡the DB
                 registrable.signUp(new User(
                         userTextField.getText(),
                         passwordTextField.getText(),
@@ -331,7 +334,7 @@ public class SignUpController {
         LOGGER.info("Changing from SignUp window to SignInWindow.");
         try {
             Stage sStage = new Stage();
-
+            //It will load the SignIn window and then exites the current window to signin
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignInWindowFXML.fxml"));
             Parent rootSignIn = (Parent) loader.load();
 
@@ -357,6 +360,7 @@ public class SignUpController {
             Boolean newValue) {
         LOGGER.info("Check values to remove the userLabel");
         if (newValue) {
+            //Removes the current styles when focus gained
             userLabel.getStyleClass().remove("errorLabel");
             userTextField.getStyleClass().remove("textFieldError");
             if (!userTextField.getStyleClass().contains("textFieldWithIcon")) {
@@ -366,6 +370,7 @@ public class SignUpController {
         } else {
             LOGGER.info("Check values to userTextField has less than 500 characters");
             try {
+                //if the user doesn´t fullfill the requirements it would throw an Exception
                 if ((userTextField.getText().length() > 500
                         || !userTextField.getText().matches("[a-zA-Z]+"))
                         && !userTextField.getText().isEmpty()) {
@@ -393,11 +398,13 @@ public class SignUpController {
             Boolean newValue) {
         LOGGER.info("Check values to remove the phoneLabel");
         if (newValue) {
+            //Removes the current styles when focus gained
             phoneLabel.getStyleClass().remove("errorLabel");
             phoneTextField.getStyleClass().remove("textFieldError");
             phoneTextField.getStyleClass().add("textFieldWithIcon");
             phoneErrorLabel.setVisible(false);
         } else {
+            //Checks the format of the phone, if incorrect then throw an exception
             try {
                 LOGGER.info("Check values to phoneTextField has less than 20 characters and all characters are numbers");
                 if (!phoneTextField.getText().isEmpty()
@@ -428,6 +435,7 @@ public class SignUpController {
             Boolean newValue) {
         LOGGER.info("Check values to remove the mailLabel");
         if (newValue) {
+            //Removes the current styles when focus gained
             mailLabel.getStyleClass().remove("errorLabel");
             mailTextField.getStyleClass().remove("textFieldError");
             mailTextField.getStyleClass().add("textFieldWithIcon");
@@ -435,6 +443,7 @@ public class SignUpController {
         } else {
             try {
                 LOGGER.info("Check values to mailTextField has less than 500 characters and has a correct format");
+                //Checks the format of the mail, if incorrect then throw an exception
                 if (!mailTextField.getText().isEmpty()
                         && (mailTextField.getText().length() > 500
                         || !mailTextField.getText().matches("^(?=.{1,64}@)[A-Za-z0-9_-]+[@][a-zA-Z0-9]+[.][a-zA-Z0-9]+"))) {
@@ -462,6 +471,7 @@ public class SignUpController {
             Boolean newValue) {
         LOGGER.info("Check values to remove the addressLabel");
         if (newValue) {
+            //Removes the current styles when focus gained
             addressLabel.getStyleClass().remove("errorLabel");
             addressTextField.getStyleClass().remove("textFieldError");
             addressTextField.getStyleClass().add("textFieldWithIcon");
@@ -469,6 +479,7 @@ public class SignUpController {
         } else {
             try {
                 LOGGER.info("Check values to addressTextField has less than 500 characters and has a correct format");
+                //Checks the format of the address, if incorrect then throw an exception
                 if (addressTextField.getText().length() > 500
                         || (!addressTextField.getText().matches("[0-9][0-9][0-9][0-9][0-9]\\h[[a-zA-Z0-9]||\\h]+"))
                         && !addressTextField.getText().isEmpty()) {
@@ -497,6 +508,7 @@ public class SignUpController {
             Boolean newValue) {
         LOGGER.info("Check values to remove the passwordLabel");
         if (newValue) {
+            //Removes the current styles when focus gained
             passwordLabel.getStyleClass().remove("errorLabel");
             passwordTextField.getStyleClass().remove("textFieldError");
             passwordTextField.getStyleClass().add("textFieldWithIcon");
@@ -504,6 +516,7 @@ public class SignUpController {
         } else {
             try {
                 LOGGER.info("Check values to passwordTextField has less than 500 characters and has a correct format");
+                //Checks the format of the phone, if incorrect then throw an exception
                 if (((!passwordTextField.getText().matches(".*[a-z].*")
                         || !passwordTextField.getText().matches(".*[A-Z].*")
                         || !passwordTextField.getText().matches(".*\\d.*")
@@ -517,6 +530,7 @@ public class SignUpController {
                     throw new BadPasswordException();
                 }
                 LOGGER.info("Check values from passwordTextField is equal to confirmPasswordTextField");
+                //Checks the format of the password, if incorrect then throw an exception
                 if ((!confirmPasswordTextField.getText().equals(passwordTextField.getText())
                         && !confirmPasswordTextField.getText().isEmpty())
                         && !passwordTextField.getText().isEmpty()) {
@@ -570,6 +584,7 @@ public class SignUpController {
             Boolean newValue) {
         LOGGER.info("Check values to remove the confirmPasswordLabel");
         if (newValue) {
+            //Removes the current styles when focus gained
             confirmPasswordLabel.getStyleClass().remove("errorLabel");
             confirmPasswordTextField.getStyleClass().remove("textFieldError");
             confirmPasswordTextField.getStyleClass().add("textFieldWithIcon");
@@ -608,6 +623,7 @@ public class SignUpController {
     public void handleTextPropertyChange(ObservableValue observable,
             String oldValue,
             String newValue) {
+        //Enable signUpButton if the required fields contain info
         if (!newValue.isEmpty()
                 && !userTextField.getText().isEmpty()
                 && !mailTextField.getText().isEmpty()

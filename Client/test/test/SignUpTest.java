@@ -57,7 +57,10 @@ public class SignUpTest extends ApplicationTest {
         verifyThat("#confirmPasswordErrorLabel", isInvisible());
 
     }
-
+    /**
+     * Test the state of the SignUp window when all the mandatory fields
+     * are written
+     */
     @Test
     public void test2_mandatoryFieldButtonEnable() {
 
@@ -84,6 +87,10 @@ public class SignUpTest extends ApplicationTest {
         verifyThat("#confirmPasswordErrorLabel", isInvisible());
     }
 
+    /**
+     * Tests all text and password fields when the format is correct
+     */
+    
     @Test
     public void test3_correctFormatInput() {
         //Clicks on hyperlink
@@ -118,6 +125,10 @@ public class SignUpTest extends ApplicationTest {
         clickOn("#userTextField");
         verifyThat("#addressErrorLabel", isInvisible());
     }
+    
+    /**
+     * Tests if the user error label pops up when inputing a wrong format
+     */
 
     @Test
     public void test4_userTextFieldError() {
@@ -141,7 +152,11 @@ public class SignUpTest extends ApplicationTest {
         clickOn("#phoneTextField");
         verifyThat("#userErrorLabel", isVisible());
     }
-
+    
+    /**
+     * Tests if the phone error label pops up when inputing a wrong format
+     */
+    
     @Test
     public void test5_phoneTextFieldError() {
         clickOn("#signUpLink");
@@ -161,6 +176,10 @@ public class SignUpTest extends ApplicationTest {
         verifyThat("#phoneErrorLabel", isVisible());
 
     }
+    
+    /**
+     * Tests if the mail error label pops up when inputing a wrong format
+     */
 
     @Test
     public void test6_mailTextFieldError() {
@@ -182,6 +201,10 @@ public class SignUpTest extends ApplicationTest {
         verifyThat("#mailErrorLabel", isVisible());
 
     }
+    
+    /**
+     * Tests if the address error label pops up when inputing a wrong format
+     */
 
     @Test
     public void test7_addressTextFieldError() {
@@ -209,6 +232,9 @@ public class SignUpTest extends ApplicationTest {
         verifyThat("#addressErrorLabel", isVisible());
     }
 
+    /**
+     * Tests if the password error label pops up when inputing a wrong format
+     */
     
     @Test
     public void test8_passwordTextFieldError(){
@@ -233,6 +259,10 @@ public class SignUpTest extends ApplicationTest {
                 
     }
     
+    /**
+     * Tests if the confirm password error label error label pops up when inputing a wrong format
+     */
+    
     @Test
     public void test9_confirmPasswordTextfieldError(){
         clickOn("#signUpLink");
@@ -245,6 +275,10 @@ public class SignUpTest extends ApplicationTest {
         clickOn("#passwordTextField");
         verifyThat("#confirmPasswordErrorLabel", isVisible());
     }
+    
+    /**
+     * Tests if the Hyperlink is working correctly
+     */
     
     @Test
     public void test10_hyperlinkWorking(){
