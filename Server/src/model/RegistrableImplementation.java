@@ -41,7 +41,7 @@ public class RegistrableImplementation implements Registrable {
     /**
      * The connections pool
      */
-    private static Pool pool = null;
+    private static Poolable pool;
     
     /**
      * A Logger for the logs
@@ -109,15 +109,6 @@ public class RegistrableImplementation implements Registrable {
             pool = new Pool();
         }
     }
-
-    /**
-     * Getter for the pool attribute
-     * 
-     * @return the pool attribute
-     */
-    public static Pool getPool() {
-        return pool;
-    }
     
     /**
      * This method get a User object and insert it inside multiple tables inside
@@ -160,10 +151,13 @@ public class RegistrableImplementation implements Registrable {
             LOGGER.severe(ex.getMessage());
         } catch (PoolErrorException ex) {
             LOGGER.severe(ex.getMessage());
+            throw new ServerErrorException();
         }finally{
             //Return Connetion to pool
-            LOGGER.info("Returning the connection to the pool.");
-            pool.returnConnection(con);
+            if(con!=null){
+                LOGGER.info("Returning the connection to the pool.");
+                pool.returnConnection(con);
+            }
         }
         return user;
     }

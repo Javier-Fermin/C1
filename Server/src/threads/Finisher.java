@@ -9,7 +9,9 @@ import static java.lang.System.exit;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.logging.Logger;
+import model.PoolableFactory;
 import model.RegistrableImplementation;
+import model.Poolable;
 
 /**
  * A thread used to end the server when certain key is pressed
@@ -29,15 +31,14 @@ public class Finisher extends Thread{
     
     @Override
     public void run() {
+        Poolable closable = PoolableFactory.getClosable();
         Scanner scanner = new Scanner(System.in);
         LOGGER.info("To stop the server press "+END_KEY);
         String key = scanner.next();
         if (key.equals(END_KEY)) {
             LOGGER.info(END_KEY+" has been pressed, shutting down the server.");
             //Close the connections of the pool
-            if(RegistrableImplementation.getPool()!=null){
-                RegistrableImplementation.getPool().closeConnections();
-            }
+            closable.closeConnections();
             exit(0);
         }
     }

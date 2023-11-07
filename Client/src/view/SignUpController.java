@@ -312,15 +312,30 @@ public class SignUpController {
                         mailTextField.getText(),
                         addressTextField.getText())
                 );
+                
+                LOGGER.info("Changing from SignUp window to SignInWindow.");
+                Stage sStage = new Stage();
+                //It will load the SignIn window and then exites the current window to signin
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignInWindowFXML.fxml"));
+                Parent rootSignIn = (Parent) loader.load();
+
+                SignInController cont = ((SignInController) loader.getController());
+
+                cont.setStage(sStage);
+                cont.initStage(rootSignIn);
+                stage.close();
+                
             } catch (ServerErrorException ex) {
-                LOGGER.severe("Server exception");
+                LOGGER.severe(ex.getMessage());
                 new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             } catch (UserAlreadyExistsException ex) {
-                LOGGER.severe("User already exist exception");
+                LOGGER.severe(ex.getMessage());
                 new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             } catch (TimeOutException ex) {
-                LOGGER.severe("Time out exception");
+                LOGGER.severe(ex.getMessage());
                 new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+            } catch (IOException ex) {
+                LOGGER.severe(ex.getMessage());
             }
         }
     }

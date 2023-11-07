@@ -15,10 +15,11 @@ import java.util.logging.Logger;
 
 /**
  * This is a pool of connections
- * 
+ *
  * @author Javier
  */
-public class Pool {
+public class Pool implements Poolable {
+
     /**
      * Parameter with the password to access the database
      */
@@ -36,52 +37,62 @@ public class Pool {
      */
     private static final Logger LOGGER = Logger.getLogger(Pool.class.getName());
 
+    public Pool() {
+        connections = new Stack();
+    }
+
     /**
      * The connections
      */
-    private Stack<Connection> connections = new Stack();
-    
+    private Stack<Connection> connections;
+
     /**
      * A method to open/get a connection
-     * 
+     *
      * @return the desired connection
-     * @throws PoolErrorException in case there is any problem opening the connection
+     * @throws PoolErrorException in case there is any problem opening the
+     * connection
      */
-    public synchronized Connection openGetConnection() throws PoolErrorException{
-        try{
-            if(connections.isEmpty()){
+    @Override
+    public synchronized Connection openGetConnection() throws PoolErrorException {
+        try {
+            if (connections.isEmpty()) {
                 LOGGER.info("Creating a new connection.");
                 connections.push(DriverManager.getConnection(URL_DB, USER_DB, PASSWORD_DB));
             }
             LOGGER.info("Connection requested.");
             return (Connection) connections.pop();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             LOGGER.severe(e.getMessage());
             throw new PoolErrorException(e.getMessage());
         }
     }
-    
+
     /**
      * This method saves a connection
-     * 
+     *
      * @param connection the connection to be saved in the pool
      */
-    public synchronized void returnConnection(Connection connection){
+    @Override
+    public synchronized void returnConnection(Connection connection) {
         LOGGER.info("Connection returned.");
         connections.push(connection);
     }
-    
+
     /**
      * This methods clears the stack removeing all the connections inside
-     * 
+     *
      * @return True if the method cleared the whole stack False otherwise
      */
-    public boolean closeConnections(){
-        for (Connection connection : connections) {
-            try {
-                connection.close();
-            } catch (SQLException ex) {
-                LOGGER.severe(ex.getMessage());
+    @Override
+    public boolean closeConnections() {
+        if (connections != null) {
+            for (Connection connection : connections) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    LOGGER.severe(ex.getMessage());
+                }
             }
         }
         return connections.isEmpty();

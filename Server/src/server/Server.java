@@ -72,17 +72,18 @@ public class Server {
                         threads++;
                     } else {
                         LOGGER.severe("Max connections reached, responding the client");
-                        ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
-                        LOGGER.info("Message read.");
-                        Message message = (Message) ois.readObject();
+                        //ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
+                        //LOGGER.info("Message read.");
+                        //Message message = (Message) ois.readObject();
                         ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
+                        Message message= new Message();
                         message.setMessageType(MessageType.SERVER_ERROR_EXCEPTION_RESPONSE);
                         LOGGER.info("Message sent.");
                         oos.writeObject(message);
                         LOGGER.info("Closing connection with the user.");
-                        ois.close();
-                        oos.close();
-                        client.close();
+                        //ois.close();
+                        //oos.close();
+                        //client.close();
                     }
                 } catch (IOException e) {
                     LOGGER.severe(e.getMessage());

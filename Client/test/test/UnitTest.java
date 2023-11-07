@@ -75,6 +75,8 @@ public class UnitTest extends ApplicationTest {
         verifyThat("#logOutButton", isVisible());
         clickOn("#logOutButton");
         
+        clickOn("Aceptar");
+        
         verifyThat("#signInWindow", isVisible());
         
     }
