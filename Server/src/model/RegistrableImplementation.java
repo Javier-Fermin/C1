@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import src.AuthenticationException;
 import src.Registrable;
@@ -67,13 +69,6 @@ public class RegistrableImplementation implements Registrable {
     private final String insertPartnerStmt = "INSERT INTO public.res_partner"
             + "(company_id, name, street, zip, email, phone, active) "
             + "VALUES ('1', ?, ?, ?, ?, ?, true)";
-  
-    /**
-     * A query to get the partner id
-     */
-    private final String getPartnerIdStmt = "SELECT id "
-            + "FROM public.res_partner "
-            + "WHERE email=?";
 
     /**
      * A query to insert a user
@@ -81,13 +76,6 @@ public class RegistrableImplementation implements Registrable {
     private final String insertUserStmt = "INSERT INTO public.res_users "
             + "(company_id, partner_id, active, login, password) "
             + "VALUES ('1', ?, True, ?, ?)";
-
-    /**
-     * A query to get a user id
-     */
-    private final String getUserIdStmt = "SELECT id "
-            + "FROM public.res_users "
-            + "WHERE partner_id=?";
 
     /**
      * A query to insert the relation of the user and the company
@@ -188,13 +176,13 @@ public class RegistrableImplementation implements Registrable {
             if (!isUserRegistered(user, con)) {
                 //Execute all the needed methods to insert all the data inside of the required postgresql tables
                 LOGGER.info("Inserting the partner for the user.");
-                insertPartner(user, con);
+                int idP=insertPartner(user, con);
                 LOGGER.info("Inserting the user.");
-                insertUser(user, getPartnerId(user, con), con);
+                int idU=insertUser(user, idP, con);
                 LOGGER.info("Inserting the relations of the user and the company.");
-                insertRelationUserCompany(user, getUserId(getPartnerId(user, con), con), con);
+                insertRelationUserCompany(user, idU, con);
                 LOGGER.info("Inserting the relations of the user and the groups.");
-                insertRelationUserGroups(getUserId(getPartnerId(user, con), con), con);
+                insertRelationUserGroups(idU, con);
                 con.commit();
             } else {
                 LOGGER.severe("User already exists.");
@@ -204,7 +192,11 @@ public class RegistrableImplementation implements Registrable {
             LOGGER.severe(e.getMessage());
             throw new ServerErrorException();
         } catch (SQLException ex) {
-            //con.rollback();
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                LOGGER.severe(ex1.getMessage());
+            }
             LOGGER.severe(ex.getMessage());
         } finally {
             //Return Connetion to pool
@@ -222,7 +214,8 @@ public class RegistrableImplementation implements Registrable {
      * @param u the user with all the data for the partner
      * @param c the connection to the database
      */
-    private void insertPartner(User u, Connection c){
+    private int insertPartner(User u, Connection c) throws SQLException{
+        int id=0;
         /*
          * Split the users address in two: zip and street
          */
@@ -233,81 +226,31 @@ public class RegistrableImplementation implements Registrable {
             zipU = addressU[0];
             streetU = addressU[1];
         }
-
-        try {
-            /*
-             * Set the PreparedStatement's statement, the values that it will 
-             * use. Then we execute it, catching any possible exception. 
-             * Finally, we close the object.
-             */
-            LOGGER.info("Preparing statement insertPartnerStmt to be executed.");
-            pstmt = c.prepareStatement(insertPartnerStmt);
-            pstmt.setString(1, u.getName());
-            pstmt.setString(2, streetU);
-            pstmt.setString(3, zipU);
-            pstmt.setString(4, u.getEmail());
-            pstmt.setString(5, u.getPhone());
-            pstmt.setQueryTimeout(10);
-            LOGGER.info("Executing query.");
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            LOGGER.severe(ex.getMessage());
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                LOGGER.severe(ex1.getMessage());
-            }
-        } finally {
-            try {
-                pstmt.close();
-            } catch (SQLException ex) {
-                LOGGER.severe(ex.getMessage());
-            }
+        /*
+         * Set the PreparedStatement's statement, the values that it will 
+         * use. Then we execute it, catching any possible exception. 
+         * Finally, we close the object.
+         */
+        LOGGER.info("Preparing statement insertPartnerStmt to be executed.");
+        pstmt = c.prepareStatement(insertPartnerStmt,RETURN_GENERATED_KEYS);
+        pstmt.setString(1, u.getName());
+        pstmt.setString(2, streetU);
+        pstmt.setString(3, zipU);
+        pstmt.setString(4, u.getEmail());
+        pstmt.setString(5, u.getPhone());
+        pstmt.setQueryTimeout(10);
+        LOGGER.info("Executing query.");
+        pstmt.executeUpdate();
+        
+        rset=pstmt.getGeneratedKeys();
+        if(rset.next()){
+            id=rset.getInt(1);
         }
-    }
-
-    /**
-     * This method used by the insertUser method to obtain the id of the partner
-     * of the res_partner table that has the same email of our User to login.
-     * If it is found, the method return the partner's id.
-     * 
-     * @param u the user which partner id is desired
-     * @param c the connection to the database
-     * @return int the partener id of the user
-     * @throws ServerErrorException in case there is any problem during the query
-     */
-    private int getPartnerId(User u, Connection c) throws ServerErrorException {
-        int idP = 0;
-        try {
-            LOGGER.info("Preparing statement getPartnerIdStmt to be executed.");
-            pstmt = c.prepareStatement(getPartnerIdStmt);
-            pstmt.setString(1, u.getEmail());
-            pstmt.setQueryTimeout(10);
-            LOGGER.info("Executing query.");
-            rset = pstmt.executeQuery();
-            while(rset.next()){
-                LOGGER.info("Partner id found.");
-                idP = rset.getInt("id");
-            }
-        } catch (SQLException ex) {
-            LOGGER.severe(ex.getMessage());
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                LOGGER.severe(ex1.getMessage());
-            }
-            throw new ServerErrorException(ex.getMessage());
-        } finally {
-            try {
-                rset.close();
-                pstmt.close();
-            } catch (SQLException ex) {
-                LOGGER.severe(ex.getMessage());
-                throw new ServerErrorException(ex.getMessage());
-            }
-        }
-
-        return idP;
+        rset.close();
+        pstmt.close();     
+        
+        return id;
+        
     }
 
     /**
@@ -320,75 +263,27 @@ public class RegistrableImplementation implements Registrable {
      * @param con the connection to the database
      * @throws ServerErrorException in case there is any problem during the query
      */
-    private void insertUser(User user, int partnerId, Connection con) throws ServerErrorException {
-        try {
-            LOGGER.info("Preparing statement insertUserStmt to be executed.");
-            pstmt = con.prepareStatement(insertUserStmt);
-            pstmt.setInt(1, partnerId);
-            pstmt.setString(2, user.getEmail());
-            pstmt.setString(3, user.getPasswd());
-            pstmt.setQueryTimeout(10);
-            LOGGER.info("Executing query.");
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            LOGGER.severe(ex.getMessage());
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                LOGGER.severe(ex1.getMessage());
-            }
-            throw new ServerErrorException();
-        } finally {
-            try {
-                pstmt.close();
-            } catch (SQLException ex) {
-                LOGGER.severe(ex.getMessage());
-                throw new ServerErrorException();
-            }
+    private int insertUser(User user, int partnerId, Connection con) throws ServerErrorException, SQLException {
+         int id=0;
+        
+        LOGGER.info("Preparing statement insertUserStmt to be executed.");
+        pstmt = con.prepareStatement(insertUserStmt,RETURN_GENERATED_KEYS);
+        pstmt.setInt(1, partnerId);
+        pstmt.setString(2, user.getEmail());
+        pstmt.setString(3, user.getPasswd());
+        pstmt.setQueryTimeout(10);
+        LOGGER.info("Executing query.");
+        pstmt.executeUpdate();
+        
+        rset=pstmt.getGeneratedKeys();    
+        if(rset.next()){
+            id=rset.getInt(1);
         }
-    }
-
-    /**
-     * This method used by the insertRelationUserCompany method to obtain the id
-     * of the user of the res_users table that has the same partner_id of our 
-     * User. If it is found, the method return the user's id.
-     * 
-     * @param partnerId the partner id of the desired user
-     * @param con the connection to the database
-     * @return the user id
-     * @throws ServerErrorException in case there is any problem during the query
-     */
-    private int getUserId(int partnerId, Connection con) throws ServerErrorException {
-        int userId = 0;
-        try {
-            LOGGER.info("Preparing statement insertPartnerStmt to be executed.");
-            pstmt = con.prepareStatement(getUserIdStmt);
-            pstmt.setInt(1, partnerId);
-            pstmt.setQueryTimeout(10);
-            LOGGER.info("Executing query.");
-            rset = pstmt.executeQuery();
-            while(rset.next()){
-                LOGGER.info("User id found.");
-                userId = rset.getInt("id");
-            }
-        } catch (SQLException ex) {
-            LOGGER.severe(ex.getMessage());
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                LOGGER.severe(ex1.getMessage());
-            }
-            throw new ServerErrorException();
-        } finally {
-            try {
-                rset.close();
-                pstmt.close();
-            } catch (SQLException ex) {
-                LOGGER.severe(ex.getMessage());
-                throw new ServerErrorException();
-            }
-        }
-        return userId;
+        
+        rset.close();
+        pstmt.close();
+        
+        return id;
     }
 
     /**
@@ -401,30 +296,16 @@ public class RegistrableImplementation implements Registrable {
      * @param con the connection to the database
      * @throws ServerErrorException in case there is any problem during the query
      */
-    private void insertRelationUserCompany(User user, int userId, Connection con) throws ServerErrorException {
-        try {
-            LOGGER.info("Preparing statement insertRelUserCompanyStmt to be executed.");
-            pstmt = con.prepareStatement(insertRelUserCompanyStmt);
-            pstmt.setInt(1, userId);
-            pstmt.setQueryTimeout(10);
-            LOGGER.info("Executing query.");
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            LOGGER.severe(ex.getMessage());
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                LOGGER.severe(ex1.getMessage());
-            }
-            throw new ServerErrorException();
-        } finally {
-            try {
-                pstmt.close();
-            } catch (SQLException ex) {
-                LOGGER.severe(ex.getMessage());
-                throw new ServerErrorException();
-            }
-        }
+    private void insertRelationUserCompany(User user, int userId, Connection con) throws ServerErrorException, SQLException {
+        
+        LOGGER.info("Preparing statement insertRelUserCompanyStmt to be executed.");
+        pstmt = con.prepareStatement(insertRelUserCompanyStmt);
+        pstmt.setInt(1, userId);
+        pstmt.setQueryTimeout(10);
+        LOGGER.info("Executing query.");
+        pstmt.executeUpdate();
+        pstmt.close();
+           
     }
     
     /**
@@ -437,33 +318,17 @@ public class RegistrableImplementation implements Registrable {
      * @param con
      * @throws ServerErrorException in case there is any problem during the query
      */    
-    private void insertRelationUserGroups(int userId, Connection con) throws ServerErrorException {
-        try {
-            LOGGER.info("Preparing statement insertRelUserGroupStmt to be executed.");
-            pstmt = con.prepareStatement(insertRelUserGroupStmt);
-            pstmt.setInt(1, userId);
-            pstmt.setInt(2, userId);
-            pstmt.setInt(3, userId);
-            pstmt.setInt(4, userId);
-            pstmt.setQueryTimeout(10);
-            LOGGER.info("Executing query.");
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            LOGGER.severe(ex.getMessage());
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                LOGGER.severe(ex1.getMessage());
-            }
-            throw new ServerErrorException();
-        } finally {
-            try {
-                pstmt.close();
-            } catch (SQLException ex) {
-                LOGGER.severe(ex.getMessage());
-                throw new ServerErrorException();
-            }
-        }
+    private void insertRelationUserGroups(int userId, Connection con) throws ServerErrorException, SQLException {
+        LOGGER.info("Preparing statement insertRelUserGroupStmt to be executed.");
+        pstmt = con.prepareStatement(insertRelUserGroupStmt);
+        pstmt.setInt(1, userId);
+        pstmt.setInt(2, userId);
+        pstmt.setInt(3, userId);
+        pstmt.setInt(4, userId);
+        pstmt.setQueryTimeout(10);
+        LOGGER.info("Executing query.");
+        pstmt.executeUpdate();
+        pstmt.close();
     }
 
     /**
@@ -476,38 +341,24 @@ public class RegistrableImplementation implements Registrable {
      * @return
      * @throws ServerErrorException 
      */
-    private boolean isUserRegistered(User user, Connection con) throws ServerErrorException {
+    private boolean isUserRegistered(User user, Connection con) throws ServerErrorException, SQLException {
         boolean userRegistered = false;
-        try {
-            LOGGER.info("Preparing statement getUsetStmt to be executed.");
-            pstmt = con.prepareStatement(getUserStmt);
-            pstmt.setString(1, user.getEmail());
-            pstmt.setQueryTimeout(10);
-            LOGGER.info("Executing query.");
-            rset = pstmt.executeQuery();
-            while(rset.next()){
-                LOGGER.info("User faound.");
-                if (!rset.getString("login").isEmpty()) {
-                    userRegistered = true;
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.severe(ex.getMessage());
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                LOGGER.severe(ex1.getMessage());
-            }
-            throw new ServerErrorException();
-        } finally {
-            try {
-                rset.close();
-                pstmt.close();
-            } catch (SQLException ex) {
-                LOGGER.severe(ex.getMessage());
-                throw new ServerErrorException();
+        
+        LOGGER.info("Preparing statement getUsetStmt to be executed.");
+        pstmt = con.prepareStatement(getUserStmt);
+        pstmt.setString(1, user.getEmail());
+        pstmt.setQueryTimeout(10);
+        LOGGER.info("Executing query.");
+        rset = pstmt.executeQuery();
+        while(rset.next()){
+            LOGGER.info("User faound.");
+            if (!rset.getString("login").isEmpty()) {
+                userRegistered = true;
             }
         }
+        rset.close();
+        pstmt.close();
+           
         return userRegistered;
     }
 
