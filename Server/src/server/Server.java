@@ -1,7 +1,6 @@
 package server;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -68,22 +67,15 @@ public class Server {
                     if (threads < Integer.parseInt(MAX_THREADS)) {
                         Worker worker = new Worker(factory, client);
                         LOGGER.info("Worker started for the client");
-                        worker.run();
                         threads++;
+                        worker.start();
                     } else {
                         LOGGER.severe("Max connections reached, responding the client");
-                        //ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
-                        //LOGGER.info("Message read.");
-                        //Message message = (Message) ois.readObject();
                         ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
                         Message message= new Message();
                         message.setMessageType(MessageType.SERVER_ERROR_EXCEPTION_RESPONSE);
                         LOGGER.info("Message sent.");
                         oos.writeObject(message);
-                        LOGGER.info("Closing connection with the user.");
-                        //ois.close();
-                        //oos.close();
-                        //client.close();
                     }
                 } catch (IOException e) {
                     LOGGER.severe(e.getMessage());
@@ -98,11 +90,19 @@ public class Server {
         }
     }
 
+    /**
+     * This method substracts one from the thread variable
+     */
     public static synchronized void minusThread() {
         LOGGER.info("A worker has ended.");
         threads--;
     }
 
+    /**
+     * Entry point for the Java application.
+     * 
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
         Server s1 = new Server();
         // starts the server

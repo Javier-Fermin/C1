@@ -125,8 +125,8 @@ public class RegistrableImplementation implements Registrable {
             LOGGER.info("Executing query");
             rset = pstmt.executeQuery();
             if (!rset.next()) {
-                LOGGER.info("Wrong credentials for the user.");
-                throw new AuthenticationException("The credentials for the user are wrong.");
+                LOGGER.info("Wrong credentials for the user or the user may not exist.");
+                throw new AuthenticationException("The credentials for the user are wrong or the user may not exist.");
             } else {
                 //Insert data to the user
                 user = new User(rset.getString("name"), rset.getString("password"), rset.getString("phone"), rset.getString("login"), null);

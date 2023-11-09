@@ -9,7 +9,6 @@ import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
-import static org.testfx.matcher.base.NodeMatchers.isDisabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 
@@ -36,12 +35,13 @@ public class SignUpControllerExceptionsTest extends ApplicationTest{
         FxToolkit.registerPrimaryStage();
         FxToolkit.setupApplication(Client.class);
     }
-    
+
     /**
-     * 
+     * Tests a sign up server error, it only works when the server is wrong in some way that generates
+     * a ServerErrorException
      */
     @Test
-    public void test1_UserAlreadyExists(){
+    public void test1_ServerError(){
         clickOn("#signUpLink");
         clickOn("#userTextField");
         write("User");
@@ -52,25 +52,16 @@ public class SignUpControllerExceptionsTest extends ApplicationTest{
         clickOn("#confirmPasswordTextField");
         write("Abcd*1234");
         clickOn("#signUpButton");
-        verifyThat("The user already exists.", isVisible());
-        clickOn("Aceptar");
-    }
-    
-    /**
-     * 
-     */
-    @Test
-    public void test2_ServerError(){
-        clickOn("#signUpButton");
         verifyThat("An unexpected error occurred, try again later.", isVisible());
         clickOn("Aceptar");
     }
     
     /**
-     * 
+     * Tests a sign up timeout, it only works when the parameters in the client
+     * properties are wrong
      */
     @Test
-    public void test3_TimeOut() {
+    public void test2_TimeOut() {
         clickOn("#signUpButton");
         verifyThat("Could not reach the server, try again later.", isVisible());
         clickOn("Aceptar");

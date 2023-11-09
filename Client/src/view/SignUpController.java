@@ -19,7 +19,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -259,17 +258,14 @@ public class SignUpController {
 
         LOGGER.info("SignUp alert on close request.");
         //Confirmation is requested when leaving the window
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                //If you accept, you will exit the application.
-                //If you cancel, you will return to the initial window.
-                Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit?").showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    Platform.exit();
-                }
-                event.consume();
+        stage.setOnCloseRequest((WindowEvent event) -> {
+            //If you accept, you will exit the application.
+            //If you cancel, you will return to the initial window.
+            Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit?").showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Platform.exit();
             }
+            event.consume();
         });
         stage.setScene(scene);
         stage.show();
@@ -329,8 +325,8 @@ public class SignUpController {
                 LOGGER.severe(ex.getMessage());
                 new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             } catch (UserAlreadyExistsException ex) {
-                LOGGER.severe(ex.getMessage());
-                new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+                LOGGER.severe(mailTextField.getText()+"\n"+ex.getMessage());
+                new Alert(Alert.AlertType.ERROR, mailTextField.getText()+"\n"+ex.getMessage()).showAndWait();
             } catch (TimeOutException ex) {
                 LOGGER.severe(ex.getMessage());
                 new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
@@ -387,7 +383,7 @@ public class SignUpController {
             try {
                 //if the user doesn´t fullfill the requirements it would throw an Exception
                 if ((userTextField.getText().length() > 500
-                        || !userTextField.getText().matches("[a-zA-Z]+"))
+                        || !userTextField.getText().matches("[A-za-z\\s]+"))
                         && !userTextField.getText().isEmpty()) {
                     throw new BadUserException();
                 }

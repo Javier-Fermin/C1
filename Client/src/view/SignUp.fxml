@@ -17,7 +17,7 @@
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" layoutX="625.0" layoutY="232.0" rotate="29.1" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" styleClass="decorativeBackground" width="30.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="150.0" layoutX="650.0" layoutY="282.0" rotate="29.1" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" styleClass="decorativeBackground" width="20.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="675.0" layoutY="312.0" rotate="29.1" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" styleClass="decorativeBackground" width="10.0" />
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="224.0" styleClass="decorativeBackground">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="224.0" styleClass="decorativeBackground">
          <children>
             <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="12.0" layoutY="168.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -82,8 +82,8 @@
             </ImageView>
             <Label fx:id="confirmPasswordErrorLabel" alignment="CENTER" styleClass="errorLabel" text="Password error" textFill="RED" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="340.0" />
             <Label fx:id="passwordErrorLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" styleClass="errorLabel" text="Password error" textFill="RED" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="340.0" />
-            <Label layoutX="115.0" layoutY="320.0" prefHeight="28.0" prefWidth="187.0" text="Do you already have an account?" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
-            <Hyperlink fx:id="signInHyperlink" layoutX="159.0" layoutY="347.0" prefHeight="23.0" prefWidth="74.0" text="Log In now!" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="190.0" />
+            <Label layoutX="115.0" layoutY="320.0" prefHeight="28.0" prefWidth="224.0" text="Do you already have an account?" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="212.0" />
+            <Hyperlink fx:id="signInHyperlink" layoutX="159.0" layoutY="347.0" prefHeight="23.0" prefWidth="74.0" text="Log In now!" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="114.0" />
             <Button fx:id="signUpButton" disable="true" layoutX="323.0" layoutY="332.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" text="Sign Up" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
             <Button fx:id="hyperlinkButton" layoutX="271.0" layoutY="367.0" mnemonicParsing="false" text="Button" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="271.0" />
          </children>

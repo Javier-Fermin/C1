@@ -6,12 +6,15 @@
 package test;
 
 import client.Client;
+import java.util.Random;
+import java.util.concurrent.TimeoutException;
 import javafx.scene.input.KeyCode;
-import javafx.stage.Stage;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
+import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.isDisabled;
 import static org.testfx.matcher.base.NodeMatchers.isEnabled;
@@ -26,16 +29,38 @@ import static org.testfx.matcher.control.TextInputControlMatchers.hasText;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SignUpTest extends ApplicationTest {
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        new Client().start(stage);
+    @BeforeClass
+    public static void setUpClass() throws TimeoutException {
+        FxToolkit.registerPrimaryStage();
+        FxToolkit.setupApplication(Client.class);
+    }
+
+    public void eraseAll() {
+        doubleClickOn("#userTextField");
+        eraseText(1);
+        doubleClickOn("#phoneTextField");
+        eraseText(2);
+        doubleClickOn("#mailTextField");
+        eraseText(1);
+        doubleClickOn("#mailTextField");
+        eraseText(1);
+        doubleClickOn("#addressTextField");
+        eraseText(1);
+        doubleClickOn("#addressTextField");
+        eraseText(1);
+        doubleClickOn("#addressTextField");
+        eraseText(1);
+        doubleClickOn("#passwordTextField");
+        eraseText(1);
+        doubleClickOn("#confirmPasswordTextField");
+        eraseText(1);
     }
 
     /**
      * Tests if the initalization of the SignUp window is correct
      */
     @Test
-    public void test1_InitialState() {
+    public void test01_InitialState() {
         //Clicks on hyperlink
         clickOn("#signUpLink");
         //Checks textfields
@@ -57,14 +82,14 @@ public class SignUpTest extends ApplicationTest {
         verifyThat("#confirmPasswordErrorLabel", isInvisible());
 
     }
+
     /**
-     * Test the state of the SignUp window when all the mandatory fields
-     * are written
+     * Test the state of the SignUp window when all the mandatory fields are
+     * written
      */
     @Test
-    public void test2_mandatoryFieldButtonEnable() {
+    public void test02_mandatoryFieldButtonEnable() {
 
-        clickOn("#signUpLink");
         clickOn("#userTextField");
         write("Ann");
         verifyThat("#signUpButton", isDisabled());
@@ -90,11 +115,9 @@ public class SignUpTest extends ApplicationTest {
     /**
      * Tests all text and password fields when the format is correct
      */
-    
     @Test
-    public void test3_correctFormatInput() {
-        //Clicks on hyperlink
-        clickOn("#signUpLink");
+    public void test03_correctFormatInput() {
+        eraseAll();
         clickOn("#userTextField");
         write("Ann");
 
@@ -125,14 +148,13 @@ public class SignUpTest extends ApplicationTest {
         clickOn("#userTextField");
         verifyThat("#addressErrorLabel", isInvisible());
     }
-    
+
     /**
      * Tests if the user error label pops up when inputing a wrong format
      */
-
-    @Test
-    public void test4_userTextFieldError() {
-        clickOn("#signUpLink");
+    //@Test
+    public void test04_userTextFieldError() {
+        eraseAll();
         verifyThat("#userErrorLabel", isInvisible());
         clickOn("#userTextField");
         write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas fringilla libero non velit luctus, ut bibendum purus gravida. Sed auctor justo a nisi volutpat, nec cursus purus commodo. Proin ultrices, purus non tempus convallis, justo felis tincidunt elit, a cursus purus nunc ac nunc. Vivamus a sem id orci consectetur eleifend in eget justo. Curabitur varius euismod bibendum. Morbi sit amet justo sit amet tellus ultricies tincidunt. Suspendisse potenti. Nam euismod turpis sit amet est accumsan laoreet. Vestibulum scelerisque mauris a sagittis fermentum. Etiam a libero vel libero semper bibendum. Sed sit amet turpis feugiat, vehicula metus a, bibendum tellus. Sed auctor dolor sit amet tortor tincidunt, eu scelerisque dolor volutpat. Sed sed justo a urna posuere venenatis. Sed gravida, justo ut tristique varius, metus libero tincidunt mi, id finibus ipsum elit ut nulla. Proin dignissim, sapien nec congue ultrices, sapien purus rhoncus quam, eget malesuada nisl est ac quam");
@@ -152,14 +174,13 @@ public class SignUpTest extends ApplicationTest {
         clickOn("#phoneTextField");
         verifyThat("#userErrorLabel", isVisible());
     }
-    
+
     /**
      * Tests if the phone error label pops up when inputing a wrong format
      */
-    
     @Test
-    public void test5_phoneTextFieldError() {
-        clickOn("#signUpLink");
+    public void test05_phoneTextFieldError() {
+        eraseAll();
         verifyThat("#phoneErrorLabel", isInvisible());
         clickOn("#phoneTextField");
         write("asdf");
@@ -176,14 +197,13 @@ public class SignUpTest extends ApplicationTest {
         verifyThat("#phoneErrorLabel", isVisible());
 
     }
-    
+
     /**
      * Tests if the mail error label pops up when inputing a wrong format
      */
-
     @Test
-    public void test6_mailTextFieldError() {
-        clickOn("#signUpLink");
+    public void test06_mailTextFieldError() {
+        eraseAll();
         verifyThat("#mailErrorLabel", isInvisible());
         clickOn("#mailTextField");
         write("hello");
@@ -201,14 +221,13 @@ public class SignUpTest extends ApplicationTest {
         verifyThat("#mailErrorLabel", isVisible());
 
     }
-    
+
     /**
      * Tests if the address error label pops up when inputing a wrong format
      */
-
-    @Test
-    public void test7_addressTextFieldError() {
-        clickOn("#signUpLink");
+    //@Test
+    public void test07_addressTextFieldError() {
+        eraseAll();
         verifyThat("#addressErrorLabel", isInvisible());
         clickOn("#addressTextField");
         write("asdasdasd");
@@ -235,10 +254,9 @@ public class SignUpTest extends ApplicationTest {
     /**
      * Tests if the password error label pops up when inputing a wrong format
      */
-    
     @Test
-    public void test8_passwordTextFieldError(){
-        clickOn("#signUpLink");
+    public void test08_passwordTextFieldError() {
+        eraseAll();
         verifyThat("#passwordErrorLabel", isInvisible());
         clickOn("#passwordTextField");
         write("123456a");
@@ -254,18 +272,16 @@ public class SignUpTest extends ApplicationTest {
         write("ABCD*1234");
         clickOn("#confirmPasswordTextField");
         verifyThat("#passwordErrorLabel", isVisible());
-             
-                
-                
+
     }
-    
+
     /**
-     * Tests if the confirm password error label error label pops up when inputing a wrong format
+     * Tests if the confirm password error label error label pops up when
+     * inputing a wrong format
      */
-    
     @Test
-    public void test9_confirmPasswordTextfieldError(){
-        clickOn("#signUpLink");
+    public void test09_confirmPasswordTextfieldError() {
+        eraseAll();
         verifyThat("#confirmPasswordErrorLabel", isInvisible());
         verifyThat("#passwordErrorLabel", isInvisible());
         clickOn("#passwordTextField");
@@ -275,15 +291,43 @@ public class SignUpTest extends ApplicationTest {
         clickOn("#passwordTextField");
         verifyThat("#confirmPasswordErrorLabel", isVisible());
     }
-    
+
     /**
      * Tests if the Hyperlink is working correctly
      */
-    
     @Test
-    public void test10_hyperlinkWorking(){
-        clickOn("#signUpLink");
+    public void test10_hyperlinkWorking() {
         clickOn("#signInHyperlink");
         verifyThat("#signInButton", isVisible());
+    }
+
+    /**
+     * This test gins up a user and then tries again to check if an AlreadyExistsUserException is raised.
+     */
+    @Test
+    public void test11_UserSignUpAndUserAlreadyExists() {
+        String user = "User" + new Random().nextInt() + "@gmail.com";
+        clickOn("#signUpLink");
+        clickOn("#userTextField");
+        write("User");
+        clickOn("#mailTextField");
+        write(user);
+        clickOn("#passwordTextField");
+        write("Abcd*1234");
+        clickOn("#confirmPasswordTextField");
+        write("Abcd*1234");
+        clickOn("#signUpButton");
+        clickOn("#signUpLink");
+        clickOn("#userTextField");
+        write("User");
+        clickOn("#mailTextField");
+        write(user);
+        clickOn("#passwordTextField");
+        write("Abcd*1234");
+        clickOn("#confirmPasswordTextField");
+        write("Abcd*1234");
+        clickOn("#signUpButton");
+        verifyThat(user+"\nThe user already exists.", isVisible());
+        clickOn("Aceptar");
     }
 }

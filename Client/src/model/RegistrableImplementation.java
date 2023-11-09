@@ -53,9 +53,17 @@ public class RegistrableImplementation implements Registrable {
      * A Logger for the logs
      */
     private static final Logger LOGGER = Logger.getLogger(RegistrableImplementation.class.getName());
-
+    /**
+     * The socket used by the client application
+     */
     private Socket client = null;
+    /**
+     * The input stream for the client application
+     */
     private ObjectInputStream ois = null;
+    /**
+     * The output stream for the client application
+     */
     private ObjectOutputStream oos = null;
 
     /**

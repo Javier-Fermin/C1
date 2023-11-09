@@ -94,6 +94,7 @@ public class Pool implements Poolable {
                     LOGGER.severe(ex.getMessage());
                 }
             }
+            connections.clear();
         }
         return connections.isEmpty();
     }
