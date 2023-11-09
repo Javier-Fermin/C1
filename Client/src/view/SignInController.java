@@ -361,10 +361,15 @@ public class SignInController implements ChangeListener<String> {
      */
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        LOGGER.info("Chage signInButton enable or disable");
         if (!newValue.isEmpty() && !usernameText.getText().isEmpty() && !passwordText.getText().isEmpty()) {
+            if(signInButton.isDisabled()){
+                LOGGER.info("signUpButton enabled.");
+            }
             signInButton.disableProperty().set(false);
         } else {
+            if(!signInButton.isDisabled()){
+                LOGGER.info("signUpButton disabled.");
+            }
             signInButton.disableProperty().set(true);
         }
     }
