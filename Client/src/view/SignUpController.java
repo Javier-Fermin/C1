@@ -238,9 +238,7 @@ public class SignUpController {
         LOGGER.info("SignUp textFields add listeners.");
         //We set the textProperty listeners to all the fields
         userTextField.textProperty().addListener(this::handleTextPropertyChange);
-        phoneTextField.textProperty().addListener(this::handleTextPropertyChange);
         mailTextField.textProperty().addListener(this::handleTextPropertyChange);
-        addressTextField.textProperty().addListener(this::handleTextPropertyChange);
         passwordTextField.textProperty().addListener(this::handleTextPropertyChange);
         confirmPasswordTextField.textProperty().addListener(this::handleTextPropertyChange);
 
@@ -520,8 +518,8 @@ public class SignUpController {
         LOGGER.info("Check values to remove the passwordLabel");
         if (newValue) {
             //Removes the current styles when focus gained
-            passwordLabel.getStyleClass().remove("errorLabel");
-            passwordTextField.getStyleClass().remove("textFieldError");
+            passwordLabel.getStyleClass().removeAll("errorLabel");
+            passwordTextField.getStyleClass().removeAll("textFieldError");
             passwordTextField.getStyleClass().add("textFieldWithIcon");
             passwordErrorLabel.setVisible(false);
         } else {
@@ -550,8 +548,8 @@ public class SignUpController {
                     if (confirmPasswordTextField.isVisible()
                             || confirmPasswordTextField.getStyleClass().contains("textFieldError")
                             || confirmPasswordLabel.getStyleClass().contains("errorLabel")) {
-                        confirmPasswordLabel.getStyleClass().remove("errorLabel");
-                        confirmPasswordTextField.getStyleClass().remove("textFieldError");
+                        confirmPasswordLabel.getStyleClass().removeAll("errorLabel");
+                        confirmPasswordTextField.getStyleClass().removeAll("textFieldError");
                         confirmPasswordTextField.getStyleClass().add("textFieldWithIcon");
                         confirmPasswordErrorLabel.setVisible(false);
                     }
@@ -560,11 +558,11 @@ public class SignUpController {
                 LOGGER.severe("Value from passwordTextField have incorrect format, show passwordErrorLabel");
                 passwordErrorLabel.setVisible(true);
                 passwordLabel.getStyleClass().add("errorLabel");
-                passwordTextField.getStyleClass().remove("textFieldWithIcon");
+                passwordTextField.getStyleClass().removeAll("textFieldWithIcon");
                 passwordTextField.getStyleClass().add("textFieldError");
                 if (confirmPasswordLabel.isVisible()) {
-                    confirmPasswordLabel.getStyleClass().remove("errorLabel");
-                    confirmPasswordTextField.getStyleClass().remove("textFieldError");
+                    confirmPasswordLabel.getStyleClass().removeAll("errorLabel");
+                    confirmPasswordTextField.getStyleClass().removeAll("textFieldError");
                     confirmPasswordTextField.getStyleClass().add("textFieldWithIcon");
                     confirmPasswordErrorLabel.setVisible(false);
                 }
@@ -574,7 +572,7 @@ public class SignUpController {
                 if (!confirmPasswordTextField.getText().isEmpty()) {
                     confirmPasswordErrorLabel.setVisible(true);
                     confirmPasswordLabel.getStyleClass().add("errorLabel");
-                    confirmPasswordTextField.getStyleClass().remove("textFieldWithIcon");
+                    confirmPasswordTextField.getStyleClass().removeAll("textFieldWithIcon");
                     confirmPasswordTextField.getStyleClass().add("textFieldError");
                 }
 
@@ -596,11 +594,11 @@ public class SignUpController {
         LOGGER.info("Check values to remove the confirmPasswordLabel");
         if (newValue) {
             //Removes the current styles when focus gained
-            confirmPasswordLabel.getStyleClass().remove("errorLabel");
-            confirmPasswordTextField.getStyleClass().remove("textFieldError");
+            confirmPasswordLabel.getStyleClass().removeAll("errorLabel");
+            confirmPasswordTextField.getStyleClass().removeAll("textFieldError");
             confirmPasswordTextField.getStyleClass().add("textFieldWithIcon");
             confirmPasswordErrorLabel.setVisible(false);
-            confirmPasswordLabel.getStyleClass().remove("errorLabel");
+            confirmPasswordLabel.getStyleClass().removeAll("errorLabel");
         } else {
             try {
                 LOGGER.info("Check values from confirmPasswordTextField is equal to passwordTextField");
@@ -614,7 +612,7 @@ public class SignUpController {
                 LOGGER.severe("Values from passwordTextField and confirmPasswordTextField are diferent, show confirmPasswordErrorLabel");
                 confirmPasswordErrorLabel.setVisible(!passwordErrorLabel.isVisible());
                 confirmPasswordLabel.getStyleClass().add("errorLabel");
-                confirmPasswordTextField.getStyleClass().remove("textFieldWithIcon");
+                confirmPasswordTextField.getStyleClass().removeAll("textFieldWithIcon");
                 confirmPasswordTextField.getStyleClass().add("textFieldError");
 
             }

@@ -66,7 +66,7 @@
             <Label fx:id="passwordLabel" layoutX="9.0" layoutY="240.0" prefHeight="28.0" prefWidth="149.0" text="Password" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="280.0" />
             <PasswordField fx:id="passwordTextField" layoutX="11.0" layoutY="310.0" prefHeight="28.0" prefWidth="206.0" promptText="Abcd*1234" styleClass="textFieldWithIcon" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="232.0" AnchorPane.topAnchor="310.0">
                <tooltip>
-                  <Tooltip text="The password must have more than 8 &#10;characters and must contain:&#10;&#9;- A letter&#10;&#9;- A digit&#10;&#9;- A special character&#10;&#9;&#9;" />
+                  <Tooltip text="The password must have more than 8 &#10;characters and must contain:&#10;&#9;- A uppercase letter&#10;&#9;- A lowercase letter&#10;&#9;- A digit&#10;&#9;- A special character&#10;&#9;&#9;" />
                </tooltip></PasswordField>
             <ImageView fitHeight="26.0" fitWidth="20.0" layoutX="186.0" layoutY="313.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="188.0" AnchorPane.topAnchor="313.0">
                <image>
@@ -80,8 +80,8 @@
                   <Image url="@../resources/images/passwd.png" />
                </image>
             </ImageView>
-            <Label fx:id="confirmPasswordErrorLabel" alignment="CENTER" styleClass="errorLabel" text="Password error" textFill="RED" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="340.0" />
-            <Label fx:id="passwordErrorLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" styleClass="errorLabel" text="Password error" textFill="RED" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="340.0" />
+            <Label fx:id="confirmPasswordErrorLabel" alignment="CENTER" styleClass="errorLabel" text="The passwords do not match." textFill="RED" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="340.0" />
+            <Label fx:id="passwordErrorLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" styleClass="errorLabel" text="The password does not fulfill the requirements." textFill="RED" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="340.0" />
             <Label layoutX="115.0" layoutY="320.0" prefHeight="28.0" prefWidth="224.0" text="Do you already have an account?" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="212.0" />
             <Hyperlink fx:id="signInHyperlink" layoutX="159.0" layoutY="347.0" prefHeight="23.0" prefWidth="74.0" text="Log In now!" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="114.0" />
             <Button fx:id="signUpButton" disable="true" layoutX="323.0" layoutY="332.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" text="Sign Up" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />

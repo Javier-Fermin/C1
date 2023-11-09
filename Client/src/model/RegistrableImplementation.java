@@ -182,7 +182,7 @@ public class RegistrableImplementation implements Registrable {
             LOGGER.info("Connecting with the server.");
             //creates client connection
             client = new Socket();
-            client.connect(socketAddress, 1000);
+            client.connect(socketAddress, 10000);
             LOGGER.info("Connection established.");
             //open writing and reading stream
             LOGGER.info("Preparing the streams for communication.");
