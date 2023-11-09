@@ -64,8 +64,8 @@ public class MainWindowController {
     /**
      * Init method for MainWindow
      *
-     * @param root
-     * @param user
+     * @param root the Parent element for the window
+     * @param user the user that has signed in
      */
     public void initStage(Parent root, User user) {
         //Receives a User object from the SignInWindow window.
@@ -108,7 +108,7 @@ public class MainWindowController {
      * and the SignInWindow window will open. If you cancel, you will return to
      * the MainWindow window
      *
-     * @param event
+     * @param event an ActionEvent 
      */
     @FXML
     public void logOutAction(ActionEvent event) {

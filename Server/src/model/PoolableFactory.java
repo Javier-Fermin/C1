@@ -6,13 +6,23 @@
 package model;
 
 /**
- *
- * @author javie
+ * This is a factory for the Poolable interface
+ * 
+ * @author Javier
  */
 public class PoolableFactory {
-    private static Pool pool;
+    /**
+     * The poolable that is used in the factory
+     */
+    private static Poolable pool;
     
-    public static Poolable getClosable(){
+    /**
+     * This method returns an implementation of the interface Poolable
+     * 
+     * @return the desired implementation
+     */
+    public static Poolable getPoolable(){
+        //If there is no poolable created it is created
         if(pool == null){
             pool = new Pool();
         }

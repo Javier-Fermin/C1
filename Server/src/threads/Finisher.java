@@ -31,14 +31,16 @@ public class Finisher extends Thread{
     
     @Override
     public void run() {
-        Poolable closable = PoolableFactory.getClosable();
+        Poolable closable = PoolableFactory.getPoolable();
         Scanner scanner = new Scanner(System.in);
-        LOGGER.info("To stop the server press "+END_KEY);
+        LOGGER.info("To stop the server press "+END_KEY+" and hit enter to confirm.");
         String key = scanner.next();
-        if (key.equals(END_KEY)) {
+        if (key.equalsIgnoreCase(END_KEY)) {
             LOGGER.info(END_KEY+" has been pressed, shutting down the server.");
             //Close the connections of the pool
-            closable.closeConnections();
+            if(closable.closeConnections()){
+                LOGGER.info("The pool of connections has been closed.");
+            };
             exit(0);
         }
     }

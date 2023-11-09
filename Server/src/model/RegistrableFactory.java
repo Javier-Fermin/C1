@@ -20,7 +20,7 @@ public class RegistrableFactory {
      * 
      * @return the desired implementation
      */
-    public Registrable getRegistrable(){
+    public synchronized Registrable getRegistrable(){
         return new RegistrableImplementation();
     }
 }
