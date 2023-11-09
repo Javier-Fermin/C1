@@ -6,11 +6,19 @@
 package model;
 
 /**
- *
- * @author javie
+ * This class is a factory used to return implementations of the Poolable
+ * interface
+ * 
+ * @author Javier
  */
 public class PoolableFactory {
     private static Pool pool;
+    
+    /**
+     * This method returns a Registrable implementation
+     * 
+     * @return the desired implementation
+     */
     
     public static Poolable getClosable(){
         if(pool == null){
