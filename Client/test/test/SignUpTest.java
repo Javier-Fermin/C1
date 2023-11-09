@@ -299,6 +299,9 @@ public class SignUpTest extends ApplicationTest {
     public void test10_hyperlinkWorking() {
         clickOn("#signInHyperlink");
         verifyThat("#signInButton", isVisible());
+        clickOn("#signUpLink");
+        press(KeyCode.ESCAPE).release(KeyCode.ESCAPE);
+        verifyThat("#signInButton", isVisible());
     }
 
     /**

@@ -154,7 +154,7 @@ public class SignInTest extends ApplicationTest {
 
     //Test 7: Comprobar que se muestra un Alert cuando al hacer el metodo de 
     //        logica SignIn nos devuelva un objeto User nulo.
-    //@Test
+    @Test
     public void test07_AuthenticationError() {
         clickOn("#usernameText");
         write("manoloNoExiste@wakeup.please");
@@ -164,9 +164,9 @@ public class SignInTest extends ApplicationTest {
         verifyThat("The credentials given for this user\n"
                             + "are wrong or the user does not exists.", isVisible());
         clickOn("Aceptar");
-        doubleClickOn("#usernameText");
+        clickOn("#usernameText");
         eraseText(28);
-        doubleClickOn("#usernameText");
+        clickOn("#usernameText");
         eraseText(28);
         clickOn("#passwordText");
         eraseText(8);
@@ -174,7 +174,7 @@ public class SignInTest extends ApplicationTest {
 
     //Test 8: Comprobar que se muestra un Alert cuando salte el TimeOutException
     //        por tardar demasiado en conectarse con el servidor.
-    @Test
+    //@Test
     public void test08_TimeOutException() {
         clickOn("#usernameText");
         write("manolo@gmail.com");

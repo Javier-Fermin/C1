@@ -31,6 +31,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.RegistrableFactory;
@@ -184,12 +186,6 @@ public class SignUpController {
     private Button signUpButton;
 
     /**
-     * Button used to trigger the hyperlink with the default escape button
-     */
-    @FXML
-    private Button hyperlinkButton;
-
-    /**
      * Setter for the stage
      *
      * @param stage
@@ -232,8 +228,12 @@ public class SignUpController {
         //The default button is the signUp button
         signUpButton.setDefaultButton(true);
 
-        //The default escape button is the hyperlink
-        hyperlinkButton.setCancelButton(true);
+        //The default escape action
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+                if (KeyCode.ESCAPE == event.getCode()) {
+                    signInHyperlink.fire();
+                }
+            });
 
         LOGGER.info("SignUp textFields add listeners.");
         //We set the textProperty listeners to all the fields
