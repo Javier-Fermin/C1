@@ -1,5 +1,7 @@
 package model;
 
+import src.Registrable;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -7,11 +9,18 @@ package model;
  */
 
 /**
- *
- * @author javie
+ * This class is a factory used to return implementations of the Registrable
+ * interface
+ * 
+ * @author Javier, Fran, Emil, Imanol
  */
 public class RegistrableFactory {
-    public Registrable getRegistrable(){
+    /**
+     * This method returns a Registrable implementation
+     * 
+     * @return the desired implementation
+     */
+    public synchronized Registrable getRegistrable(){
         return new RegistrableImplementation();
     }
 }
