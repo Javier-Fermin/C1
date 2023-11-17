@@ -137,6 +137,7 @@ public class RegistrableImplementation implements Registrable {
             throw new TimeOutException();
         } catch (SQLException ex) {
             LOGGER.severe(ex.getMessage());
+            throw new ServerErrorException();
         } catch (PoolErrorException ex) {
             LOGGER.severe(ex.getMessage());
             throw new ServerErrorException();
@@ -221,10 +222,11 @@ public class RegistrableImplementation implements Registrable {
          */
         String zipU = null;
         String streetU = null;
-        if(!u.getAddress().isEmpty()){
-            String[] addressU = u.getAddress().split(" ");
-            zipU = addressU[0];
-            streetU = addressU[1];
+        if(!u.getAddress().isEmpty() && u.getAddress().matches("[0-9][0-9][0-9][0-9][0-9]\\h.+")){
+            zipU = u.getAddress().substring(0, 5);
+            streetU = u.getAddress().substring(6, u.getAddress().length());
+        }else{
+            streetU = u.getAddress();
         }
         /*
          * Set the PreparedStatement's statement, the values that it will 

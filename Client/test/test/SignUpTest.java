@@ -320,6 +320,7 @@ public class SignUpTest extends ApplicationTest {
         clickOn("#confirmPasswordTextField");
         write("Abcd*1234");
         clickOn("#signUpButton");
+        verifyThat("#signUpLink", isVisible());
         clickOn("#signUpLink");
         clickOn("#userTextField");
         write("User");

@@ -306,9 +306,9 @@ public class SignUpController {
                         mailTextField.getText(),
                         addressTextField.getText())
                 );
-                
-                Optional<ButtonType> alert = new Alert(Alert.AlertType.INFORMATION, "User succesfully Signed Up!").showAndWait();
-                
+                LOGGER.info("Showing success.");
+                new Alert(Alert.AlertType.INFORMATION, "Sign Up successful.").showAndWait();
+
                 LOGGER.info("Changing from SignUp window to SignInWindow.");
                 Stage sStage = new Stage();
                 //It will load the SignIn window and then exites the current window to signin
@@ -492,7 +492,6 @@ public class SignUpController {
                 LOGGER.info("Check values to addressTextField has less than 500 characters and has a correct format");
                 //Checks the format of the address, if incorrect then throw an exception
                 if (addressTextField.getText().length() > 500
-                        || (!addressTextField.getText().matches("[0-9][0-9][0-9][0-9][0-9]\\h[[a-zA-Z0-9]||\\h]+"))
                         && !addressTextField.getText().isEmpty()) {
                     throw new BadAddressException();
                 } else {
