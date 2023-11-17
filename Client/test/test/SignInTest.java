@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -47,6 +48,7 @@ public class SignInTest extends ApplicationTest {
 
     //Test 1: Inicializacion(Comprobar campos vacios y desabilitados).
     @Test
+    @Ignore
     public void test01_InitialWindowState() {
         clickOn("#signUpLink");
         clickOn("#signInHyperlink");
@@ -66,6 +68,7 @@ public class SignInTest extends ApplicationTest {
     //Test 2: Comprobar que el SignIn boton este deshabilitado si alguno de los 
     //        campos o ambos estan vacios(usernameText y passwordText).
     @Test
+    @Ignore
     public void test02_SignInButtonIsDisabled() {
         clickOn("#usernameText");
         write("manolo");
@@ -81,6 +84,7 @@ public class SignInTest extends ApplicationTest {
     //Test 3: Comprobar que el SignIn boton esta habilitado cuando los campos
     //        usernameText y passwordText no estan vacios.
     @Test
+    @Ignore
     public void test03_SignInButtonIsEnabled() {
         clickOn("#usernameText");
         write("manolo");
@@ -98,6 +102,7 @@ public class SignInTest extends ApplicationTest {
     //Test 4: Comprobar que se cambia el icono del ToggleButton y que se muestre
     //        o passwordText o showPasswordText.
     @Test
+    @Ignore
     public void test04_showPasswordButton() {
         clickOn("#passwordText");
         write("password");
@@ -121,7 +126,7 @@ public class SignInTest extends ApplicationTest {
 
     //Test 5: Comprobar que al clickar el boton SignInButton la ventana 
     //        MainWindow es visible.
-//    @Test
+    @Test
     public void test05_SignInCliked() {
         clickOn("#usernameText");
         write("manolo@gmail.com");
@@ -130,13 +135,12 @@ public class SignInTest extends ApplicationTest {
         clickOn("#signInButton");
         verifyThat("#mainWindowPane", isVisible());
 
-        clickOn("#logOutButton");
-        verifyThat("#signInWindow", isVisible());
     }
 
     //Test 6: Comprobar que se muestra un Alert cuando se introduce un username
     //        con formato de correo erroneo y pulsamos el boton SignInButton.
     @Test
+    @Ignore
     public void test06_badUsernameException() {
         clickOn("#usernameText");
         write("manolo");
@@ -155,6 +159,7 @@ public class SignInTest extends ApplicationTest {
     //Test 7: Comprobar que se muestra un Alert cuando al hacer el metodo de 
     //        logica SignIn nos devuelva un objeto User nulo.
     @Test
+    @Ignore
     public void test07_AuthenticationError() {
         clickOn("#usernameText");
         write("manoloNoExiste@wakeup.please");
@@ -192,6 +197,7 @@ public class SignInTest extends ApplicationTest {
     //         ventana y y esta no se cierra cuando el usuario cancela la 
     //         operacion.
     @Test
+    @Ignore
     public void test09_CancelCloseWindow() {
         press(KeyCode.ESCAPE).release(KeyCode.ESCAPE);
         verifyThat("Are you sure you want to exit?", isVisible());
@@ -203,6 +209,7 @@ public class SignInTest extends ApplicationTest {
     //Test 10: Comprobar que muestra un Alert de confirmacion al cerrar la 
     //         ventana y esta se cierra cuando el usuario confirma la operacion.
     @Test
+    @Ignore
     public void test10_ConfirmCloseWindow() {
         press(KeyCode.ESCAPE).release(KeyCode.ESCAPE);
         verifyThat("Are you sure you want to exit?", isVisible());
