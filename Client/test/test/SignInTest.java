@@ -49,6 +49,7 @@ public class SignInTest extends ApplicationTest {
     //Test 1: Inicializacion(Comprobar campos vacios y desabilitados).
     @Ignore
     @Test
+    @Ignore
     public void test01_InitialWindowState() {
         clickOn("#signUpLink");
         clickOn("#signInHyperlink");
@@ -69,6 +70,7 @@ public class SignInTest extends ApplicationTest {
     //        campos o ambos estan vacios(usernameText y passwordText).
     @Ignore
     @Test
+    @Ignore
     public void test02_SignInButtonIsDisabled() {
         clickOn("#usernameText");
         write("manolo");
@@ -85,6 +87,7 @@ public class SignInTest extends ApplicationTest {
     //        usernameText y passwordText no estan vacios.
     @Ignore
     @Test
+    @Ignore
     public void test03_SignInButtonIsEnabled() {
         clickOn("#usernameText");
         write("manolo");
@@ -103,6 +106,7 @@ public class SignInTest extends ApplicationTest {
     //        o passwordText o showPasswordText.
     @Ignore
     @Test
+    @Ignore
     public void test04_showPasswordButton() {
         clickOn("#passwordText");
         write("password");
@@ -135,12 +139,14 @@ public class SignInTest extends ApplicationTest {
         write("abcd*1234");
         clickOn("#signInButton");
         verifyThat("#mainWindowPane", isVisible());
+
     }
 
     //Test 6: Comprobar que se muestra un Alert cuando se introduce un username
     //        con formato de correo erroneo y pulsamos el boton SignInButton.
     @Ignore
     @Test
+    @Ignore
     public void test06_badUsernameException() {
         clickOn("#usernameText");
         write("manolo");
@@ -160,6 +166,7 @@ public class SignInTest extends ApplicationTest {
     //        logica SignIn nos devuelva un objeto User nulo.
     @Ignore
     @Test
+    @Ignore
     public void test07_AuthenticationError() {
         clickOn("#usernameText");
         write("manoloNoExiste@wakeup.please");
@@ -199,6 +206,7 @@ public class SignInTest extends ApplicationTest {
     //         operacion.
     @Ignore
     @Test
+    @Ignore
     public void test09_CancelCloseWindow() {
         press(KeyCode.ESCAPE).release(KeyCode.ESCAPE);
         verifyThat("Are you sure you want to exit?", isVisible());
@@ -211,6 +219,7 @@ public class SignInTest extends ApplicationTest {
     //         ventana y esta se cierra cuando el usuario confirma la operacion.
     @Ignore
     @Test
+    @Ignore
     public void test10_ConfirmCloseWindow() {
         press(KeyCode.ESCAPE).release(KeyCode.ESCAPE);
         verifyThat("Are you sure you want to exit?", isVisible());
