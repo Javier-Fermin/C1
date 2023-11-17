@@ -308,12 +308,13 @@ public class SignUpController {
                 );
                 LOGGER.info("Showing success.");
                 new Alert(Alert.AlertType.INFORMATION, "Sign Up successful.").showAndWait();
+
                 LOGGER.info("Changing from SignUp window to SignInWindow.");
                 Stage sStage = new Stage();
                 //It will load the SignIn window and then exites the current window to signin
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignInWindowFXML.fxml"));
                 Parent rootSignIn = (Parent) loader.load();
-
+ 
                 SignInController cont = ((SignInController) loader.getController());
 
                 cont.setStage(sStage);
@@ -382,7 +383,7 @@ public class SignUpController {
             try {
                 //if the user doesn´t fullfill the requirements it would throw an Exception
                 if ((userTextField.getText().length() > 500
-                        || !userTextField.getText().matches("[A-za-z\\s]+"))
+                        || !userTextField.getText().matches("^[\\p{L} ]+$"))
                         && !userTextField.getText().isEmpty()) {
                     throw new BadUserException();
                 }
