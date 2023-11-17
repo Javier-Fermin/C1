@@ -148,7 +148,6 @@ public class SignInController implements ChangeListener<String> {
      */
     @FXML
     public void passwordButtonAction(ActionEvent event) {
-        LOGGER.info("Change image to the button showPasswordButton");
         if (!showPasswordButton.isSelected()) {
             showPasswordButton.setGraphic(new ImageView("/resources/images/show.png"));
         } else {
@@ -164,18 +163,18 @@ public class SignInController implements ChangeListener<String> {
      */
     @FXML
     public void signInButtonAction(ActionEvent event) {
+        LOGGER.info("Logging In...");
         try {
-            LOGGER.info("Validate if email in usernameText has a correct format");
             User user = null;
             // When pressed: The content of usernameText is validated: 
             if (isValid(usernameText.getText())) {
-                
-                LOGGER.info("Execute signIn method to take user data");
+
+                registro = new RegistrableFactory().getRegistrable();
+
                 //The SignIn logic layer method will be used, defining the parameters with the content of usernameText and passwordText: 
                 user = registro.signIn(new User("", passwordText.getText(), "", usernameText.getText(), ""));
 
                 //If the user is null, the user will be informed with an authentication error message (AuthenticationException).
-                LOGGER.info("Open Main Window");
                 //If no exception has occurred, the user is prompted, the window will be closed and the MainWindow window will be displayed.
                 Stage sStage = new Stage();
 
@@ -209,9 +208,9 @@ public class SignInController implements ChangeListener<String> {
         } catch (ServerErrorException ex) {
             new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             LOGGER.severe("Server error");
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
-            LOGGER.severe("App error");
+            LOGGER.severe(ex.getMessage());
         }
     }
 
@@ -223,7 +222,6 @@ public class SignInController implements ChangeListener<String> {
     @FXML
     public void signUpClicked(ActionEvent event) {
         try {
-            LOGGER.info("Open SignIn Window");
             Stage sStage = new Stage();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignUp.fxml"));
@@ -235,8 +233,9 @@ public class SignInController implements ChangeListener<String> {
             cont.initStage(root);
 
             stage.close();
-        } catch (IOException ex) {
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, "Sign Up window error" + ex.getMessage());
+        } catch (Exception ex) {
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+            LOGGER.severe(ex.getMessage());
         }
     }
 
@@ -256,7 +255,6 @@ public class SignInController implements ChangeListener<String> {
      */
     public void initStage(Parent root) {
         try {
-            LOGGER.info("Inicialize Window initStage");
             Scene scene = new Scene(root);
             //Window no Resizable
             stage.setResizable(false);
@@ -265,7 +263,6 @@ public class SignInController implements ChangeListener<String> {
             stage.setTitle("Odoo - SignIn");
 
             //Confirmation is requested when leaving the window
-            LOGGER.info("If the window want to exit, alert to verify");
             stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
@@ -278,7 +275,6 @@ public class SignInController implements ChangeListener<String> {
                     event.consume();
                 }
             });
-            LOGGER.info("Set escape to window escape button");
             //The esc key is the window escape button.
             stage.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
                 if (KeyCode.ESCAPE == event.getCode()) {
@@ -290,7 +286,6 @@ public class SignInController implements ChangeListener<String> {
                 }
             });
 
-            LOGGER.info("set usernameText and passwordText properties");
             //The usernameText, which will be an empty field, will pick up the focus. This will have a mail pattern.
             usernameText.textProperty().addListener(this);
             usernameText.requestFocus();
@@ -299,7 +294,6 @@ public class SignInController implements ChangeListener<String> {
             passwordText.textProperty().addListener(this);
             addTextLimiter(passwordText, 500);
 
-            LOGGER.info("set buttons properties");
             showPasswordButton.setOnAction(this::passwordButtonAction);
             signUpLink.setOnAction(this::signUpClicked);
             signInButton.setOnAction(this::signInButtonAction);
@@ -313,8 +307,8 @@ public class SignInController implements ChangeListener<String> {
             stage.setOnShowing(this::handleWindowShowing);
             stage.show();
         } catch (Exception ex) {
-            ex.printStackTrace();
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, "Inicialize error" + ex.getMessage());
+            new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+            LOGGER.severe(ex.getMessage());
         }
     }
 
@@ -328,7 +322,6 @@ public class SignInController implements ChangeListener<String> {
      * @param event ActionEvent object
      */
     private void handleWindowShowing(WindowEvent event) {
-        LOGGER.info("bindBidirectional propertie to showPasswordText and passwordText");
         showPasswordText.textProperty().bindBidirectional(passwordText.textProperty());
         showPasswordButton.setGraphic(new ImageView("/resources/images/show.png"));
         passwordText.visibleProperty().bind(showPasswordButton.selectedProperty().not());
@@ -365,14 +358,8 @@ public class SignInController implements ChangeListener<String> {
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
         if (!newValue.isEmpty() && !usernameText.getText().isEmpty() && !passwordText.getText().isEmpty()) {
-            if(signInButton.isDisabled()){
-                LOGGER.info("signUpButton enabled.");
-            }
             signInButton.disableProperty().set(false);
         } else {
-            if(!signInButton.isDisabled()){
-                LOGGER.info("signUpButton disabled.");
-            }
             signInButton.disableProperty().set(true);
         }
     }
@@ -384,7 +371,6 @@ public class SignInController implements ChangeListener<String> {
      * @param maxLength //the maximun number of characters available
      */
     public static void addTextLimiter(final TextField tf, final int maxLength) {
-        LOGGER.info("Limit number os character can write");
         tf.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
