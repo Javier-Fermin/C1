@@ -6,6 +6,7 @@
 package view;
 
 import exceptions.BadEmailException;
+import java.awt.Color;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -59,7 +60,7 @@ public class SignInController implements ChangeListener<String> {
     /**
      * An object that implements the Registable interface
      */
-    private Registrable registro;
+    private Registrable registro = RegistrableFactory.getRegistrable();
 
     /**
      * The window stage
@@ -109,23 +110,11 @@ public class SignInController implements ChangeListener<String> {
     private PasswordField passwordText;
 
     /**
-     * Button to SignIn
-     */
-    @FXML // fx:id="signInButton"
-    private Button signInButton;
-
-    /**
      * signUpAccess label for the window
      */
     @FXML // fx:id="signUpAccessLabel"
     private Label signUpAccessLabel;
-
-    /**
-     * Link to the SignUpWindow
-     */
-    @FXML // fx:id="signUpLink"
-    private Hyperlink signUpLink;
-
+    
     /**
      * Button to show showPasswordText
      */
@@ -137,6 +126,18 @@ public class SignInController implements ChangeListener<String> {
      */
     @FXML // fx:id="showPasswordText"
     private TextField showPasswordText;
+    
+    /**
+     * Link to the SignUpWindow
+     */
+    @FXML // fx:id="signUpLink"
+    private Hyperlink signUpLink;
+    
+    /**
+     * Button to SignIn
+     */
+    @FXML // fx:id="signInButton"
+    private Button signInButton;
 
     /**
      * Method that change image of the window When pressed: The ToggleButton icon
@@ -168,7 +169,7 @@ public class SignInController implements ChangeListener<String> {
             User user = null;
             // When pressed: The content of usernameText is validated: 
             if (isValid(usernameText.getText())) {
-                registro = new RegistrableFactory().getRegistrable();
+                
                 LOGGER.info("Execute signIn method to take user data");
                 //The SignIn logic layer method will be used, defining the parameters with the content of usernameText and passwordText: 
                 user = registro.signIn(new User("", passwordText.getText(), "", usernameText.getText(), ""));
@@ -189,6 +190,8 @@ public class SignInController implements ChangeListener<String> {
                 stage.close();
                 // If the content does not follow an email address pattern, the user will be informed with an authentication error message (AuthenticationException).
             } else {
+                usernameText.requestFocus();
+                usernameText.setStyle("-fx-text-inner-color: red;");
                 throw new BadEmailException("Email error: Bad email format");
             }
 
